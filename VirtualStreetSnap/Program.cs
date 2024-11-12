@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace  VirtualStreetSnap;
+namespace VirtualStreetSnap;
 
 sealed class Program
 {

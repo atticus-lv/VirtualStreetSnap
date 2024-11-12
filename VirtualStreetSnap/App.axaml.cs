@@ -3,10 +3,10 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using  VirtualStreetSnap.ViewModels;
-using  VirtualStreetSnap.Views;
+using VirtualStreetSnap.ViewModels;
+using VirtualStreetSnap.Views;
 
-namespace  VirtualStreetSnap;
+namespace VirtualStreetSnap;
 
 public partial class App : Application
 {

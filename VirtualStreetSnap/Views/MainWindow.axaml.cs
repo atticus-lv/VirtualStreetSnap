@@ -4,16 +4,16 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using  VirtualStreetSnap.Models;
-using  VirtualStreetSnap.Services;
-using  VirtualStreetSnap.ViewModels;
+using VirtualStreetSnap.Models;
+using VirtualStreetSnap.Services;
+using VirtualStreetSnap.ViewModels;
 
-namespace  VirtualStreetSnap.Views;
+namespace VirtualStreetSnap.Views;
 
 public partial class MainWindow : Window
 {
     private readonly MainWindowViewModel _viewModel;
-    
+
     public MainWindow()
     {
         InitializeComponent();

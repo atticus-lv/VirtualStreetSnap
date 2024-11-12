@@ -7,7 +7,7 @@ using Avalonia.Media.Imaging;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 using Size = System.Drawing.Size;
 
-namespace  VirtualStreetSnap.Services;
+namespace VirtualStreetSnap.Services;
 
 public class ScreenshotHelper
 {
