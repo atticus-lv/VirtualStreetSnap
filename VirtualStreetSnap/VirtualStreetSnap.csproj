@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <!--windows-x64平台-->
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <!--发布时包含所有依赖项-->
+        <SelfContained>true</SelfContained>
+        <!--发布时本机依赖项自解压-->
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <!--        trim-->
+        <PublishTrimmed>true</PublishTrimmed>
+        <!--单个文件-->
+<!--        <PublishSingleFile>true</PublishSingleFile>-->
+        <PublishAot>true</PublishAot>
+        
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="TrimmerRoots.xml"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.1.0"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.1.0"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.0"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.0"/>
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.0"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
+        <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+    </ItemGroup>
+</Project>

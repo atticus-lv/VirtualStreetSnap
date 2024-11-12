@@ -1,0 +1,49 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:VirtualStreetSnap.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:VirtualStreetSnap.Models"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="VirtualStreetSnap.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="VirtualStreetSnap"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent"
+        Width="1280" Height="720"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="0">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*,Auto" Margin="2">
+        <Border Name='CaptureBorder' BorderBrush="Brown" BorderThickness="2">
+            <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsHitTestVisible="False" />
+        </Border>
+
+        <Border Grid.Row="1" Name="BottomBar" PointerPressed="BottomBar_PointerPressed"
+                Background="Black" HorizontalAlignment="Stretch">
+            <Grid ColumnDefinitions="*,Auto,Auto" Margin="5">
+                <ComboBox Grid.Column="0"
+                          ItemsSource="{Binding RadioItems}"
+                          SelectedItem="{Binding SelectedSizeRadio}"
+                          SelectionChanged="SelectingItemsControl_OnSelectionChanged"
+                          Width="100" Margin="0,0,10,0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:SizeRadio}">
+                            <TextBlock Text="{Binding Label}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Grid.Column="1" Content="SnapShot" Click="OnSaveImageButtonClick"
+                        Width="150" Height="30" HorizontalContentAlignment="Center" />
+                <Button Grid.Column="2" Content="X" DockPanel.Dock="Right"
+                        Width="30" Height="30" HorizontalContentAlignment="Center" Margin="10 0 0 0 "
+                        Command="{Binding OnCloseButtonClick}" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
