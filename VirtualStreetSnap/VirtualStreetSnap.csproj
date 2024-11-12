@@ -12,7 +12,6 @@
         <PublishTrimmed>true</PublishTrimmed>
         <!--单个文件-->
 <!--        <PublishSingleFile>true</PublishSingleFile>-->
-        <PublishAot>true</PublishAot>
         
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
@@ -20,6 +19,10 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <PublishAot>true</PublishAot>
+    </PropertyGroup>
+    
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
