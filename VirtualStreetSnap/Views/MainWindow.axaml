@@ -52,7 +52,7 @@
             </Grid>
         </Border>
         <Panel Grid.Row="1">
-            <Grid ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*" Opacity="0.5" IsVisible="{Binding ShowGuideLinesThirds}" />
+            <Grid Name="GuidesGrid" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*" Opacity="0.5" IsVisible="{Binding ShowGuideLinesThirds}" />
             <Border Name='CaptureBorder' BorderBrush="Brown" BorderThickness="10" Opacity="0.5"
                     IsVisible="{Binding ShowFocusBorder}" />
             <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch" 

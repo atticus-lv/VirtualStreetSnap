@@ -36,17 +36,19 @@ public partial class MainWindow : Window
     private async void OnSaveImageButtonClick(object? sender, RoutedEventArgs e)
     {
         CaptureBorder.IsVisible = false;
+        GuidesGrid.IsVisible = false;
         var currentScreen = Screens.Primary;
         var screenshot = await ScreenshotHelper.CaptureFullScreenAsync(currentScreen.Bounds);
         CaptureBorder.IsVisible = true;
+        GuidesGrid.IsVisible = true;
         // calculate capture area
         var appScale = currentScreen.Scaling;
         var toolBarHeight = ToolBar.Bounds.Height;
-        var borderBrushThickness = 2;
+        var borderCrop = 2 * appScale;
         var captureArea = CaptureArea.Bounds;
-        captureArea = new Rect(captureArea.X + Position.X,
-            captureArea.Y + Position.Y + toolBarHeight * appScale + borderBrushThickness * appScale,
-            captureArea.Width * appScale, captureArea.Height * appScale);
+        captureArea = new Rect(captureArea.X + Position.X + borderCrop,
+            captureArea.Y + Position.Y + toolBarHeight * appScale + borderCrop,
+            captureArea.Width * appScale - borderCrop, captureArea.Height * appScale - borderCrop);
 
         var captureShot = ScreenshotHelper.CropImage(screenshot, captureArea);
         // save screenshot
