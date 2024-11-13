@@ -1,0 +1,30 @@
+﻿name: publish demo
+
+on:
+  push:
+    branches: [ "master" ]
+
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Make upload directory
+        run: mkdir upload
+
+      - name: Publish win-x64
+        run: dotnet publish VirtualStreetSnap -c Release
+
+      - name: Zip win-x64
+        run: |
+          $files = Get-ChildItem -Path ./VirtualStreetSnap/bin/Release/net8.0/win-x64/publish/* -Recurse -Exclude *.pdb
+          Compress-Archive -Path $files.FullName -DestinationPath ./upload/VirtualStreetSnap.win-x64.zip
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: VirtualStreetSnap
+          path: ./upload/VirtualStreetSnap.win-x64.zip
