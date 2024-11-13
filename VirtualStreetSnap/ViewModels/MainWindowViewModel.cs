@@ -15,6 +15,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private SizeRadio? _selectedSizeRadio;
 
     [ObservableProperty]
+    private bool _isBorderVisible = true;
+
+
+    [ObservableProperty]
     private Color _borderColor = Colors.Brown;
 
     public ObservableCollection<SizeRadio> RadioItems { get; } =
@@ -31,7 +35,6 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         SelectedSizeRadio = RadioItems.First();
     }
-
 
     [RelayCommand]
     public void OnCloseButtonClick()

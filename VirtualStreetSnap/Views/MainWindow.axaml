@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:models="clr-namespace:VirtualStreetSnap.Models"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="VirtualStreetSnap.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -19,31 +19,42 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,Auto" Margin="2">
-        <Border Name='CaptureBorder' BorderBrush="Brown" BorderThickness="2">
-            <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsHitTestVisible="False" />
-        </Border>
+    <Grid RowDefinitions="Auto,*" Margin="2">
 
-        <Border Grid.Row="1" Name="BottomBar" PointerPressed="BottomBar_PointerPressed"
+        <Border Grid.Row="0" Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
                 Background="Black" HorizontalAlignment="Stretch">
             <Grid ColumnDefinitions="*,Auto,Auto" Margin="5">
-                <ComboBox Grid.Column="0"
-                          ItemsSource="{Binding RadioItems}"
-                          SelectedItem="{Binding SelectedSizeRadio}"
-                          SelectionChanged="SelectingItemsControl_OnSelectionChanged"
-                          Width="100" Margin="0,0,10,0">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:SizeRadio}">
-                            <TextBlock Text="{Binding Label}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox ItemsSource="{Binding RadioItems}"
+                              SelectedItem="{Binding SelectedSizeRadio}"
+                              SelectionChanged="SelectingItemsControl_OnSelectionChanged"
+                              Width="100" Margin="0,0,10,0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:SizeRadio}">
+                                <TextBlock Text="{Binding Label}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ToggleButton Name="ToggleBorderButton"
+                                  IsChecked="{Binding IsBorderVisible,Mode=TwoWay}">
+                        Focus
+                    </ToggleButton>
+                </StackPanel>
+
                 <Button Grid.Column="1" Content="SnapShot" Click="OnSaveImageButtonClick"
-                        Width="150" Height="30" HorizontalContentAlignment="Center" />
-                <Button Grid.Column="2" Content="X" DockPanel.Dock="Right"
-                        Width="30" Height="30" HorizontalContentAlignment="Center" Margin="10 0 0 0 "
-                        Command="{Binding OnCloseButtonClick}" />
+                        Width="150" HorizontalContentAlignment="Center" />
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10 0 0 0 " Spacing="5">
+                    <ToggleButton Name="ToggleButtonTopMost" Content="Pin" />
+                    <Button Content="X" DockPanel.Dock="Right" HorizontalContentAlignment="Center" Width="35"
+                            Command="{Binding OnCloseButtonClick}" />
+                </StackPanel>
+
             </Grid>
+        </Border>
+        <Border Grid.Row="1" Name='CaptureBorder' BorderBrush="Brown" BorderThickness="2"
+                IsVisible="{Binding IsBorderVisible}">
+            <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                       IsHitTestVisible="False" />
         </Border>
     </Grid>
 </Window>

@@ -13,7 +13,7 @@ public class ScreenshotHelper
 {
     public static async Task<Bitmap> CaptureFullScreenAsync(PixelRect screenBounds)
     {
-        await Task.Delay(50);
+        await Task.Delay(10);
         using (var bitmap = new System.Drawing.Bitmap(screenBounds.Width, screenBounds.Height))
         {
             using (var g = Graphics.FromImage(bitmap))
