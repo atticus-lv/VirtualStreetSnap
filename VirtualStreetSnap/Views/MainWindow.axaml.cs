@@ -64,7 +64,13 @@ public partial class MainWindow : Window
         var contentHeight = (int)(Height - toolBarHeight);
         var hiddenTitleBarHeight = (int)(Height - contentHeight);
 
-        var width = selectedSizeRadio.getWidth(contentHeight);
+        var width = selectedSizeRadio.GetWidth(contentHeight);
+        if (width < MinWidth)
+        {
+            width = (int)MinWidth;
+            contentHeight = selectedSizeRadio.GetHeight(width);
+        }
+
         var endX = Position.X + (Width - width) / 2;
         var endY = Position.Y + Height - contentHeight - toolBarHeight - hiddenTitleBarHeight;
 
