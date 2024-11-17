@@ -19,7 +19,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         _viewModel = (MainWindowViewModel)DataContext!;
 
-        ToggleButtonTopMost.IsCheckedChanged += TogglePinButton_Checked;
+        ToggleButtonTopMost.IsCheckedChanged += (sender, e) => { Topmost = !Topmost; };
     }
 
     private void ToolBar_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -28,19 +28,13 @@ public partial class MainWindow : Window
         BeginMoveDrag(e);
     }
 
-    private void TogglePinButton_Checked(object? sender, RoutedEventArgs e)
-    {
-        Topmost = !Topmost;
-    }
-
     private async void OnSaveImageButtonClick(object? sender, RoutedEventArgs e)
     {
-        CaptureBorder.IsVisible = false;
-        GuidesGrid.IsVisible = false;
+        CompositionGuides.IsVisible = false;
         var currentScreen = Screens.Primary;
         var screenshot = await ScreenshotHelper.CaptureFullScreenAsync(currentScreen.Bounds);
-        CaptureBorder.IsVisible = true;
-        GuidesGrid.IsVisible = true;
+        CompositionGuides.IsVisible = true;
+
         // calculate capture area
         var appScale = currentScreen.Scaling;
         var toolBarHeight = ToolBar.Bounds.Height;

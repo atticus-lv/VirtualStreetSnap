@@ -15,13 +15,19 @@ public partial class MainWindowViewModel : ViewModelBase
     private SizeRadio? _selectedSizeRadio;
 
     [ObservableProperty]
-    private bool _showOverlays = true;
-    
-    [ObservableProperty]
     private bool _showFocusBorder = true;
-    
+
     [ObservableProperty]
     private bool _showGuideLinesThirds = true;
+
+    [ObservableProperty]
+    private bool _showGuideLinesCenter;
+
+    [ObservableProperty]
+    private bool _showGuideLinesRatio;
+
+    [ObservableProperty]
+    private float _guideLinesOpacity = 0.5f;
 
     [ObservableProperty]
     private Color _borderColor = Colors.Brown;
@@ -47,5 +53,4 @@ public partial class MainWindowViewModel : ViewModelBase
         if (Design.IsDesignMode) return;
         Environment.Exit(0);
     }
-
 }

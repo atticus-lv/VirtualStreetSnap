@@ -21,7 +21,6 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,*" Margin="2">
-
         <Border Grid.Row="0" Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
                 Background="#111111" HorizontalAlignment="Stretch">
             <Grid ColumnDefinitions="*,Auto,Auto" Margin="5">
@@ -37,8 +36,26 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                     <ToggleButton Content="Focus" IsChecked="{Binding !ShowFocusBorder, Mode=TwoWay}" />
-                    <ToggleButton Content="Grid" IsChecked="{Binding !ShowGuideLinesThirds, Mode=TwoWay}" />
-
+                    <Button Content="Guides">
+                        <Button.Flyout>
+                            <Flyout Placement="BottomEdgeAlignedLeft">
+                                <StackPanel Width="200">
+                                    <CheckBox Content="Grid"
+                                              IsChecked="{Binding ShowGuideLinesThirds, Mode=TwoWay}" />
+                                    <CheckBox Content="Center"
+                                              IsChecked="{Binding ShowGuideLinesCenter, Mode=TwoWay}" />
+                                    <CheckBox Content="Ratio"
+                                              IsChecked="{Binding ShowGuideLinesRatio, Mode=TwoWay}" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
+                                                VerticalAlignment="Center">
+                                        <NumericUpDown Maximum="1" Minimum="0" Increment="0.1"
+                                                       Value="{Binding GuideLinesOpacity}" Margin="0 0 10 0" />
+                                        <TextBlock Text="Opacity" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                 </StackPanel>
 
                 <Button Grid.Column="1" Content="SnapShot" Click="OnSaveImageButtonClick"
@@ -51,11 +68,23 @@
 
             </Grid>
         </Border>
+
         <Panel Grid.Row="1">
-            <Grid Name="GuidesGrid" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*" Opacity="0.5" IsVisible="{Binding ShowGuideLinesThirds}" />
-            <Border Name='CaptureBorder' BorderBrush="Brown" BorderThickness="10" Opacity="0.5"
-                    IsVisible="{Binding ShowFocusBorder}" />
-            <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch" 
+            <Panel Name="CompositionGuides">
+                <Grid Name="GuidesGridThird" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
+                      Opacity="{Binding GuideLinesOpacity}"
+                      IsVisible="{Binding ShowGuideLinesThirds}" />
+                <Grid Name="GuideGridCenter" ShowGridLines="True" RowDefinitions="*,*" ColumnDefinitions="*,*"
+                      Opacity="{Binding GuideLinesOpacity}"
+                      IsVisible="{Binding ShowGuideLinesCenter}" />
+                <Grid Name="GuideGridRatio" ShowGridLines="True" RowDefinitions="1*,0.618*,1*"
+                      ColumnDefinitions="1*,0.618*,1*" Opacity="{Binding GuideLinesOpacity}"
+                      IsVisible="{Binding ShowGuideLinesRatio}" />
+                <Border BorderBrush="Brown" BorderThickness="10" Opacity="0.5"
+                        IsVisible="{Binding ShowFocusBorder}" />
+            </Panel>
+
+            <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch"
                        VerticalAlignment="Stretch"
                        IsHitTestVisible="False" />
         </Panel>
