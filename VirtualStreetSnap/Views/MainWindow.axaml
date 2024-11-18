@@ -35,8 +35,14 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <ToggleButton Content="Focus" IsChecked="{Binding !ShowFocusBorder, Mode=TwoWay}" />
-                    <Button Content="Guides">
+                    <ToggleButton IsChecked="{Binding !ShowFocusBorder, Mode=TwoWay}">
+                        <PathIcon Data="{StaticResource ScreenshotRegular}" />
+                    </ToggleButton>
+                    <Button>
+                        <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                            <PathIcon Data="{StaticResource TableRegular}" />
+                            <TextBlock VerticalAlignment="Center" Text="Guides" />
+                        </StackPanel>
                         <Button.Flyout>
                             <Flyout Placement="BottomEdgeAlignedLeft">
                                 <StackPanel Width="200">
@@ -58,12 +64,21 @@
                     </Button>
                 </StackPanel>
 
-                <Button Grid.Column="1" Content="SnapShot" Click="OnSaveImageButtonClick"
-                        Width="150" HorizontalContentAlignment="Center" />
+                <Button Grid.Column="1" Click="OnSaveImageButtonClick"
+                        Width="150" HorizontalContentAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                        <PathIcon Data="{StaticResource CameraRegular}" />
+                        <TextBlock Text="SnapShot" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10 0 0 0 " Spacing="5">
-                    <ToggleButton Name="ToggleButtonTopMost" Content="Pin" />
-                    <Button Content="X" DockPanel.Dock="Right" HorizontalContentAlignment="Center" Width="35"
-                            Command="{Binding OnCloseButtonClick}" />
+                    <ToggleButton Name="ToggleButtonTopMost">
+                        <PathIcon Data="{StaticResource PinRegular}"></PathIcon>
+                    </ToggleButton>
+                    <Button DockPanel.Dock="Right" HorizontalContentAlignment="Center" Width="35"
+                            Command="{Binding OnCloseButtonClick}">
+                        <TextBlock Text="X" FontSize="16"></TextBlock>
+                    </Button>
                 </StackPanel>
 
             </Grid>

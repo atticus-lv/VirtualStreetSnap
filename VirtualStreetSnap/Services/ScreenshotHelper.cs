@@ -9,8 +9,16 @@ using Size = System.Drawing.Size;
 
 namespace VirtualStreetSnap.Services;
 
-public class ScreenshotHelper
-{
+/// <summary>
+/// This class provides methods to capture the screen and crop the image. Only used in the Windows version.
+/// </summary>
+public static class ScreenshotHelper
+{   
+    /// <summary>
+    /// Captures the full screen and returns a Bitmap.
+    /// </summary>
+    /// <param name="screenBounds">The bounds of the screen to capture.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the captured screen as a Bitmap.</returns>
     public static async Task<Bitmap> CaptureFullScreenAsync(PixelRect screenBounds)
     {
         await Task.Delay(10);
@@ -30,14 +38,17 @@ public class ScreenshotHelper
             }
         }
     }
-
+    /// <summary>
+    /// Crops the specified source image to the specified bounds.
+    /// </summary>
+    /// <param name="source">The source image to crop.</param>
+    /// <param name="cropBounds">The bounds to crop the image to.</param>
+    /// <returns>The cropped image as a Bitmap.</returns>
     public static Bitmap CropImage(Bitmap source, Rect cropBounds)
     {
-        // Create a new RenderTargetBitmap with the specified crop bounds
         var croppedImage = new RenderTargetBitmap(new PixelSize((int)cropBounds.Width, (int)cropBounds.Height),
             new Vector(96, 96));
-
-        // Use a drawing context to draw the cropped image
+        
         using (var ctx = croppedImage.CreateDrawingContext(false))
         {
             ctx.DrawImage(source, cropBounds, new Rect(0, 0, cropBounds.Width, cropBounds.Height));

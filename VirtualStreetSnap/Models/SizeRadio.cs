@@ -2,6 +2,10 @@
 
 namespace  VirtualStreetSnap.Models;
 
+/// <summary>
+/// This class is used to store the size of the camera like 16:9, 4:3, 1:1.
+/// It provides methods to get the width and height based on the aspect ratio.
+/// </summary>
 public class SizeRadio
 {
     public SizeRadio(string label)
@@ -9,18 +13,27 @@ public class SizeRadio
         Label = label;
     }
 
-    // this is a class that is used to store the size of the camera like 16:9, 4:3, 1:1
+    
     public string Label { get; set; }
     
+    /// <summary>
+    /// Gets the width based on the height and the aspect ratio.
+    /// </summary>
+    /// <param name="height">The height to calculate the width from.</param>
+    /// <returns>The calculated width.</returns>
     public int GetWidth(int height)
     {
-        // split by : and get the elements and convert it to int
-        // then multiply the height by the first element and divide it by the second element
+        
 
         var ratio = Label.Split(":").Select(int.Parse).ToArray();
         return height * ratio[0] / ratio[1];
     }
     
+    /// <summary>
+    /// Gets the height based on the width and the aspect ratio.
+    /// </summary>
+    /// <param name="width">The width to calculate the height from.</param>
+    /// <returns>The calculated height.</returns>
     public int GetHeight(int width)
     {
         var ratio = Label.Split(":").Select(int.Parse).ToArray();
