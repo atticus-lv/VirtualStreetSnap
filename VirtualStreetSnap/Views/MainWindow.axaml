@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:models="clr-namespace:VirtualStreetSnap.Models"
+        xmlns:services="clr-namespace:VirtualStreetSnap.Services"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="VirtualStreetSnap.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        services:DialogManager.Register="{Binding}"
         Icon="/Assets/avalonia-logo.ico"
         Title="VirtualStreetSnap"
         WindowStartupLocation="CenterScreen"
@@ -83,8 +85,8 @@
                                     <TextBox Text="{Binding FilePrefix}" />
                                     <TextBlock>Save Directory</TextBlock>
                                     <Grid ColumnDefinitions="*,Auto">
-                                        <TextBox Text="{Binding SaveDirectory}" />
-                                        <Button Grid.Column="1">...</Button>
+                                        <TextBox Text="{Binding SaveDirectory}" IsReadOnly="True" ToolTip.Tip="{Binding SaveDirectory}" />
+                                        <Button Grid.Column="1" Command="{Binding ChangeDir}" CommandParameter="SaveDirectory">...</Button>
                                     </Grid>
                                 </StackPanel>
                             </Flyout>

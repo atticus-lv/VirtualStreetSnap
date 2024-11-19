@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -87,5 +88,15 @@ public partial class MainWindowViewModel : ViewModelBase
         var configService = new ConfigService(configFilePath);
         configService.SaveConfig(Config);
         Environment.Exit(0);
+    }
+
+    public async Task ChangeDir(string parmName)
+    {
+        var task = parmName switch
+        {
+            "SaveDirectory" => this.ChangeDirectory(value => SaveDirectory = value, "Select Directory"),
+            _ => Task.CompletedTask
+        };
+        await task;
     }
 }
