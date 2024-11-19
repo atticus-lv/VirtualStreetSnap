@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -12,14 +13,11 @@ namespace VirtualStreetSnap.Views;
 
 public partial class MainWindow : Window
 {
-    private readonly MainWindowViewModel? _viewModel;
 
     public MainWindow()
     {
         InitializeComponent();
-        _viewModel = (MainWindowViewModel)DataContext!;
-
-        ToggleButtonTopMost.IsCheckedChanged += (sender, e) => { Topmost = !Topmost; };
+        OnTopMostCheckbox.IsCheckedChanged += (sender, e) => { Topmost = !Topmost; };
     }
 
     private void ToolBar_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -46,10 +44,19 @@ public partial class MainWindow : Window
 
         var captureShot = ScreenshotHelper.CropImage(screenshot, captureArea);
         // save screenshot
-        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+        var _viewModel = (MainWindowViewModel)DataContext;
+        var saveDir = _viewModel.SaveDirectory;
+        if (!Path.Exists(saveDir))
+        {
+            Directory.CreateDirectory(saveDir);
+        }
+        var filePrefix =  _viewModel.FilePrefix;
+        filePrefix = new string(filePrefix.Select(c => Path.GetInvalidFileNameChars().Contains(c) ? '_' : c).ToArray());
+        
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
         // screenshot.Save(Path.Combine(path, $"FULL_{time}.png"));
-        captureShot.Save(Path.Combine(path, $"CAP_{time}.png"));
+        captureShot.Save(Path.Combine(saveDir, $"{filePrefix}_{time}.png"));
     }
 
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)

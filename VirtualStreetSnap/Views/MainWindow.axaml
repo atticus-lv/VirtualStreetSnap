@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:models="clr-namespace:VirtualStreetSnap.Models"
+        xmlns:services="clr-namespace:VirtualStreetSnap.Services"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="VirtualStreetSnap.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        services:DialogManager.Register="{Binding}"
         Icon="/Assets/avalonia-logo.ico"
         Title="VirtualStreetSnap"
         WindowStartupLocation="CenterScreen"
@@ -47,7 +49,7 @@
                             <Flyout Placement="BottomEdgeAlignedLeft">
                                 <StackPanel Width="200">
                                     <CheckBox Content="Grid"
-                                              IsChecked="{Binding ShowGuideLinesThirds, Mode=TwoWay}" />
+                                              IsChecked="{Binding ShowGuideLinesGrid, Mode=TwoWay}" />
                                     <CheckBox Content="Center"
                                               IsChecked="{Binding ShowGuideLinesCenter, Mode=TwoWay}" />
                                     <CheckBox Content="Ratio"
@@ -72,12 +74,28 @@
                     </StackPanel>
                 </Button>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10 0 0 0 " Spacing="5">
-                    <ToggleButton Name="ToggleButtonTopMost">
-                        <PathIcon Data="{StaticResource PinRegular}"></PathIcon>
-                    </ToggleButton>
+                    <Button>
+                        <PathIcon Data="{StaticResource SettingsRegular}" />
+                        <Button.Flyout>
+                            <Flyout Placement='BottomEdgeAlignedRight'>
+
+                                <StackPanel Spacing="5" Width="200">
+                                    <CheckBox Name="OnTopMostCheckbox">On Top</CheckBox>
+                                    <TextBlock>File Prefix</TextBlock>
+                                    <TextBox Text="{Binding FilePrefix}" />
+                                    <TextBlock>Save Directory</TextBlock>
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <TextBox Text="{Binding SaveDirectory}" IsReadOnly="True" ToolTip.Tip="{Binding SaveDirectory}" />
+                                        <Button Grid.Column="1" Command="{Binding ChangeDir}" CommandParameter="SaveDirectory">...</Button>
+                                    </Grid>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+
                     <Button DockPanel.Dock="Right" HorizontalContentAlignment="Center" Width="35"
                             Command="{Binding OnCloseButtonClick}">
-                        <TextBlock Text="X" FontSize="16"></TextBlock>
+                        <TextBlock Text="X" FontSize="16" />
                     </Button>
                 </StackPanel>
 
@@ -88,7 +106,7 @@
             <Panel Name="CompositionGuides">
                 <Grid Name="GuidesGridThird" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
                       Opacity="{Binding GuideLinesOpacity}"
-                      IsVisible="{Binding ShowGuideLinesThirds}" />
+                      IsVisible="{Binding ShowGuideLinesGrid}" />
                 <Grid Name="GuideGridCenter" ShowGridLines="True" RowDefinitions="*,*" ColumnDefinitions="*,*"
                       Opacity="{Binding GuideLinesOpacity}"
                       IsVisible="{Binding ShowGuideLinesCenter}" />
