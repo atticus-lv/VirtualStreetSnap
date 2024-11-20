@@ -14,15 +14,20 @@ namespace VirtualStreetSnap.ViewModels;
 
 public partial class ImageGalleryViewModel : ViewModelBase
 {
+    // The number of thumbnails to load at a time
     private const int BatchSize = 20;
-    private List<string> _allImagePaths = new();
+
+    // A list of all the image paths in the save directory
+    private List<string> _allImagePaths = [];
     private int _currentBatchIndex;
 
     [ObservableProperty]
-    private ObservableCollection<ImageThumbViewModel> _thumbnails = new();
-
-    [ObservableProperty]
     private bool _showThumbnailBar = true;
+
+    // A collection of ImageThumbViewModels representing the thumbnails
+    [ObservableProperty]
+    private ObservableCollection<ImageThumbViewModel> _thumbnails = [];
+
 
     [ObservableProperty]
     private ImageThumbViewModel? _selectedThumbnail;
@@ -32,7 +37,8 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _selectedImageName = "";
-
+    
+    // The current configuration of the app, use for getting the save directory
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
 
@@ -80,7 +86,8 @@ public partial class ImageGalleryViewModel : ViewModelBase
     {
         ShowThumbnailBar = !ShowThumbnailBar;
     }
-
+    
+    // Commands for context menu
     [RelayCommand]
     public void DeleteSelectedThumbnail()
     {
