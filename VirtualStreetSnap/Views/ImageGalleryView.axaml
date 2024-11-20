@@ -13,22 +13,26 @@
     </UserControl.DataContext>
 
 
-    <Grid RowDefinitions="*,120" Background="#111111">
+    <Grid RowDefinitions="*,Auto" Background="#111111">
         <!-- Selected Image Display -->
         <Border Grid.Row="0" CornerRadius="5" Padding="2">
             <Panel>
                 <TextBlock Text="Select an Image" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <Image Source="{Binding SelectedImage}" Stretch="Uniform" />
                 <TextBlock Text="{Binding SelectedImageName}" Margin="2" />
+                <Button VerticalAlignment="Bottom" Background="Transparent" Command="{Binding ToggleThumbnailBar}">
+                    <PathIcon Data="{StaticResource ArrowMaximizeVerticalRegular}"  Width="30" Height="30" />
+                </Button>
             </Panel>
         </Border>
 
         <!-- Thumbnails Display -->
         <ScrollViewer x:Name="ThumbnailsScrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Disabled">
+                      VerticalScrollBarVisibility="Disabled"
+                      IsVisible="{Binding ShowThumbnailBar}">
             <ListBox ItemsSource="{Binding Thumbnails}"
                      SelectedItem="{Binding SelectedThumbnail}"
-                     HorizontalAlignment="Left"
+                     HorizontalAlignment="Left" Background="Transparent"
                      SelectionMode="Single">
                 <ListBox.ContextMenu>
                     <ContextMenu>

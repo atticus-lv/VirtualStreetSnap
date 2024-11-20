@@ -16,6 +16,9 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private ObservableCollection<ImageThumbViewModel> _thumbnails = new();
 
     [ObservableProperty]
+    private bool _showThumbnailBar = true;
+
+    [ObservableProperty]
     private ImageThumbViewModel? _selectedThumbnail;
 
     [ObservableProperty]
@@ -50,6 +53,12 @@ public partial class ImageGalleryViewModel : ViewModelBase
     {
         SelectedImage = value?.Image;
         SelectedImageName = value?.ImgName ?? "Unknown";
+    }
+
+    [RelayCommand]
+    public void ToggleThumbnailBar()
+    {
+        ShowThumbnailBar = !ShowThumbnailBar;
     }
 
     [RelayCommand]
