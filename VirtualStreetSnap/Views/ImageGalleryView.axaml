@@ -29,6 +29,7 @@
         <!-- Thumbnails Display -->
         <ScrollViewer x:Name="ThumbnailsScrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Disabled"
+                      ScrollChanged="ThumbnailsScrollViewer_ScrollChanged"
                       IsVisible="{Binding ShowThumbnailBar}">
             <ListBox ItemsSource="{Binding Thumbnails}"
                      SelectedItem="{Binding SelectedThumbnail}"

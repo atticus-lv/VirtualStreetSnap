@@ -1,7 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,6 +14,10 @@ namespace VirtualStreetSnap.ViewModels;
 
 public partial class ImageGalleryViewModel : ViewModelBase
 {
+    private const int BatchSize = 20;
+    private List<string> _allImagePaths = new();
+    private int _currentBatchIndex;
+
     [ObservableProperty]
     private ObservableCollection<ImageThumbViewModel> _thumbnails = new();
 
@@ -44,9 +50,23 @@ public partial class ImageGalleryViewModel : ViewModelBase
     public void LoadThumbnails(string directoryPath)
     {
         if (!Directory.Exists(directoryPath)) return;
-        var pngFiles = Directory.GetFiles(directoryPath, "*.png");
+        _allImagePaths = Directory.GetFiles(directoryPath, "*.png").ToList();
         Thumbnails.Clear();
-        foreach (var file in pngFiles) Thumbnails.Add(new ImageThumbViewModel(file));
+        _currentBatchIndex = 0;
+        LoadNextBatch();
+    }
+
+    private void LoadNextBatch()
+    {
+        var nextBatch = _allImagePaths.Skip(_currentBatchIndex * BatchSize).Take(BatchSize);
+        foreach (var file in nextBatch) Thumbnails.Add(new ImageThumbViewModel(file));
+        _currentBatchIndex++;
+    }
+
+    [RelayCommand]
+    public void LoadMoreThumbnails()
+    {
+        if (_currentBatchIndex * BatchSize < _allImagePaths.Count) LoadNextBatch();
     }
 
     partial void OnSelectedThumbnailChanged(ImageThumbViewModel? value)
