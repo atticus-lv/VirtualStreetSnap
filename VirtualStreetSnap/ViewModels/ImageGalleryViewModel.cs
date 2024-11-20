@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
 
@@ -18,7 +20,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     [ObservableProperty]
     private Bitmap? _selectedImage;
-    
+
     [ObservableProperty]
     private string _selectedImageName = "";
 
@@ -33,10 +35,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(Settings.SaveDirectory))
-        {
-            LoadThumbnails(Config.Settings.SaveDirectory);
-        }
+        if (e.PropertyName == nameof(Settings.SaveDirectory)) LoadThumbnails(Config.Settings.SaveDirectory);
     }
 
     public void LoadThumbnails(string directoryPath)
@@ -51,5 +50,31 @@ public partial class ImageGalleryViewModel : ViewModelBase
     {
         SelectedImage = value?.Image;
         SelectedImageName = value?.ImgName ?? "Unknown";
+    }
+
+    [RelayCommand]
+    public void DeleteSelectedThumbnail()
+    {
+        if (SelectedThumbnail == null) return;
+        var filePath = SelectedThumbnail.ImgPath;
+        if (!File.Exists(filePath)) return;
+        File.Delete(filePath);
+        Thumbnails.Remove(SelectedThumbnail);
+        SelectedThumbnail = null;
+    }
+
+    [RelayCommand]
+    public void OpenSelectedThumbnailFolder()
+    {
+        if (SelectedThumbnail == null) return;
+        var filePath = SelectedThumbnail.ImgPath;
+        var folderPath = Path.GetDirectoryName(filePath);
+        if (folderPath != null && Directory.Exists(folderPath))
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = folderPath,
+                UseShellExecute = true,
+                Verb = "open"
+            });
     }
 }
