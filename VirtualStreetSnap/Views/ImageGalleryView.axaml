@@ -13,22 +13,60 @@
     </UserControl.DataContext>
 
 
-    <Grid RowDefinitions="*,120" Background="#111111">
+    <Grid RowDefinitions="*,Auto" Background="#111111">
         <!-- Selected Image Display -->
         <Border Grid.Row="0" CornerRadius="5" Padding="2">
             <Panel>
                 <TextBlock Text="Select an Image" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <Image Source="{Binding SelectedImage}" Stretch="Uniform" />
+                <Viewbox x:Name="ImageViewbox" Stretch="Uniform"
+                         PointerPressed="ImageViewbox_PointerPressed"
+                         PointerReleased="ImageViewbox_PointerReleased"
+                         PointerMoved="ImageViewbox_PointerMoved">
+                    <Image Source="{Binding SelectedImage}" />
+                    <Viewbox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Click="ResetImageViewBox">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource ArrowRotateLeftRegular}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Reset Zoom" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <MenuItem Click="FlipHorizontally_Click">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource FlipHorizontalRegular}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Flip Horizontally" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <MenuItem Click="FlipVertically_Click">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource FlipVerticalRegular}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Flip Vertically" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                        </ContextMenu>
+                    </Viewbox.ContextMenu>
+                </Viewbox>
                 <TextBlock Text="{Binding SelectedImageName}" Margin="2" />
+                <Button VerticalAlignment="Bottom" Background="Transparent" Command="{Binding ToggleThumbnailBar}">
+                    <PathIcon Data="{StaticResource ArrowMaximizeVerticalRegular}" Width="30" Height="30" />
+                </Button>
             </Panel>
         </Border>
 
         <!-- Thumbnails Display -->
         <ScrollViewer x:Name="ThumbnailsScrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Disabled">
+                      VerticalScrollBarVisibility="Disabled"
+                      ScrollChanged="ThumbnailsScrollViewer_ScrollChanged"
+                      IsVisible="{Binding ShowThumbnailBar}">
             <ListBox ItemsSource="{Binding Thumbnails}"
                      SelectedItem="{Binding SelectedThumbnail}"
-                     HorizontalAlignment="Left"
+                     HorizontalAlignment="Left" Background="Transparent"
                      SelectionMode="Single">
                 <ListBox.ContextMenu>
                     <ContextMenu>
