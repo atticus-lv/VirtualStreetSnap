@@ -13,7 +13,7 @@ public partial class ImageGalleryView : UserControl
 {
     private double _currentScale = 1.0;
     private const double ScaleStep = 0.1;
-    private const double MinScale = 0.1;
+    private const double MinScale = 0.5;
     private const double MaxScale = 10.0;
     private Point _lastPanPoint;
     private bool _isPanning;

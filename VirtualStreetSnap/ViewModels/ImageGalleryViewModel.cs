@@ -86,7 +86,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
     {
         ShowThumbnailBar = !ShowThumbnailBar;
     }
-    
+
     // Commands for context menu
     [RelayCommand]
     public void DeleteSelectedThumbnail()
