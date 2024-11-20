@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:models="clr-namespace:VirtualStreetSnap.Models"
+        xmlns:views="clr-namespace:VirtualStreetSnap.Views"
         xmlns:services="clr-namespace:VirtualStreetSnap.Services"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="VirtualStreetSnap.Views.MainWindow"
@@ -21,6 +22,7 @@
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
+
 
     <Grid RowDefinitions="Auto,*" Margin="2">
         <Border Grid.Row="0" Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
@@ -65,8 +67,8 @@
                         </Button.Flyout>
                     </Button>
                 </StackPanel>
-
                 <Button Grid.Column="1" Click="OnSaveImageButtonClick"
+                        IsEnabled="{Binding !IsPreviewMode}"
                         Width="150" HorizontalContentAlignment="Center">
                     <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
                         <PathIcon Data="{StaticResource CameraRegular}" />
@@ -74,6 +76,12 @@
                     </StackPanel>
                 </Button>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10 0 0 0 " Spacing="5">
+                    <ToggleButton IsChecked="{Binding IsPreviewMode,Mode=TwoWay}">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <PathIcon Data="{StaticResource ImageLibraryRegular}"></PathIcon>
+                            <TextBlock Text="Gallery" VerticalAlignment="Center"></TextBlock>
+                        </StackPanel>
+                    </ToggleButton>
                     <Button>
                         <PathIcon Data="{StaticResource SettingsRegular}" />
                         <Button.Flyout>
@@ -85,8 +93,12 @@
                                     <TextBox Text="{Binding FilePrefix}" />
                                     <TextBlock>Save Directory</TextBlock>
                                     <Grid ColumnDefinitions="*,Auto">
-                                        <TextBox Text="{Binding SaveDirectory}" IsReadOnly="True" ToolTip.Tip="{Binding SaveDirectory}" />
-                                        <Button Grid.Column="1" Command="{Binding ChangeDir}" CommandParameter="SaveDirectory">...</Button>
+                                        <TextBox Text="{Binding SaveDirectory}" IsReadOnly="True"
+                                                 ToolTip.Tip="{Binding SaveDirectory}" />
+                                        <Button Grid.Column="1" Command="{Binding ChangeDir}"
+                                                CommandParameter="SaveDirectory">
+                                            ...
+                                        </Button>
                                     </Grid>
                                 </StackPanel>
                             </Flyout>
@@ -103,7 +115,7 @@
         </Border>
 
         <Panel Grid.Row="1">
-            <Panel Name="CompositionGuides">
+            <Panel Name="CompositionGuides" IsVisible="{Binding !IsPreviewMode}">
                 <Grid Name="GuidesGridThird" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
                       Opacity="{Binding GuideLinesOpacity}"
                       IsVisible="{Binding ShowGuideLinesGrid}" />
@@ -120,7 +132,11 @@
             <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch"
                        VerticalAlignment="Stretch"
                        IsHitTestVisible="False" />
+            
+            <Panel IsVisible="{Binding IsPreviewMode}">
+                <views:ImageGalleryView></views:ImageGalleryView>
+            </Panel>
         </Panel>
-
     </Grid>
+
 </Window>

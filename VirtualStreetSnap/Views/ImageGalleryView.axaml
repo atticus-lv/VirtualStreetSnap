@@ -1,0 +1,52 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
+             xmlns:views="clr-namespace:VirtualStreetSnap.Views"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+             x:Class="VirtualStreetSnap.Views.ImageGalleryView"
+             x:DataType="viewModels:ImageGalleryViewModel">
+
+    <UserControl.DataContext>
+        <viewModels:ImageGalleryViewModel />
+    </UserControl.DataContext>
+
+
+    <Grid RowDefinitions="*,120" Background="#111111">
+        <!-- Selected Image Display -->
+        <Border Grid.Row="0" CornerRadius="5" Padding="2">
+            <Panel>
+                <TextBlock Text="Select an Image" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Image Source="{Binding SelectedImage}" Stretch="Uniform" />
+                <TextBlock Text="{Binding SelectedImageName}" Margin="2" />
+            </Panel>
+        </Border>
+
+        <!-- Thumbnails Display -->
+        <ScrollViewer x:Name="ThumbnailsScrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Disabled">
+            <ListBox ItemsSource="{Binding Thumbnails}"
+                     SelectedItem="{Binding SelectedThumbnail}"
+                     HorizontalAlignment="Left"
+                     SelectionMode="Single">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Delete" Command="{Binding DeleteSelectedThumbnail}" />
+                        <MenuItem Header="Open In Folder" Command="{Binding OpenSelectedThumbnailFolder}" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <views:ImageThumbView DataContext="{Binding}" Width="100" Height="100" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

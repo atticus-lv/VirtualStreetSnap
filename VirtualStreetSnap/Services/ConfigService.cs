@@ -5,16 +5,23 @@ using VirtualStreetSnap.Models;
 
 namespace VirtualStreetSnap.Services;
 
-public class ConfigService(string configFilePath)
+public class ConfigService
 {
-    public AppConfig? LoadConfig()
+    private static readonly Lazy<AppConfig> _configInstance = new(() => LoadConfig());
+    private static readonly string _configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+
+    private ConfigService() { }
+
+    public static AppConfig Instance => _configInstance.Value;
+
+    private static AppConfig LoadConfig()
     {
-        if (!File.Exists(configFilePath))
+        if (!File.Exists(_configFilePath))
             return NewDefaultConfig();
 
         try
         {
-            var json = File.ReadAllText(configFilePath);
+            var json = File.ReadAllText(_configFilePath);
             return JsonConvert.DeserializeObject<AppConfig>(json);
         }
         catch (Exception ex)
@@ -24,12 +31,12 @@ public class ConfigService(string configFilePath)
         }
     }
 
-    public void SaveConfig(AppConfig config)
+    public static void SaveConfig()
     {
         try
         {
-            var json = JsonConvert.SerializeObject(config, Formatting.Indented);
-            File.WriteAllText(configFilePath, json);
+            var json = JsonConvert.SerializeObject(Instance, Formatting.Indented);
+            File.WriteAllText(_configFilePath, json);
         }
         catch (Exception ex)
         {

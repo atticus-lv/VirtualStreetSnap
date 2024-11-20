@@ -14,7 +14,10 @@ namespace VirtualStreetSnap.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    private static readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+
+    // When the app is in preview mode, the user can't take a screenshot
+    [ObservableProperty]
+    private bool _isPreviewMode;
 
     [ObservableProperty]
     private SizeRadio? _selectedSizeRadio;
@@ -38,7 +41,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private Color _borderColor = Colors.Brown;
 
     [ObservableProperty]
-    private AppConfig _config;
+    private AppConfig _config = ConfigService.Instance;
 
     [ObservableProperty]
     private string _filePrefix = "IMG";
@@ -60,9 +63,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         SelectedSizeRadio = RadioItems.First();
-        Console.WriteLine(configFilePath);
-        var configService = new ConfigService(configFilePath);
-        Config = configService.LoadConfig();
         if (Config is null) return;
         ShowGuideLinesGrid = Config.Overlays.Guides.Grid;
         ShowGuideLinesCenter = Config.Overlays.Guides.Center;
@@ -71,7 +71,7 @@ public partial class MainWindowViewModel : ViewModelBase
         SaveDirectory = Config.Settings.SaveDirectory;
         FilePrefix = Config.Settings.FilePrefix;
         // Set the default values if the config is not existing
-        configService.SaveConfig(Config);
+        ConfigService.SaveConfig();
     }
 
     [RelayCommand]
@@ -85,8 +85,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Config.Overlays.Focus = ShowFocusBorder;
         Config.Settings.SaveDirectory = SaveDirectory;
         Config.Settings.FilePrefix = FilePrefix;
-        var configService = new ConfigService(configFilePath);
-        configService.SaveConfig(Config);
+        ConfigService.SaveConfig();
         Environment.Exit(0);
     }
 
@@ -98,5 +97,8 @@ public partial class MainWindowViewModel : ViewModelBase
             _ => Task.CompletedTask
         };
         await task;
+        // save the config
+        Config.Settings.SaveDirectory = SaveDirectory;
+        ConfigService.SaveConfig();
     }
 }
