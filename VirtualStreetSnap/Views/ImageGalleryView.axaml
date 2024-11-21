@@ -52,7 +52,11 @@
                         </ContextMenu>
                     </Viewbox.ContextMenu>
                 </Viewbox>
-                <TextBlock Text="{Binding SelectedImageName}" Margin="2" />
+                <TextBlock Text="{Binding SelectedImageName}" Margin="2">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
+                    </TextBlock.Effect>
+                </TextBlock>
                 <StackPanel VerticalAlignment="Bottom" Background="Transparent" Orientation="Horizontal" Height="30" Opacity="0.7">
                     <Button Command="{Binding ToggleThumbnailBar}">
                                         <PathIcon Data="{StaticResource ArrowMaximizeVerticalRegular}" />
