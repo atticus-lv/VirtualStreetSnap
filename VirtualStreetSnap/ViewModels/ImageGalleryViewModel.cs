@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -20,6 +21,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
     // A list of all the image paths in the save directory
     private List<string> _allImagePaths = [];
     private int _currentBatchIndex;
+    private DateTime _lastCheckedTime = DateTime.MinValue;
 
     [ObservableProperty]
     private bool _showThumbnailBar = true;
@@ -37,29 +39,37 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _selectedImageName = "";
-    
+
     // The current configuration of the app, use for getting the save directory
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
 
     public ImageGalleryViewModel()
     {
-        LoadThumbnails(Config.Settings.SaveDirectory);
+        ReLoadThumbnails();
         Config.Settings.PropertyChanged += OnSettingsPropertyChanged;
     }
 
     private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(Settings.SaveDirectory)) LoadThumbnails(Config.Settings.SaveDirectory);
+        if (e.PropertyName == nameof(Settings.SaveDirectory)) ReLoadThumbnails();
     }
 
-    public void LoadThumbnails(string directoryPath)
+    [RelayCommand]
+    public void ReLoadThumbnails()
     {
-        if (!Directory.Exists(directoryPath)) return;
-        _allImagePaths = Directory.GetFiles(directoryPath, "*.png").ToList();
+        if (!Directory.Exists(Config.Settings.SaveDirectory)) return;
+
+        var lastWriteTime = Directory.GetLastWriteTime(Config.Settings.SaveDirectory);
+        if (lastWriteTime <= _lastCheckedTime) return;
+        _lastCheckedTime = lastWriteTime;
+
+        _allImagePaths = Directory.GetFiles(Config.Settings.SaveDirectory, "*.png").ToList();
+        _allImagePaths.Reverse(); // reverse the list so the newest images are at the top
         Thumbnails.Clear();
         _currentBatchIndex = 0;
         LoadNextBatch();
+        if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails[0];
     }
 
     private void LoadNextBatch()
