@@ -76,7 +76,7 @@
                     </StackPanel>
                 </Button>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10 0 0 0 " Spacing="5">
-                    <ToggleButton IsChecked="{Binding IsPreviewMode,Mode=TwoWay}">
+                    <ToggleButton Name="ToggleGalleryButton" IsChecked="{Binding IsPreviewMode,Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal" Spacing="5">
                             <PathIcon Data="{StaticResource ImageLibraryRegular}"></PathIcon>
                             <TextBlock Text="Gallery" VerticalAlignment="Center"></TextBlock>
@@ -134,7 +134,7 @@
                        IsHitTestVisible="False" />
             
             <Panel IsVisible="{Binding IsPreviewMode}">
-                <views:ImageGalleryView></views:ImageGalleryView>
+                <views:ImageGalleryView Name="GalleryView"></views:ImageGalleryView>
             </Panel>
         </Panel>
     </Grid>
