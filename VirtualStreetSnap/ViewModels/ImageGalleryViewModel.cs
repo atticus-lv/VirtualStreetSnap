@@ -58,6 +58,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
     {
         if (!Directory.Exists(Config.Settings.SaveDirectory)) return;
         _allImagePaths = Directory.GetFiles(Config.Settings.SaveDirectory, "*.png").ToList();
+        _allImagePaths.Reverse(); // reverse the list so the newest images are at the top
         Thumbnails.Clear();
         _currentBatchIndex = 0;
         LoadNextBatch();
