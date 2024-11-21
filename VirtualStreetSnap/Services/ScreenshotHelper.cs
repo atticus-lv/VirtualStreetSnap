@@ -21,22 +21,16 @@ public static class ScreenshotHelper
     /// <returns>A task that represents the asynchronous operation. The task result contains the captured screen as a Bitmap.</returns>
     public static async Task<Bitmap> CaptureFullScreenAsync(PixelRect screenBounds)
     {
-        await Task.Delay(10);
-        using (var bitmap = new System.Drawing.Bitmap(screenBounds.Width, screenBounds.Height))
-        {
-            using (var g = Graphics.FromImage(bitmap))
-            {
-                g.CopyFromScreen(screenBounds.X, screenBounds.Y, 0, 0,
-                    new Size(screenBounds.Width, screenBounds.Height));
-            }
+        await Task.Delay(5);// This is a workaround to prevent the app from freezing when capturing the screen.
+        using var bitmap = new System.Drawing.Bitmap(screenBounds.Width, screenBounds.Height);
+        using var g = Graphics.FromImage(bitmap);
+        g.CopyFromScreen(screenBounds.X, screenBounds.Y, 0, 0,
+            new Size(screenBounds.Width, screenBounds.Height));
 
-            using (var ms = new MemoryStream())
-            {
-                bitmap.Save(ms, ImageFormat.Png);
-                ms.Seek(0, SeekOrigin.Begin);
-                return new Bitmap(ms);
-            }
-        }
+        using var ms = new MemoryStream();
+        bitmap.Save(ms, ImageFormat.Bmp);
+        ms.Seek(0, SeekOrigin.Begin);
+        return new Bitmap(ms);
     }
     /// <summary>
     /// Crops the specified source image to the specified bounds.
@@ -48,11 +42,9 @@ public static class ScreenshotHelper
     {
         var croppedImage = new RenderTargetBitmap(new PixelSize((int)cropBounds.Width, (int)cropBounds.Height),
             new Vector(96, 96));
-        
-        using (var ctx = croppedImage.CreateDrawingContext(false))
-        {
-            ctx.DrawImage(source, cropBounds, new Rect(0, 0, cropBounds.Width, cropBounds.Height));
-        }
+
+        using var ctx = croppedImage.CreateDrawingContext(false);
+        ctx.DrawImage(source, cropBounds, new Rect(0, 0, cropBounds.Width, cropBounds.Height));
 
         return croppedImage;
     }
