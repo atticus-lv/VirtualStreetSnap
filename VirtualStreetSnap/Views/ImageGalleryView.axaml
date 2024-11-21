@@ -53,9 +53,15 @@
                     </Viewbox.ContextMenu>
                 </Viewbox>
                 <TextBlock Text="{Binding SelectedImageName}" Margin="2" />
-                <Button VerticalAlignment="Bottom" Background="Transparent" Command="{Binding ToggleThumbnailBar}">
-                    <PathIcon Data="{StaticResource ArrowMaximizeVerticalRegular}" Width="30" Height="30" />
-                </Button>
+                <StackPanel VerticalAlignment="Bottom" Background="Transparent" Orientation="Horizontal" Height="30" Opacity="0.7">
+                    <Button Command="{Binding ToggleThumbnailBar}">
+                                        <PathIcon Data="{StaticResource ArrowMaximizeVerticalRegular}" />
+                                    </Button>
+                    <Button Height="30" Command="{Binding ReLoadThumbnails}">
+                        <PathIcon Data="{StaticResource ApprovalsAppRegular}" ></PathIcon>
+                    </Button>
+                </StackPanel>
+                
             </Panel>
         </Border>
 

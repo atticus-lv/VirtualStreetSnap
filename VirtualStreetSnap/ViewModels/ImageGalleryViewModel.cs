@@ -44,19 +44,20 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     public ImageGalleryViewModel()
     {
-        LoadThumbnails(Config.Settings.SaveDirectory);
+        ReLoadThumbnails();
         Config.Settings.PropertyChanged += OnSettingsPropertyChanged;
     }
 
     private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(Settings.SaveDirectory)) LoadThumbnails(Config.Settings.SaveDirectory);
+        if (e.PropertyName == nameof(Settings.SaveDirectory)) ReLoadThumbnails();
     }
-
-    public void LoadThumbnails(string directoryPath)
+    
+    [RelayCommand]
+    public void ReLoadThumbnails()
     {
-        if (!Directory.Exists(directoryPath)) return;
-        _allImagePaths = Directory.GetFiles(directoryPath, "*.png").ToList();
+        if (!Directory.Exists(Config.Settings.SaveDirectory)) return;
+        _allImagePaths = Directory.GetFiles(Config.Settings.SaveDirectory, "*.png").ToList();
         Thumbnails.Clear();
         _currentBatchIndex = 0;
         LoadNextBatch();
