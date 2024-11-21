@@ -18,7 +18,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         OnTopMostCheckbox.IsCheckedChanged += (sender, e) => { Topmost = !Topmost; };
         ToggleGalleryButton.IsCheckedChanged += (sender, e) =>
-        {   
+        {
             if (ToggleGalleryButton.IsChecked == false) return;
             var viewModel = GalleryView.DataContext as ImageGalleryViewModel;
             viewModel?.ReLoadThumbnails();

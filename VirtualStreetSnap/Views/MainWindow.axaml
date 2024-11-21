@@ -23,7 +23,6 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-
     <Grid RowDefinitions="Auto,*" Margin="2">
         <Border Grid.Row="0" Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
                 Background="#111111" HorizontalAlignment="Stretch">
@@ -45,7 +44,8 @@
                     <Button>
                         <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
                             <PathIcon Data="{StaticResource TableRegular}" />
-                            <TextBlock VerticalAlignment="Center" Text="Guides" />
+                            <TextBlock VerticalAlignment="Center" Text="Guides"
+                                       IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
                         </StackPanel>
                         <Button.Flyout>
                             <Flyout Placement="BottomEdgeAlignedLeft">
@@ -69,24 +69,25 @@
                 </StackPanel>
                 <Button Grid.Column="1" Click="OnSaveImageButtonClick"
                         IsEnabled="{Binding !IsPreviewMode}"
-                        Width="150" HorizontalContentAlignment="Center">
-                    <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                        HorizontalContentAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="20 0 20 0">
                         <PathIcon Data="{StaticResource CameraRegular}" />
-                        <TextBlock Text="SnapShot" VerticalAlignment="Center" />
+                        <TextBlock Text="SnapShot" VerticalAlignment="Center"
+                                   IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=600}" />
                     </StackPanel>
                 </Button>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10 0 0 0 " Spacing="5">
                     <ToggleButton Name="ToggleGalleryButton" IsChecked="{Binding IsPreviewMode,Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal" Spacing="5">
-                            <PathIcon Data="{StaticResource ImageLibraryRegular}"></PathIcon>
-                            <TextBlock Text="Gallery" VerticalAlignment="Center"></TextBlock>
+                            <PathIcon Data="{StaticResource ImageLibraryRegular}" />
+                            <TextBlock Text="Gallery" VerticalAlignment="Center"
+                                       IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
                         </StackPanel>
                     </ToggleButton>
                     <Button>
                         <PathIcon Data="{StaticResource SettingsRegular}" />
                         <Button.Flyout>
                             <Flyout Placement='BottomEdgeAlignedRight'>
-
                                 <StackPanel Spacing="5" Width="200">
                                     <CheckBox Name="OnTopMostCheckbox">On Top</CheckBox>
                                     <TextBlock>File Prefix</TextBlock>
@@ -110,7 +111,6 @@
                         <TextBlock Text="X" FontSize="16" />
                     </Button>
                 </StackPanel>
-
             </Grid>
         </Border>
 
@@ -132,11 +132,10 @@
             <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch"
                        VerticalAlignment="Stretch"
                        IsHitTestVisible="False" />
-            
+
             <Panel IsVisible="{Binding IsPreviewMode}">
-                <views:ImageGalleryView Name="GalleryView"></views:ImageGalleryView>
+                <views:ImageGalleryView Name="GalleryView" />
             </Panel>
         </Panel>
     </Grid>
-
 </Window>

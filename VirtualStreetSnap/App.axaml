@@ -2,14 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="VirtualStreetSnap.App"
              xmlns:local="using:VirtualStreetSnap"
+             xmlns:converters="clr-namespace:VirtualStreetSnap.Converters"
              RequestedThemeVariant="Dark">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <!-- <Application.DataTemplates> -->
     <!--     <local:ViewLocator/> -->
     <!-- </Application.DataTemplates> -->
-  
-    <Application.Styles>
+
+             <Application.Resources>
+                 <converters:WidthToVisibilityConverter x:Key="WidthToVisibilityConverter" />
+             </Application.Resources>
+             <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://VirtualStreetSnap/Assets/Icons.axaml" />
     </Application.Styles>
