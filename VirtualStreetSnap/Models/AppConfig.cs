@@ -43,7 +43,7 @@ public class Guides
 
 public class AppConfig
 {
-    public string Version { get; set; } = "0.0.2";
+    public string Version { get; set; } = "1.0";
     public required Settings Settings { get; set; }
     public required Overlays Overlays { get; set; }
 }

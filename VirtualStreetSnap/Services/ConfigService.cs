@@ -48,7 +48,7 @@ public class ConfigService
     {
         return new AppConfig
         {
-            Version = "0.0.2",
+            Version = "1.0",
             Settings = new Settings
             {
                 SaveDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),

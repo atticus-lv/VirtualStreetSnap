@@ -63,7 +63,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         SelectedSizeRadio = RadioItems.First();
-        if (Config is null) return;
         ShowGuideLinesGrid = Config.Overlays.Guides.Grid;
         ShowGuideLinesCenter = Config.Overlays.Guides.Center;
         ShowGuideLinesRatio = Config.Overlays.Guides.Ratio;
@@ -85,6 +84,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Config.Overlays.Focus = ShowFocusBorder;
         Config.Settings.SaveDirectory = SaveDirectory;
         Config.Settings.FilePrefix = FilePrefix;
+        Config.Version = "1.0";
         ConfigService.SaveConfig();
         Environment.Exit(0);
     }
