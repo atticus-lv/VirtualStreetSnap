@@ -119,4 +119,11 @@ public partial class ImageGalleryViewModel : ViewModelBase
                 Verb = "open"
             });
     }
+
+    [RelayCommand]
+    public async void CopySelectedImage()
+    {
+        if (SelectedThumbnail == null) return;
+        await PowerShellClipBoard.SetImage(SelectedThumbnail.ImgPath);
+    }
 }
