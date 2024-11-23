@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Drawing;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Markup.Xaml;
 using VirtualStreetSnap.ViewModels;
+using Point = Avalonia.Point;
+using System.Windows.Forms;
+using VirtualStreetSnap.Services;
 
 namespace VirtualStreetSnap.Views;
 
@@ -23,10 +26,10 @@ public partial class ImageGalleryView : UserControl
     public ImageGalleryView()
     {
         InitializeComponent();
-        ScrollViewer scrollViewer = this.FindControl<ScrollViewer>("ThumbnailsScrollViewer");
+        var scrollViewer = this.FindControl<ScrollViewer>("ThumbnailsScrollViewer");
         scrollViewer.PointerWheelChanged += ScrollViewer_PointerWheelChanged;
 
-        Viewbox imageViewbox = this.FindControl<Viewbox>("ImageViewbox");
+        var imageViewbox = this.FindControl<Viewbox>("ImageViewbox");
         imageViewbox.PointerWheelChanged += ImageViewbox_PointerWheelChanged;
 
         var transformGroup = new TransformGroup();
@@ -47,17 +50,16 @@ public partial class ImageGalleryView : UserControl
     {
         if (sender is not ScrollViewer scrollViewer) return;
         if (!(scrollViewer.Offset.X >= scrollViewer.Extent.Width - scrollViewer.Viewport.Width)) return;
-        if (DataContext is ImageGalleryViewModel viewModel)
-        {
-            viewModel.LoadMoreThumbnailsCommand.Execute(null);
-        }
+        if (DataContext is ImageGalleryViewModel viewModel) viewModel.LoadMoreThumbnailsCommand.Execute(null);
     }
 
     private void ImageViewbox_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         if (sender is not Viewbox) return;
 
-        _currentScale = e.Delta.Y > 0 ? Math.Min(_currentScale + ScaleStep, MaxScale) : Math.Max(_currentScale - ScaleStep, MinScale);
+        _currentScale = e.Delta.Y > 0
+            ? Math.Min(_currentScale + ScaleStep, MaxScale)
+            : Math.Max(_currentScale - ScaleStep, MinScale);
 
         _scaleTransform.ScaleX = _currentScale;
         _scaleTransform.ScaleY = _currentScale;
@@ -91,7 +93,7 @@ public partial class ImageGalleryView : UserControl
         _translateTransform.X += delta.X;
         _translateTransform.Y += delta.Y;
     }
-    
+
     private void ResetImageViewBox(object? sender, RoutedEventArgs routedEventArgs)
     {
         _currentScale = 1.0;
@@ -100,6 +102,7 @@ public partial class ImageGalleryView : UserControl
         _translateTransform.X = 0;
         _translateTransform.Y = 0;
     }
+
     private void FlipHorizontally_Click(object? sender, RoutedEventArgs e)
     {
         _scaleTransform.ScaleX *= -1;

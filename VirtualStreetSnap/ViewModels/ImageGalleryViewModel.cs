@@ -15,21 +15,17 @@ namespace VirtualStreetSnap.ViewModels;
 
 public partial class ImageGalleryViewModel : ViewModelBase
 {
-    // The number of thumbnails to load at a time
     private const int BatchSize = 20;
-
-    // A list of all the image paths in the save directory
-    private List<string> _allImagePaths = [];
+    private List<string> _allImagePaths = new();
     private int _currentBatchIndex;
     private DateTime _lastCheckedTime = DateTime.MinValue;
+    private string _lastCheckedDirectory = string.Empty;
 
     [ObservableProperty]
     private bool _showThumbnailBar = true;
 
-    // A collection of ImageThumbViewModels representing the thumbnails
     [ObservableProperty]
-    private ObservableCollection<ImageThumbViewModel> _thumbnails = [];
-
+    private ObservableCollection<ImageThumbViewModel> _thumbnails = new();
 
     [ObservableProperty]
     private ImageThumbViewModel? _selectedThumbnail;
@@ -38,9 +34,8 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private Bitmap? _selectedImage;
 
     [ObservableProperty]
-    private string _selectedImageName = "";
+    private string _selectedImageName = string.Empty;
 
-    // The current configuration of the app, use for getting the save directory
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
 
@@ -52,7 +47,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(Settings.SaveDirectory)) ReLoadThumbnails();
+        ReLoadThumbnails();
     }
 
     [RelayCommand]
@@ -61,11 +56,13 @@ public partial class ImageGalleryViewModel : ViewModelBase
         if (!Directory.Exists(Config.Settings.SaveDirectory)) return;
 
         var lastWriteTime = Directory.GetLastWriteTime(Config.Settings.SaveDirectory);
-        if (lastWriteTime <= _lastCheckedTime) return;
+        if (lastWriteTime <= _lastCheckedTime && Config.Settings.SaveDirectory == _lastCheckedDirectory) return;
+
         _lastCheckedTime = lastWriteTime;
+        _lastCheckedDirectory = Config.Settings.SaveDirectory;
 
         _allImagePaths = Directory.GetFiles(Config.Settings.SaveDirectory, "*.png").ToList();
-        _allImagePaths.Reverse(); // reverse the list so the newest images are at the top
+        _allImagePaths.Reverse();
         Thumbnails.Clear();
         _currentBatchIndex = 0;
         LoadNextBatch();
@@ -97,7 +94,6 @@ public partial class ImageGalleryViewModel : ViewModelBase
         ShowThumbnailBar = !ShowThumbnailBar;
     }
 
-    // Commands for context menu
     [RelayCommand]
     public void DeleteSelectedThumbnail()
     {
@@ -122,5 +118,12 @@ public partial class ImageGalleryViewModel : ViewModelBase
                 UseShellExecute = true,
                 Verb = "open"
             });
+    }
+
+    [RelayCommand]
+    public async void CopySelectedImage()
+    {
+        if (SelectedThumbnail == null) return;
+        await PowerShellClipBoard.SetImage(SelectedThumbnail.ImgPath);
     }
 }

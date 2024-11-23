@@ -25,6 +25,15 @@
                     <Image Source="{Binding SelectedImage}" />
                     <Viewbox.ContextMenu>
                         <ContextMenu>
+                            <MenuItem Command="{Binding CopySelectedImage}">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource ImageCopyRegular}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Copy Image" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+
                             <MenuItem Click="ResetImageViewBox">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
@@ -57,15 +66,16 @@
                         <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
                     </TextBlock.Effect>
                 </TextBlock>
-                <StackPanel VerticalAlignment="Bottom" Background="Transparent" Orientation="Horizontal" Height="30" Opacity="0.7">
+                <StackPanel VerticalAlignment="Bottom" Background="Transparent" Orientation="Horizontal" Height="30"
+                            Opacity="0.7">
                     <Button Command="{Binding ToggleThumbnailBar}">
-                                        <PathIcon Data="{StaticResource ArrowMaximizeVerticalRegular}" />
-                                    </Button>
+                        <PathIcon Data="{StaticResource ArrowMaximizeVerticalRegular}" />
+                    </Button>
                     <Button Height="30" Command="{Binding ReLoadThumbnails}">
-                        <PathIcon Data="{StaticResource ApprovalsAppRegular}" ></PathIcon>
+                        <PathIcon Data="{StaticResource ApprovalsAppRegular}"></PathIcon>
                     </Button>
                 </StackPanel>
-                
+
             </Panel>
         </Border>
 
