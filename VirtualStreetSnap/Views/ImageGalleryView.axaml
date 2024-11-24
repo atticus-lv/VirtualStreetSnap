@@ -13,9 +13,9 @@
     </UserControl.DataContext>
 
     <Grid RowDefinitions="*,Auto" Background="#111111">
-        <!-- Selected Image Display -->
         <Border Grid.Row="0" CornerRadius="5" Padding="2">
             <Panel>
+                <!-- Selected Image Display -->
                 <TextBlock Text="Select an Image" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <Viewbox x:Name="ImageViewbox" Stretch="Uniform"
                          PointerPressed="ImageViewbox_PointerPressed"
@@ -24,24 +24,16 @@
                     <Image Source="{Binding SelectedImage}" />
                     <Viewbox.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding CopySelectedImage}">
+                            <MenuItem Click="OnShowColorPicker_Click">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <PathIcon Data="{StaticResource ImageCopyRegular}" />
-                                        <TextBlock VerticalAlignment="Center" Text="Copy Image" />
+                                        <PathIcon Data="{StaticResource ColorRegular}"></PathIcon>
+                                        <TextBlock VerticalAlignment="Center" Text="Pick Color" />
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
-
-                            <MenuItem Click="ResetImageViewBox">
-                                <MenuItem.Header>
-                                    <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <PathIcon Data="{StaticResource ArrowRotateLeftRegular}" />
-                                        <TextBlock VerticalAlignment="Center" Text="Reset Zoom" />
-                                    </StackPanel>
-                                </MenuItem.Header>
-                            </MenuItem>
-                            <MenuItem Click="FlipHorizontally_Click">
+                            <Separator></Separator>
+                            <MenuItem Click="OnFlipHorizontally_Click">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <PathIcon Data="{StaticResource FlipHorizontalRegular}" />
@@ -49,11 +41,28 @@
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
-                            <MenuItem Click="FlipVertically_Click">
+                            <MenuItem Click="OnFlipVertically_Click">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <PathIcon Data="{StaticResource FlipVerticalRegular}" />
                                         <TextBlock VerticalAlignment="Center" Text="Flip Vertically" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <MenuItem Click="OnResetImageViewBox_Click">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource ArrowRotateLeftRegular}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Reset Zoom" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <Separator></Separator>
+                            <MenuItem Command="{Binding CopySelectedImage}">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource ImageCopyRegular}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Copy Image" />
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
@@ -65,6 +74,7 @@
                         <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
                     </TextBlock.Effect>
                 </TextBlock>
+                <!-- tool button -->
                 <StackPanel VerticalAlignment="Bottom" Background="Transparent" Orientation="Horizontal" Height="30"
                             Opacity="0.7">
                     <Button Command="{Binding ToggleThumbnailBar}">
@@ -73,11 +83,10 @@
                     <Button Height="30" Command="{Binding ReLoadThumbnails}">
                         <PathIcon Data="{StaticResource ApprovalsAppRegular}"></PathIcon>
                     </Button>
-                    
-                    <Button Command="{Binding ToggleColorPicker}">
-                        <PathIcon Data="{StaticResource ColorRegular}"></PathIcon>
-                    </Button>
+
+
                 </StackPanel>
+                <!-- color picker -->
                 <Canvas IsVisible="{Binding ShowColorPicker}">
                     <Border Name="ColoPickerPanel" Canvas.Left="300" Canvas.Top="200"
                             Background="#111111" Margin="5" CornerRadius="4" IsHitTestVisible="False">
@@ -87,7 +96,8 @@
                         <StackPanel Margin="5" Spacing="5">
                             <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
                                 <Rectangle Name="ColorPickerRect" Fill="Aqua" Width="30" Height="30"></Rectangle>
-                                <TextBlock Name="ColorPickerTextHex" Text="Hex" Foreground="White" FontSize="16" VerticalAlignment="Center" />
+                                <TextBlock Name="ColorPickerTextHex" Text="Hex" Foreground="White" FontSize="16"
+                                           VerticalAlignment="Center" />
                             </StackPanel>
                             <TextBlock Name="ColorPickerTextRgb" Text="RGB" Foreground="White" FontSize="16" />
                         </StackPanel>

@@ -18,6 +18,7 @@ public partial class ImageGalleryView : UserControl
     private const double ScaleStep = 0.1;
     private const double MinScale = 0.5;
     private const double MaxScale = 10.0;
+    private Point _lastMovePoint;
     private Point _lastPanPoint;
     private bool _isPanning;
     private readonly ScaleTransform _scaleTransform = new();
@@ -67,23 +68,25 @@ public partial class ImageGalleryView : UserControl
     }
 
     private void ImageViewbox_PointerPressed(object? sender, PointerPressedEventArgs e)
-    {
+    {   
+        _lastMovePoint = e.GetPosition(this);
+        
         if (!e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed &&
             !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
         
         // Hide color picker when left mouse button is pressed, not middle button
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
-        {
+        {  
             if (DataContext is ImageGalleryViewModel { ShowColorPicker: true } viewModel)
             {   
                 viewModel.ShowColorPicker = false;
-                _ = PowerShellClipBoard.SetText(ColorPickerTextHex.Text);
+                _ = PowerShellClipBoard.SetText(ColorPickerTextHex.Text!);
             }
         }
         
         _isPanning = true;
-        _lastPanPoint = e.GetPosition(this);
-        e.Pointer.Capture((IInputElement)sender);
+        _lastPanPoint = _lastMovePoint;
+        e.Pointer.Capture((IInputElement)sender!);
     }
 
     private void ImageViewbox_PointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -97,18 +100,17 @@ public partial class ImageGalleryView : UserControl
     private void ImageViewbox_PointerMoved(object? sender, PointerEventArgs e)
     {   
 
-        if (DataContext is ImageGalleryViewModel { ShowColorPicker: true } viewModel )
-        {
-            var position = e.GetPosition(this);
-            var color = ScreenshotHelper.GetColorAtControl((Visual)sender!, position);
-            var colorHex = color.ToString().Substring(3);
-            Canvas.SetLeft(ColoPickerPanel, position.X);
-            Canvas.SetTop(ColoPickerPanel, position.Y);
-            Console.WriteLine(Canvas.GetLeft(ColoPickerPanel));
-            ColorPickerRect.Fill = new SolidColorBrush((uint)color);
-            ColorPickerTextHex.Text = $"#{colorHex}";
-            ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
-        }
+        
+        var position = e.GetPosition(this);
+        var color = ScreenshotHelper.GetColorAtControl((Visual)sender!, position);
+        var colorHex = color.ToString().Substring(3);
+        Canvas.SetLeft(ColoPickerPanel, position.X);
+        Canvas.SetTop(ColoPickerPanel, position.Y);
+        Console.WriteLine(Canvas.GetLeft(ColoPickerPanel));
+        ColorPickerRect.Fill = new SolidColorBrush((uint)color);
+        ColorPickerTextHex.Text = $"#{colorHex}";
+        ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
+        
         
         if (!_isPanning) return;
         var currentPoint = e.GetPosition(this);
@@ -119,7 +121,7 @@ public partial class ImageGalleryView : UserControl
         _translateTransform.Y += delta.Y;
     }
 
-    private void ResetImageViewBox(object? sender, RoutedEventArgs routedEventArgs)
+    private void OnResetImageViewBox_Click(object? sender, RoutedEventArgs routedEventArgs)
     {
         _currentScale = 1.0;
         _scaleTransform.ScaleX = _currentScale;
@@ -128,13 +130,21 @@ public partial class ImageGalleryView : UserControl
         _translateTransform.Y = 0;
     }
 
-    private void FlipHorizontally_Click(object? sender, RoutedEventArgs e)
+    private void OnFlipHorizontally_Click(object? sender, RoutedEventArgs e)
     {
         _scaleTransform.ScaleX *= -1;
     }
 
-    private void FlipVertically_Click(object? sender, RoutedEventArgs e)
+    private void OnFlipVertically_Click(object? sender, RoutedEventArgs e)
     {
         _scaleTransform.ScaleY *= -1;
+    }
+
+    private void OnShowColorPicker_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is ImageGalleryViewModel viewModel)
+        {
+            viewModel.ShowColorPicker = true;
+        }
     }
 }

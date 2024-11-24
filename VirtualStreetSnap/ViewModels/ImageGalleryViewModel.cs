@@ -130,9 +130,4 @@ public partial class ImageGalleryViewModel : ViewModelBase
         await PowerShellClipBoard.SetImage(SelectedThumbnail.ImgPath);
     }
     
-    [RelayCommand]
-    public void ToggleColorPicker()
-    {
-        ShowColorPicker = !ShowColorPicker;
-    }
 }
