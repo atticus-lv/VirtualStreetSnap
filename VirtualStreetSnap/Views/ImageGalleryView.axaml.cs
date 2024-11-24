@@ -105,19 +105,23 @@ public partial class ImageGalleryView : UserControl
     }
 
     private void ImageViewbox_PointerMoved(object? sender, PointerEventArgs e)
-    {
-        var position = e.GetPosition(this);
-        var color = ScreenshotHelper.GetColorAtControl((Visual)sender!, position);
-        var colorHex = color.ToString().Substring(3);
-        Canvas.SetLeft(ColoPickerPanel, position.X);
-        Canvas.SetTop(ColoPickerPanel, position.Y);
-        ColorPickerRect.Fill = new SolidColorBrush((uint)color);
-        ColorPickerTextHex.Text = $"#{colorHex}";
-        ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
-
-
-        if (!_isPanning) return;
+    {   
+        if (sender is not Viewbox) return;
         var currentPoint = e.GetPosition(this);
+
+        if (sender is Visual visual && currentPoint.X >= 0 && currentPoint.Y >= 0 &&
+            currentPoint.X < visual.Bounds.Width && currentPoint.Y < visual.Bounds.Height)
+        {
+            var color = ScreenshotHelper.GetColorAtControl(visual, currentPoint);
+            var colorHex = color.ToString().Substring(3);
+            Canvas.SetLeft(ColoPickerPanel, currentPoint.X);
+            Canvas.SetTop(ColoPickerPanel, currentPoint.Y);
+            ColorPickerRect.Fill = new SolidColorBrush((uint)color);
+            ColorPickerTextHex.Text = $"#{colorHex}";
+            ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
+        }
+        
+        if (!_isPanning) return;
         var delta = currentPoint - _lastPanPoint;
         _lastPanPoint = currentPoint;
 
