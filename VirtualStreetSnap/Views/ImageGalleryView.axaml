@@ -121,7 +121,7 @@
                       IsVisible="{Binding ShowThumbnailBar}">
             <ListBox ItemsSource="{Binding Thumbnails}"
                      SelectedItem="{Binding SelectedThumbnail}"
-                     HorizontalAlignment="Left" Background="Transparent"
+                     HorizontalAlignment="Left" Background="#111111"
                      SelectionMode="Single">
                 <ListBox.ContextMenu>
                     <ContextMenu>
