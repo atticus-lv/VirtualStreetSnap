@@ -15,11 +15,11 @@ namespace VirtualStreetSnap.ViewModels;
 
 public partial class ImageGalleryViewModel : ViewModelBase
 {
-    private const int BatchSize = 20;
-    private List<string> _allImagePaths = new();
-    private int _currentBatchIndex;
-    private DateTime _lastCheckedTime = DateTime.MinValue;
-    private string _lastCheckedDirectory = string.Empty;
+    private const int BatchSize = 20; // Number of thumbnails to load at a time
+    private List<string> _allImagePaths = new(); // All image paths in the save directory,user for lazy loading
+    private int _currentBatchIndex; // Current batch index for lazy loading
+    private DateTime _lastCheckedTime = DateTime.MinValue; // Last time the save directory was checked
+    private string _lastCheckedDirectory = string.Empty; // Last directory checked for new images
 
     [ObservableProperty]
     private bool _showColorPicker;
@@ -32,12 +32,6 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     [ObservableProperty]
     private ImageThumbViewModel? _selectedThumbnail;
-
-    [ObservableProperty]
-    private Bitmap? _selectedImage;
-
-    [ObservableProperty]
-    private string _selectedImageName = string.Empty;
 
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
@@ -79,17 +73,15 @@ public partial class ImageGalleryViewModel : ViewModelBase
         _currentBatchIndex++;
     }
 
+    partial void OnSelectedThumbnailChanged(ImageThumbViewModel? value)
+    { }
+
     [RelayCommand]
     public void LoadMoreThumbnails()
     {
         if (_currentBatchIndex * BatchSize < _allImagePaths.Count) LoadNextBatch();
     }
 
-    partial void OnSelectedThumbnailChanged(ImageThumbViewModel? value)
-    {
-        SelectedImage = value?.Image;
-        SelectedImageName = value?.ImgName ?? "Unknown";
-    }
 
     [RelayCommand]
     public void ToggleThumbnailBar()
@@ -129,5 +121,4 @@ public partial class ImageGalleryViewModel : ViewModelBase
         if (SelectedThumbnail == null) return;
         await PowerShellClipBoard.SetImage(SelectedThumbnail.ImgPath);
     }
-    
 }

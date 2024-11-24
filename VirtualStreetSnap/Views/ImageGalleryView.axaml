@@ -21,7 +21,7 @@
                          PointerPressed="ImageViewbox_PointerPressed"
                          PointerReleased="ImageViewbox_PointerReleased"
                          PointerMoved="ImageViewbox_PointerMoved">
-                    <Image Source="{Binding SelectedImage}" />
+                    <Image Source="{Binding SelectedThumbnail.Image}" />
                     <Viewbox.ContextMenu>
                         <ContextMenu>
                             <MenuItem Click="OnShowColorPicker_Click">
@@ -69,11 +69,20 @@
                         </ContextMenu>
                     </Viewbox.ContextMenu>
                 </Viewbox>
-                <TextBlock Text="{Binding SelectedImageName}" Margin="2">
-                    <TextBlock.Effect>
-                        <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
-                    </TextBlock.Effect>
-                </TextBlock>
+                <!-- image info -->
+                <StackPanel>
+                    <TextBlock Text="{Binding SelectedThumbnail.ImgName}" Margin="2">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock Text="{Binding SelectedThumbnail.ImgSize}" Margin="2">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+                
                 <!-- tool button -->
                 <StackPanel VerticalAlignment="Bottom" Background="Transparent" Orientation="Horizontal" Height="30"
                             Opacity="0.7">
@@ -83,8 +92,7 @@
                     <Button Height="30" Command="{Binding ReLoadThumbnails}">
                         <PathIcon Data="{StaticResource ApprovalsAppRegular}"></PathIcon>
                     </Button>
-
-
+                    
                 </StackPanel>
                 <!-- color picker -->
                 <Canvas IsVisible="{Binding ShowColorPicker}">

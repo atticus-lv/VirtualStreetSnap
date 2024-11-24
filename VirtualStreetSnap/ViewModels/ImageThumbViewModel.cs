@@ -11,8 +11,12 @@ public partial class ImageThumbViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _imgPath = "";
+    
+    [ObservableProperty]
+    public string _imgName;
 
-    public string ImgName;
+    [ObservableProperty]
+    public string _imgSize = "0x0";
     
     [ObservableProperty]
     private Bitmap _image;
@@ -22,6 +26,7 @@ public partial class ImageThumbViewModel : ViewModelBase
         ImgPath = File.Exists(imgPath) ? imgPath : DefaultImagePath;
         ImgName = Path.GetFileName(ImgPath);
         LoadImage(ImgPath);
+        ImgSize = $"{Image.Size.Width}x{Image.Size.Height}";
     }
 
 

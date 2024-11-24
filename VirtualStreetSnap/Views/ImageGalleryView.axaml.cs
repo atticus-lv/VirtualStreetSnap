@@ -109,7 +109,6 @@ public partial class ImageGalleryView : UserControl
         var colorHex = color.ToString().Substring(3);
         Canvas.SetLeft(ColoPickerPanel, position.X);
         Canvas.SetTop(ColoPickerPanel, position.Y);
-        Console.WriteLine(Canvas.GetLeft(ColoPickerPanel));
         ColorPickerRect.Fill = new SolidColorBrush((uint)color);
         ColorPickerTextHex.Text = $"#{colorHex}";
         ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
