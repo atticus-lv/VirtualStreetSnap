@@ -74,6 +74,7 @@ public partial class ImageGalleryView : UserControl
 
     private void ImageViewbox_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        if (sender is not Viewbox) return;
         _lastMovePoint = e.GetPosition(this);
 
         if (!e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed &&
@@ -95,7 +96,8 @@ public partial class ImageGalleryView : UserControl
     }
 
     private void ImageViewbox_PointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
+    {   
+        if (sender is not Viewbox) return;
         if (!_isPanning || (e.InitialPressMouseButton != MouseButton.Middle &&
                             e.InitialPressMouseButton != MouseButton.Left)) return;
         _isPanning = false;
