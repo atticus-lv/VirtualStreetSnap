@@ -12,19 +12,52 @@
         <viewModels:ImageGalleryViewModel />
     </UserControl.DataContext>
 
-
     <Grid RowDefinitions="*,Auto" Background="#111111">
-        <!-- Selected Image Display -->
         <Border Grid.Row="0" CornerRadius="5" Padding="2">
             <Panel>
+                <!-- Selected Image Display -->
                 <TextBlock Text="Select an Image" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <Viewbox x:Name="ImageViewbox" Stretch="Uniform"
                          PointerPressed="ImageViewbox_PointerPressed"
                          PointerReleased="ImageViewbox_PointerReleased"
                          PointerMoved="ImageViewbox_PointerMoved">
-                    <Image Source="{Binding SelectedImage}" />
+                    <Image Source="{Binding SelectedThumbnail.Image}" />
                     <Viewbox.ContextMenu>
                         <ContextMenu>
+                            <MenuItem Click="OnShowColorPicker_Click">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource ColorRegular}"></PathIcon>
+                                        <TextBlock VerticalAlignment="Center" Text="Pick Color" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <Separator></Separator>
+                            <MenuItem Click="OnFlipHorizontally_Click">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource FlipHorizontalRegular}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Flip Horizontally" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <MenuItem Click="OnFlipVertically_Click">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource FlipVerticalRegular}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Flip Vertically" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <MenuItem Click="OnResetImageViewBox_Click">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="{StaticResource ArrowRotateLeftRegular}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Reset Zoom" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <Separator></Separator>
                             <MenuItem Command="{Binding CopySelectedImage}">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
@@ -33,39 +66,24 @@
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
-
-                            <MenuItem Click="ResetImageViewBox">
-                                <MenuItem.Header>
-                                    <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <PathIcon Data="{StaticResource ArrowRotateLeftRegular}" />
-                                        <TextBlock VerticalAlignment="Center" Text="Reset Zoom" />
-                                    </StackPanel>
-                                </MenuItem.Header>
-                            </MenuItem>
-                            <MenuItem Click="FlipHorizontally_Click">
-                                <MenuItem.Header>
-                                    <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <PathIcon Data="{StaticResource FlipHorizontalRegular}" />
-                                        <TextBlock VerticalAlignment="Center" Text="Flip Horizontally" />
-                                    </StackPanel>
-                                </MenuItem.Header>
-                            </MenuItem>
-                            <MenuItem Click="FlipVertically_Click">
-                                <MenuItem.Header>
-                                    <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <PathIcon Data="{StaticResource FlipVerticalRegular}" />
-                                        <TextBlock VerticalAlignment="Center" Text="Flip Vertically" />
-                                    </StackPanel>
-                                </MenuItem.Header>
-                            </MenuItem>
                         </ContextMenu>
                     </Viewbox.ContextMenu>
                 </Viewbox>
-                <TextBlock Text="{Binding SelectedImageName}" Margin="2">
-                    <TextBlock.Effect>
-                        <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
-                    </TextBlock.Effect>
-                </TextBlock>
+                <!-- image info -->
+                <StackPanel>
+                    <TextBlock Text="{Binding SelectedThumbnail.ImgName}" Margin="2">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock Text="{Binding SelectedThumbnail.ImgSize}" Margin="2">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+                
+                <!-- tool button -->
                 <StackPanel VerticalAlignment="Bottom" Background="Transparent" Orientation="Horizontal" Height="30"
                             Opacity="0.7">
                     <Button Command="{Binding ToggleThumbnailBar}">
@@ -74,8 +92,25 @@
                     <Button Height="30" Command="{Binding ReLoadThumbnails}">
                         <PathIcon Data="{StaticResource ApprovalsAppRegular}"></PathIcon>
                     </Button>
+                    
                 </StackPanel>
-
+                <!-- color picker -->
+                <Canvas IsVisible="{Binding ShowColorPicker}">
+                    <Border Name="ColoPickerPanel" Canvas.Left="300" Canvas.Top="200"
+                            Background="#111111" Margin="5" CornerRadius="4" IsHitTestVisible="False">
+                        <Border.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
+                        </Border.Effect>
+                        <StackPanel Margin="5" Spacing="5">
+                            <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                                <Rectangle Name="ColorPickerRect" Fill="Aqua" Width="30" Height="30"></Rectangle>
+                                <TextBlock Name="ColorPickerTextHex" Text="Hex" Foreground="White" FontSize="16"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock Name="ColorPickerTextRgb" Text="RGB" Foreground="White" FontSize="16" />
+                        </StackPanel>
+                    </Border>
+                </Canvas>
             </Panel>
         </Border>
 
@@ -86,7 +121,7 @@
                       IsVisible="{Binding ShowThumbnailBar}">
             <ListBox ItemsSource="{Binding Thumbnails}"
                      SelectedItem="{Binding SelectedThumbnail}"
-                     HorizontalAlignment="Left" Background="Transparent"
+                     HorizontalAlignment="Left" Background="#111111"
                      SelectionMode="Single">
                 <ListBox.ContextMenu>
                     <ContextMenu>

@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Avalonia.Media.Imaging;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
@@ -13,7 +13,7 @@ using VirtualStreetSnap.Services;
 
 namespace VirtualStreetSnap.ViewModels;
 
-public partial class ImageGalleryViewModel : ViewModelBase
+public class LazyLoadManager
 {
     private const int BatchSize = 20;
     private List<string> _allImagePaths = new();
@@ -21,23 +21,50 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private DateTime _lastCheckedTime = DateTime.MinValue;
     private string _lastCheckedDirectory = string.Empty;
 
-    [ObservableProperty]
-    private bool _showThumbnailBar = true;
+    public ObservableCollection<ImageThumbViewModel> Thumbnails { get; } = new();
+
+    public void Initialize(string saveDirectory)
+    {
+        if (!Directory.Exists(saveDirectory)) return;
+
+        var lastWriteTime = Directory.GetLastWriteTime(saveDirectory);
+        if (lastWriteTime <= _lastCheckedTime && saveDirectory == _lastCheckedDirectory) return;
+
+        _lastCheckedTime = lastWriteTime;
+        _lastCheckedDirectory = saveDirectory;
+
+        _allImagePaths = Directory.GetFiles(saveDirectory, "*.png").ToList();
+        _allImagePaths.Reverse();
+        Thumbnails.Clear();
+        _currentBatchIndex = 0;
+        LoadNextBatch();
+    }
+
+    public void LoadNextBatch()
+    {
+        var nextBatch = _allImagePaths.Skip(_currentBatchIndex * BatchSize).Take(BatchSize);
+        foreach (var file in nextBatch) Thumbnails.Add(new ImageThumbViewModel(file));
+        _currentBatchIndex++;
+    }
+}
+
+public partial class ImageGalleryViewModel : ViewModelBase
+{
+    private readonly LazyLoadManager _lazyLoadManager = new();
 
     [ObservableProperty]
-    private ObservableCollection<ImageThumbViewModel> _thumbnails = new();
+    private bool _showColorPicker;
+
+    [ObservableProperty]
+    private bool _showThumbnailBar = true;
 
     [ObservableProperty]
     private ImageThumbViewModel? _selectedThumbnail;
 
     [ObservableProperty]
-    private Bitmap? _selectedImage;
-
-    [ObservableProperty]
-    private string _selectedImageName = string.Empty;
-
-    [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
+
+    public ObservableCollection<ImageThumbViewModel> Thumbnails => _lazyLoadManager.Thumbnails;
 
     public ImageGalleryViewModel()
     {
@@ -53,39 +80,14 @@ public partial class ImageGalleryViewModel : ViewModelBase
     [RelayCommand]
     public void ReLoadThumbnails()
     {
-        if (!Directory.Exists(Config.Settings.SaveDirectory)) return;
-
-        var lastWriteTime = Directory.GetLastWriteTime(Config.Settings.SaveDirectory);
-        if (lastWriteTime <= _lastCheckedTime && Config.Settings.SaveDirectory == _lastCheckedDirectory) return;
-
-        _lastCheckedTime = lastWriteTime;
-        _lastCheckedDirectory = Config.Settings.SaveDirectory;
-
-        _allImagePaths = Directory.GetFiles(Config.Settings.SaveDirectory, "*.png").ToList();
-        _allImagePaths.Reverse();
-        Thumbnails.Clear();
-        _currentBatchIndex = 0;
-        LoadNextBatch();
+        _lazyLoadManager.Initialize(Config.Settings.SaveDirectory);
         if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails[0];
-    }
-
-    private void LoadNextBatch()
-    {
-        var nextBatch = _allImagePaths.Skip(_currentBatchIndex * BatchSize).Take(BatchSize);
-        foreach (var file in nextBatch) Thumbnails.Add(new ImageThumbViewModel(file));
-        _currentBatchIndex++;
     }
 
     [RelayCommand]
     public void LoadMoreThumbnails()
     {
-        if (_currentBatchIndex * BatchSize < _allImagePaths.Count) LoadNextBatch();
-    }
-
-    partial void OnSelectedThumbnailChanged(ImageThumbViewModel? value)
-    {
-        SelectedImage = value?.Image;
-        SelectedImageName = value?.ImgName ?? "Unknown";
+        _lazyLoadManager.LoadNextBatch();
     }
 
     [RelayCommand]
@@ -121,7 +123,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public async void CopySelectedImage()
+    public async Task CopySelectedImage()
     {
         if (SelectedThumbnail == null) return;
         await PowerShellClipBoard.SetImage(SelectedThumbnail.ImgPath);

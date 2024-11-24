@@ -24,6 +24,16 @@ public static class PowerShellClipBoard
 
         await ExecutePowerShell(script);
     }
+    
+    public static async Task SetText(string text)
+    {
+        string script = $@"
+            Add-Type -AssemblyName System.Windows.Forms;
+            [System.Windows.Forms.Clipboard]::SetText('{text}');
+        ";
+
+        await ExecutePowerShell(script);
+    }
 
     private static async Task ExecutePowerShell(string script)
     {
