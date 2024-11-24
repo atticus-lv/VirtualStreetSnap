@@ -70,6 +70,17 @@ public partial class ImageGalleryView : UserControl
     {
         if (!e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed &&
             !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
+        
+        // Hide color picker when left mouse button is pressed, not middle button
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            if (DataContext is ImageGalleryViewModel { ShowColorPicker: true } viewModel)
+            {   
+                viewModel.ShowColorPicker = false;
+                _ = PowerShellClipBoard.SetText(ColorPickerTextHex.Text);
+            }
+        }
+        
         _isPanning = true;
         _lastPanPoint = e.GetPosition(this);
         e.Pointer.Capture((IInputElement)sender);
@@ -84,7 +95,21 @@ public partial class ImageGalleryView : UserControl
     }
 
     private void ImageViewbox_PointerMoved(object? sender, PointerEventArgs e)
-    {
+    {   
+
+        if (DataContext is ImageGalleryViewModel { ShowColorPicker: true } viewModel )
+        {
+            var position = e.GetPosition(this);
+            var color = ScreenshotHelper.GetColorAtControl((Visual)sender!, position);
+            var colorHex = color.ToString().Substring(3);
+            Canvas.SetLeft(ColoPickerPanel, position.X);
+            Canvas.SetTop(ColoPickerPanel, position.Y);
+            Console.WriteLine(Canvas.GetLeft(ColoPickerPanel));
+            ColorPickerRect.Fill = new SolidColorBrush((uint)color);
+            ColorPickerTextHex.Text = $"#{colorHex}";
+            ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
+        }
+        
         if (!_isPanning) return;
         var currentPoint = e.GetPosition(this);
         var delta = currentPoint - _lastPanPoint;

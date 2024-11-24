@@ -22,6 +22,9 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private string _lastCheckedDirectory = string.Empty;
 
     [ObservableProperty]
+    private bool _showColorPicker;
+
+    [ObservableProperty]
     private bool _showThumbnailBar = true;
 
     [ObservableProperty]
@@ -125,5 +128,11 @@ public partial class ImageGalleryViewModel : ViewModelBase
     {
         if (SelectedThumbnail == null) return;
         await PowerShellClipBoard.SetImage(SelectedThumbnail.ImgPath);
+    }
+    
+    [RelayCommand]
+    public void ToggleColorPicker()
+    {
+        ShowColorPicker = !ShowColorPicker;
     }
 }
