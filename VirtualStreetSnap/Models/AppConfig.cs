@@ -3,7 +3,7 @@
 namespace VirtualStreetSnap.Models;
 
 public class Settings
-{   
+{
     public required string FilePrefix { get; set; } = "IMG";
     private string _saveDirectory;
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -19,11 +19,12 @@ public class Settings
         }
     }
 
+    public string Language { get; set; } = "en-US";
+
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
 }
 
 public class Overlays

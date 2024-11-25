@@ -1,0 +1,26 @@
+﻿
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+    <system:String x:Key="My.Lang.Greetings">欢迎来到 Avalonia :-)</system:String>
+    <system:String x:Key="My.Lang.HelloWorld">你好世界</system:String>
+    <system:String x:Key="My.Lang.FilePrefix">文件前缀</system:String>
+    <system:String x:Key="My.Lang.SaveDirectory">保存目录</system:String>
+    <system:String x:Key="My.Lang.Language">语言</system:String>
+    <system:String x:Key="My.Lang.Gallery">图库</system:String>
+    <system:String x:Key="My.Lang.SnapShot">快照</system:String>
+    <system:String x:Key="My.Lang.Opacity">透明度</system:String>
+    <system:String x:Key="My.Lang.Grid">网格</system:String>
+    <system:String x:Key="My.Lang.Center">中心</system:String>
+    <system:String x:Key="My.Lang.Ratio">比例</system:String>
+    <system:String x:Key="My.Lang.Guides">引导</system:String>
+    <system:String x:Key="My.Lang.SelectanImage">选择图像</system:String>
+    <system:String x:Key="My.Lang.CopyImage">复制图像</system:String>
+    <system:String x:Key="My.Lang.ResetZoom">重置缩放</system:String>
+    <system:String x:Key="My.Lang.FlipVertically">垂直翻转</system:String>
+    <system:String x:Key="My.Lang.FlipHorizontally">水平翻转</system:String>
+    <system:String x:Key="My.Lang.PickColor">拾取颜色</system:String>
+    <system:String x:Key="My.Lang.Delete">删除</system:String>
+    <system:String x:Key="My.Lang.OpenInFolder">在文件夹中打开</system:String>
+    <system:String x:Key="My.Lang.OnTop">置顶</system:String>
+</ResourceDictionary>
