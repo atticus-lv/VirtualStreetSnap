@@ -109,17 +109,17 @@
                 <!-- color picker -->
                 <Canvas IsVisible="{Binding ShowColorPicker}">
                     <Border Name="ColoPickerPanel" Canvas.Left="300" Canvas.Top="200"
-                            Background="#111111" Margin="5" CornerRadius="4" IsHitTestVisible="False">
+                            Background="#111111"  CornerRadius="4" IsHitTestVisible="False" >
                         <Border.Effect>
                             <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
                         </Border.Effect>
-                        <StackPanel Margin="5" Spacing="5" HorizontalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Rectangle Name="ColorPickerRect" Fill="Aqua" Width="30" Height="30" RadiusX="4" RadiusY="4"/>
-                                <TextBlock Name="ColorPickerTextHex" Text="Hex" Foreground="White" FontSize="16"
-                                           VerticalAlignment="Center" />
+                        <StackPanel Margin="10 5 5 5" Spacing="10" HorizontalAlignment="Left" Orientation="Horizontal">
+                            <Rectangle Name="ColorPickerRect" Fill="Aqua" Width="40" Height="40" RadiusX="4" RadiusY="4"/>
+                            <StackPanel  VerticalAlignment="Center">
+                                <TextBlock Name="ColorPickerTextHex" Text="Hex" Foreground="Gainsboro" FontSize="16" />
+                                <TextBlock Name="ColorPickerTextRgb" Text="RGB" Foreground="Gray" FontSize="12" />
+                                <TextBlock Name="ColorPickerTextHsv" Text="HSV" Foreground="Gray" FontSize="12" />
                             </StackPanel>
-                            <TextBlock Name="ColorPickerTextRgb" Text="RGB" Foreground="Gray" FontSize="16" />
                         </StackPanel>
                     </Border>
                 </Canvas>

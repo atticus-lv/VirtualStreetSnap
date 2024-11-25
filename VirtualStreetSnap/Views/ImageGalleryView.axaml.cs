@@ -127,11 +127,15 @@ public partial class ImageGalleryView : UserControl
             {
                 var color = ScreenshotHelper.GetColorAtControl(image, imagePoint);
                 var colorHex = color.ToString().Substring(3);
+                color.ToHsv(out var h, out var s, out var v);
+
                 Canvas.SetLeft(ColoPickerPanel, e.GetPosition(this).X);
                 Canvas.SetTop(ColoPickerPanel, e.GetPosition(this).Y);
+
                 ColorPickerRect.Fill = new SolidColorBrush((uint)color);
                 ColorPickerTextHex.Text = $"#{colorHex}";
-                ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
+                ColorPickerTextRgb.Text = $"RGB({color.Red,3}, {color.Green,3}, {color.Blue,3})";
+                ColorPickerTextHsv.Text = $"HSV({(int)h,3}, {(int)s,3}, {(int)v,3})";
             }
         }
 
