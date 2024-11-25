@@ -16,7 +16,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        OnTopMostCheckbox.IsCheckedChanged += (sender, e) => { Topmost = !Topmost; };
+        // OnTopMostCheckbox.IsCheckedChanged += (sender, e) => { Topmost = !Topmost; };
         ToggleGalleryButton.IsCheckedChanged += (sender, e) =>
         {
             if (ToggleGalleryButton.IsChecked == false) return;
@@ -31,7 +31,7 @@ public partial class MainWindow : Window
         BeginMoveDrag(e);
     }
 
-    private async void OnSaveImageButtonClick(object? sender, RoutedEventArgs e)
+    private async void SnapshotButton_Click(object? sender, RoutedEventArgs e)
     {
         CompositionGuides.IsVisible = false;
         var currentScreen = Screens.Primary;
@@ -82,5 +82,15 @@ public partial class MainWindow : Window
         Width = width;
         Height = contentHeight + toolBarHeight;
         Position = new PixelPoint((int)endX, (int)endY);
+    }
+
+    private void ToggleGalleryButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (ToggleGalleryButton.IsChecked == true) ToggleSettingsButton.IsChecked = false;
+    }
+
+    private void ToggleSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (ToggleSettingsButton.IsChecked == true) ToggleGalleryButton.IsChecked = false;
     }
 }
