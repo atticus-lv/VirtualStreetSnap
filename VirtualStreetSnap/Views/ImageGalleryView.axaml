@@ -107,13 +107,13 @@
                         <Border.Effect>
                             <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
                         </Border.Effect>
-                        <StackPanel Margin="5" Spacing="5">
-                            <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
-                                <Rectangle Name="ColorPickerRect" Fill="Aqua" Width="30" Height="30"></Rectangle>
+                        <StackPanel Margin="5" Spacing="5" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Rectangle Name="ColorPickerRect" Fill="Aqua" Width="30" Height="30" RadiusX="4" RadiusY="4"/>
                                 <TextBlock Name="ColorPickerTextHex" Text="Hex" Foreground="White" FontSize="16"
                                            VerticalAlignment="Center" />
                             </StackPanel>
-                            <TextBlock Name="ColorPickerTextRgb" Text="RGB" Foreground="White" FontSize="16" />
+                            <TextBlock Name="ColorPickerTextRgb" Text="RGB" Foreground="Gray" FontSize="16" />
                         </StackPanel>
                     </Border>
                 </Canvas>

@@ -97,7 +97,7 @@ public partial class ImageGalleryView : UserControl
     }
 
     private void ImageViewbox_PointerReleased(object? sender, PointerReleasedEventArgs e)
-    {   
+    {
         if (sender is not Viewbox) return;
         if (!_isPanning || (e.InitialPressMouseButton != MouseButton.Middle &&
                             e.InitialPressMouseButton != MouseButton.Left)) return;
@@ -106,7 +106,7 @@ public partial class ImageGalleryView : UserControl
     }
 
     private void ImageViewbox_PointerMoved(object? sender, PointerEventArgs e)
-    {   
+    {
         if (sender is not Viewbox viewbox) return;
         var currentPoint = e.GetPosition(viewbox);
 
@@ -134,7 +134,7 @@ public partial class ImageGalleryView : UserControl
                 ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
             }
         }
-        
+
         if (!_isPanning) return;
         var delta = e.GetPosition(this) - _lastPanPoint;
         _lastPanPoint = e.GetPosition(this);
