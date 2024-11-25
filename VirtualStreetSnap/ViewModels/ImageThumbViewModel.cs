@@ -13,10 +13,13 @@ public partial class ImageThumbViewModel : ViewModelBase
     private string _imgPath = "";
     
     [ObservableProperty]
+    private string _imgDir = "";
+    
+    [ObservableProperty]
     public string _imgName;
 
     [ObservableProperty]
-    public string _imgSize = "0x0";
+    public string _imgSize = "0 x 0";
     
     [ObservableProperty]
     private Bitmap _image;
@@ -24,9 +27,10 @@ public partial class ImageThumbViewModel : ViewModelBase
     public ImageThumbViewModel(string imgPath)
     {
         ImgPath = File.Exists(imgPath) ? imgPath : DefaultImagePath;
+        ImgDir = (Path.GetDirectoryName(ImgPath) ?? "").Replace("\\","/");
         ImgName = Path.GetFileName(ImgPath);
         LoadImage(ImgPath);
-        ImgSize = $"{Image.Size.Width}x{Image.Size.Height}";
+        ImgSize = $"{Image.Size.Width} x {Image.Size.Height}";
     }
 
 
