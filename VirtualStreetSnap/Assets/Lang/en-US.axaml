@@ -1,0 +1,26 @@
+﻿
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+    <system:String x:Key="My.Lang.Greetings">Welcome to Avalonia :-)</system:String>
+    <system:String x:Key="My.Lang.HelloWorld">Hello World</system:String>
+    <system:String x:Key="My.Lang.FilePrefix">File Prefix</system:String>
+    <system:String x:Key="My.Lang.SaveDirectory">Save Directory</system:String>
+    <system:String x:Key="My.Lang.Language">Language</system:String>
+    <system:String x:Key="My.Lang.Gallery">Gallery</system:String>
+    <system:String x:Key="My.Lang.SnapShot">SnapShot</system:String>
+    <system:String x:Key="My.Lang.Opacity">Opacity</system:String>
+    <system:String x:Key="My.Lang.Grid">Grid</system:String>
+    <system:String x:Key="My.Lang.Center">Center</system:String>
+    <system:String x:Key="My.Lang.Ratio">Ratio</system:String>
+    <system:String x:Key="My.Lang.Guides">Guides</system:String>
+    <system:String x:Key="My.Lang.SelectanImage">Select an Image</system:String>
+    <system:String x:Key="My.Lang.CopyImage">Copy Image</system:String>
+    <system:String x:Key="My.Lang.ResetZoom">Reset Zoom</system:String>
+    <system:String x:Key="My.Lang.FlipVertically">Flip Vertically</system:String>
+    <system:String x:Key="My.Lang.FlipHorizontally">Flip Horizontally</system:String>
+    <system:String x:Key="My.Lang.PickColor">Pick Color</system:String>
+    <system:String x:Key="My.Lang.Delete">Delete</system:String>
+    <system:String x:Key="My.Lang.OpenInFolder">Open In Folder</system:String>
+    <system:String x:Key="My.Lang.OnTop">On Top</system:String>
+</ResourceDictionary>

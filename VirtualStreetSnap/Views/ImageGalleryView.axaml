@@ -16,7 +16,8 @@
         <Border Grid.Row="0" CornerRadius="5" Padding="2">
             <Panel>
                 <!-- Selected Image Display -->
-                <TextBlock Text="Select an Image" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Text="{DynamicResource My.Lang.SelectanImage}" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
                 <Viewbox x:Name="ImageViewbox" Stretch="Uniform"
                          PointerPressed="ImageViewbox_PointerPressed"
                          PointerReleased="ImageViewbox_PointerReleased"
@@ -28,7 +29,8 @@
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <PathIcon Data="{StaticResource ColorRegular}"></PathIcon>
-                                        <TextBlock VerticalAlignment="Center" Text="Pick Color" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{DynamicResource My.Lang.PickColor}" />
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
@@ -37,7 +39,8 @@
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <PathIcon Data="{StaticResource FlipHorizontalRegular}" />
-                                        <TextBlock VerticalAlignment="Center" Text="Flip Horizontally" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{DynamicResource My.Lang.FlipHorizontally}" />
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
@@ -45,7 +48,8 @@
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <PathIcon Data="{StaticResource FlipVerticalRegular}" />
-                                        <TextBlock VerticalAlignment="Center" Text="Flip Vertically" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{DynamicResource My.Lang.FlipVertically}" />
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
@@ -53,7 +57,8 @@
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <PathIcon Data="{StaticResource ArrowRotateLeftRegular}" />
-                                        <TextBlock VerticalAlignment="Center" Text="Reset Zoom" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{DynamicResource My.Lang.ResetZoom}" />
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
@@ -62,7 +67,8 @@
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <PathIcon Data="{StaticResource ImageCopyRegular}" />
-                                        <TextBlock VerticalAlignment="Center" Text="Copy Image" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{DynamicResource My.Lang.CopyImage}" />
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
@@ -82,7 +88,7 @@
                         </TextBlock.Effect>
                     </TextBlock>
                 </StackPanel>
-                
+
                 <!-- tool button -->
                 <StackPanel VerticalAlignment="Bottom" Background="Transparent" Orientation="Horizontal" Height="30"
                             Opacity="0.7">
@@ -92,7 +98,7 @@
                     <Button Height="30" Command="{Binding ReLoadThumbnails}">
                         <PathIcon Data="{StaticResource ApprovalsAppRegular}"></PathIcon>
                     </Button>
-                    
+
                 </StackPanel>
                 <!-- color picker -->
                 <Canvas IsVisible="{Binding ShowColorPicker}">
@@ -125,8 +131,9 @@
                      SelectionMode="Single">
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Delete" Command="{Binding DeleteSelectedThumbnail}" />
-                        <MenuItem Header="Open In Folder" Command="{Binding OpenSelectedThumbnailFolder}" />
+                        <MenuItem Header="{DynamicResource My.Lang.Delete}" Command="{Binding DeleteSelectedThumbnail}" />
+                        <MenuItem Header="{DynamicResource My.Lang.OpenInFolder}"
+                                  Command="{Binding OpenSelectedThumbnailFolder}" />
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.ItemsPanel>

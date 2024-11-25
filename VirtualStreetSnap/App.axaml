@@ -4,16 +4,22 @@
              xmlns:local="using:VirtualStreetSnap"
              xmlns:converters="clr-namespace:VirtualStreetSnap.Converters"
              RequestedThemeVariant="Dark">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <!-- <Application.DataTemplates> -->
     <!--     <local:ViewLocator/> -->
     <!-- </Application.DataTemplates> -->
 
-             <Application.Resources>
-                 <converters:WidthToVisibilityConverter x:Key="WidthToVisibilityConverter" />
-             </Application.Resources>
-             <Application.Styles>
+    <Application.Resources>
+        <ResourceDictionary>
+            <converters:WidthToVisibilityConverter x:Key="WidthToVisibilityConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Assets/Lang/en-US.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://VirtualStreetSnap/Assets/Icons.axaml" />
     </Application.Styles>
