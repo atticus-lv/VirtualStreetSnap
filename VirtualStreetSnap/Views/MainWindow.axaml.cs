@@ -51,9 +51,9 @@ public partial class MainWindow : Window
         // save screenshot
 
         var _viewModel = (MainWindowViewModel)DataContext;
-        var saveDir = _viewModel.SaveDirectory;
+        var saveDir = _viewModel.Config.Settings.SaveDirectory;
         if (!Path.Exists(saveDir)) Directory.CreateDirectory(saveDir);
-        var filePrefix = _viewModel.FilePrefix;
+        var filePrefix = _viewModel.Config.Settings.FilePrefix;
         filePrefix = new string(filePrefix.Select(c => Path.GetInvalidFileNameChars().Contains(c) ? '_' : c).ToArray());
 
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
