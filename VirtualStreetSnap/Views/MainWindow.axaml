@@ -38,39 +38,11 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <ToggleButton IsChecked="{Binding !ShowFocusBorder, Mode=TwoWay}">
-                        <PathIcon Data="{StaticResource ScreenshotRegular}" />
-                    </ToggleButton>
-                    <Button>
-                        <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
-                            <PathIcon Data="{StaticResource TableRegular}" />
-                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource My.Lang.Guides}"
-                                       IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
-                        </StackPanel>
-                        <Button.Flyout>
-                            <Flyout Placement="BottomEdgeAlignedLeft">
-                                <StackPanel Width="200">
-                                    <CheckBox Content="{DynamicResource My.Lang.Grid}"
-                                              IsChecked="{Binding ShowGuideLinesGrid, Mode=TwoWay}" />
-                                    <CheckBox Content="{DynamicResource My.Lang.Center}"
-                                              IsChecked="{Binding ShowGuideLinesCenter, Mode=TwoWay}" />
-                                    <CheckBox Content="{DynamicResource My.Lang.Ratio}"
-                                              IsChecked="{Binding ShowGuideLinesRatio, Mode=TwoWay}" />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
-                                                VerticalAlignment="Center">
-                                        <NumericUpDown Maximum="1" Minimum="0" Increment="0.1"
-                                                       Value="{Binding GuideLinesOpacity}" Margin="0 0 10 0" />
-                                        <TextBlock Text="{DynamicResource My.Lang.Opacity}" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
                 </StackPanel>
                 <Button Grid.Column="1" Click="SnapshotButton_Click" HorizontalContentAlignment="Center">
                     <Button.IsEnabled>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
-                            <Binding Path="!IsGalleryView" /> 
+                            <Binding Path="!IsGalleryView" />
                             <Binding Path="!IsSettingsView" />
                         </MultiBinding>
                     </Button.IsEnabled>
@@ -106,27 +78,10 @@
                 </StackPanel>
             </Grid>
         </Border>
-
-
+        
         <Panel Grid.Row="1">
             <Panel Name="CompositionGuides">
-                <Panel.IsVisible>
-                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                        <Binding Path="!IsGalleryView" /> 
-                        <Binding Path="!IsSettingsView" />
-                    </MultiBinding>
-                </Panel.IsVisible>
-                <Grid Name="GuidesGridThird" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
-                      Opacity="{Binding GuideLinesOpacity}"
-                      IsVisible="{Binding ShowGuideLinesGrid}" />
-                <Grid Name="GuideGridCenter" ShowGridLines="True" RowDefinitions="*,*" ColumnDefinitions="*,*"
-                      Opacity="{Binding GuideLinesOpacity}"
-                      IsVisible="{Binding ShowGuideLinesCenter}" />
-                <Grid Name="GuideGridRatio" ShowGridLines="True" RowDefinitions="1*,0.618*,1*"
-                      ColumnDefinitions="1*,0.618*,1*" Opacity="{Binding GuideLinesOpacity}"
-                      IsVisible="{Binding ShowGuideLinesRatio}" />
-                <Border BorderBrush="Brown" BorderThickness="10" Opacity="0.5"
-                        IsVisible="{Binding ShowFocusBorder}" />
+                <views:CompositionGuidesView></views:CompositionGuidesView>
             </Panel>
 
             <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch"

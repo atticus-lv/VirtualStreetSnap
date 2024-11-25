@@ -27,27 +27,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private SizeRadio? _selectedSizeRadio;
 
     [ObservableProperty]
-    private LanguageModel _selectedLanguage;
-
-    [ObservableProperty]
-    private bool _showFocusBorder = true;
-
-    [ObservableProperty]
-    private bool _showGuideLinesGrid = true;
-
-    [ObservableProperty]
-    private bool _showGuideLinesCenter;
-
-    [ObservableProperty]
-    private bool _showGuideLinesRatio;
-
-    [ObservableProperty]
-    private float _guideLinesOpacity = 0.5f;
-
-    [ObservableProperty]
-    private Color _borderColor = Colors.Brown;
-
-    [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
 
 
@@ -70,13 +49,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         SelectedSizeRadio = RadioItems.First();
-        ShowGuideLinesGrid = Config.Overlays.Guides.Grid;
-        ShowGuideLinesCenter = Config.Overlays.Guides.Center;
-        ShowGuideLinesRatio = Config.Overlays.Guides.Ratio;
-        ShowFocusBorder = Config.Overlays.Focus;
-
-        // Set the default values if the config is not existing
-        ConfigService.SaveConfig();
+        ConfigService.SaveIfNotExists();
     }
 
     [RelayCommand]
@@ -84,10 +57,6 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (Design.IsDesignMode) return;
         // Save the config before closing the app
-        Config.Overlays.Guides.Grid = ShowGuideLinesGrid;
-        Config.Overlays.Guides.Center = ShowGuideLinesCenter;
-        Config.Overlays.Guides.Ratio = ShowGuideLinesRatio;
-        Config.Overlays.Focus = ShowFocusBorder;
         Config.Version = "1.0";
         ConfigService.SaveConfig();
         Environment.Exit(0);
