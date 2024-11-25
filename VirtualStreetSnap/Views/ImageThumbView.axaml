@@ -5,12 +5,11 @@
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
              mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="100"
              x:Class="VirtualStreetSnap.Views.ImageThumbView"
-             x:DataType="viewModels:ImageThumbViewModel"
-             Width="100" Height="100"
-             >
+             x:DataType="viewModels:ImageBaseViewModel"
+             Width="100" Height="100">
     
     <Design.DataContext>
-        <viewModels:ImageThumbViewModel />
+        <viewModels:ImageBaseViewModel />
     </Design.DataContext>
     
     <Border  CornerRadius="5" Padding="2">

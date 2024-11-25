@@ -21,7 +21,7 @@ public class LazyLoadManager
     private DateTime _lastCheckedTime = DateTime.MinValue;
     private string _lastCheckedDirectory = string.Empty;
 
-    public ObservableCollection<ImageThumbViewModel> Thumbnails { get; } = new();
+    public ObservableCollection<ImageBaseViewModel> Thumbnails { get; } = new();
 
     public void Initialize(string saveDirectory)
     {
@@ -43,7 +43,7 @@ public class LazyLoadManager
     public void LoadNextBatch()
     {
         var nextBatch = _allImagePaths.Skip(_currentBatchIndex * BatchSize).Take(BatchSize);
-        foreach (var file in nextBatch) Thumbnails.Add(new ImageThumbViewModel(file));
+        foreach (var file in nextBatch) Thumbnails.Add(new ImageBaseViewModel(file));
         _currentBatchIndex++;
     }
 }
@@ -59,12 +59,12 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private bool _showThumbnailBar = true;
 
     [ObservableProperty]
-    private ImageThumbViewModel? _selectedThumbnail;
+    private ImageBaseViewModel? _selectedThumbnail;
 
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
 
-    public ObservableCollection<ImageThumbViewModel> Thumbnails => _lazyLoadManager.Thumbnails;
+    public ObservableCollection<ImageBaseViewModel> Thumbnails => _lazyLoadManager.Thumbnails;
 
     public ImageGalleryViewModel()
     {
