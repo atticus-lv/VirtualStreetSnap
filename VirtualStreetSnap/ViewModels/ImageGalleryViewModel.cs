@@ -21,7 +21,7 @@ public class LazyLoadManager
     private DateTime _lastCheckedTime = DateTime.MinValue;
     private string _lastCheckedDirectory = string.Empty;
 
-    public ObservableCollection<ImageBaseViewModel> Thumbnails { get; } = new();
+    public ObservableCollection<ImageBase> Thumbnails { get; } = new();
 
     public void Initialize(string saveDirectory)
     {
@@ -43,7 +43,7 @@ public class LazyLoadManager
     public void LoadNextBatch()
     {
         var nextBatch = _allImagePaths.Skip(_currentBatchIndex * BatchSize).Take(BatchSize);
-        foreach (var file in nextBatch) Thumbnails.Add(new ImageBaseViewModel(file));
+        foreach (var file in nextBatch) Thumbnails.Add(new ImageBase(file));
         _currentBatchIndex++;
     }
 }
@@ -59,15 +59,18 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private bool _showThumbnailBar = true;
 
     [ObservableProperty]
-    private ImageBaseViewModel? _selectedThumbnail;
+    private ImageBase? _selectedThumbnail;
 
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
+    
+    [ObservableProperty]
+    private ImageViewerViewModel _selectedImageViewer = new ImageViewerViewModel();
 
-    public ObservableCollection<ImageBaseViewModel> Thumbnails => _lazyLoadManager.Thumbnails;
+    public ObservableCollection<ImageBase> Thumbnails => _lazyLoadManager.Thumbnails;
 
     public ImageGalleryViewModel()
-    {
+    {   
         ReLoadThumbnails();
         Config.Settings.PropertyChanged += OnSettingsPropertyChanged;
     }
@@ -75,6 +78,12 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         ReLoadThumbnails();
+    }
+
+    partial void OnSelectedThumbnailChanged(ImageBase value)
+    {
+        Console.WriteLine("SelectedThumbnail changed");
+        SelectedImageViewer.ViewImage = value;
     }
 
     [RelayCommand]

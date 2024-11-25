@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
 
 namespace VirtualStreetSnap.ViewModels;
@@ -11,11 +12,11 @@ public partial class ImageViewerViewModel : ViewModelBase
     private bool _showColorPicker;
 
     [ObservableProperty]
-    private ImageBaseViewModel? _viewImage;
-
+    private ImageBase? _viewImage;
+    
     public ImageViewerViewModel()
     {
-        ViewImage = new ImageBaseViewModel();
+        ViewImage = new ImageBase();
     }
 
     [RelayCommand]

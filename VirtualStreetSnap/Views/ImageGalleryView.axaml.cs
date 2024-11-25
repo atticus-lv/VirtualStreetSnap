@@ -31,13 +31,13 @@ public partial class ImageGalleryView : UserControl
         var scrollViewer = this.FindControl<ScrollViewer>("ThumbnailsScrollViewer");
         scrollViewer.PointerWheelChanged += ScrollViewer_PointerWheelChanged;
 
-        var imageViewbox = this.FindControl<Viewbox>("ImageViewbox");
-        imageViewbox.PointerWheelChanged += ImageViewbox_PointerWheelChanged;
+        // var imageViewbox = this.FindControl<Viewbox>("ImageViewbox");
+        // imageViewbox.PointerWheelChanged += ImageViewbox_PointerWheelChanged;
 
         var transformGroup = new TransformGroup();
         transformGroup.Children.Add(_scaleTransform);
         transformGroup.Children.Add(_translateTransform);
-        imageViewbox.RenderTransform = transformGroup;
+        // imageViewbox.RenderTransform = transformGroup;
     }
 
     private bool IsPickingColor => DataContext is ImageGalleryViewModel { ShowColorPicker: true };
@@ -73,28 +73,28 @@ public partial class ImageGalleryView : UserControl
         e.Handled = true;
     }
 
-    private void ImageViewbox_PointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        if (sender is not Viewbox) return;
-        _lastMovePoint = e.GetPosition(this);
-
-        if (!e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed &&
-            !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
-
-        // Hide color picker when left mouse button is pressed, not middle button
-
-        if (IsPickingColor)
-        {
-            var viewModel = (ImageGalleryViewModel)DataContext!;
-            viewModel.ShowColorPicker = false;
-            _ = PowerShellClipBoard.SetText(ColorPickerTextHex.Text!);
-            return; // Exit early
-        }
-
-        _isPanning = true;
-        _lastPanPoint = _lastMovePoint;
-        e.Pointer.Capture((IInputElement)sender!);
-    }
+    // private void ImageViewbox_PointerPressed(object? sender, PointerPressedEventArgs e)
+    // {
+    //     if (sender is not Viewbox) return;
+    //     _lastMovePoint = e.GetPosition(this);
+    //
+    //     if (!e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed &&
+    //         !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
+    //
+    //     // Hide color picker when left mouse button is pressed, not middle button
+    //
+    //     if (IsPickingColor)
+    //     {
+    //         var viewModel = (ImageGalleryViewModel)DataContext!;
+    //         viewModel.ShowColorPicker = false;
+    //         _ = PowerShellClipBoard.SetText(ColorPickerTextHex.Text!);
+    //         return; // Exit early
+    //     }
+    //
+    //     _isPanning = true;
+    //     _lastPanPoint = _lastMovePoint;
+    //     e.Pointer.Capture((IInputElement)sender!);
+    // }
 
     private void ImageViewbox_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
@@ -105,47 +105,47 @@ public partial class ImageGalleryView : UserControl
         e.Pointer.Capture(null);
     }
 
-    private void ImageViewbox_PointerMoved(object? sender, PointerEventArgs e)
-    {
-        if (sender is not Viewbox viewbox) return;
-        var currentPoint = e.GetPosition(viewbox);
-
-        if (viewbox.Child is Image image)
-        {
-            var imageBounds = image.Bounds;
-            var viewboxBounds = viewbox.Bounds;
-
-            // Calculate the scale factor
-            var scaleX = imageBounds.Width / viewboxBounds.Width;
-            var scaleY = imageBounds.Height / viewboxBounds.Height;
-
-            // Convert the point to image coordinates
-            var imagePoint = new Point(currentPoint.X * scaleX, currentPoint.Y * scaleY);
-
-            if (imagePoint.X >= 0 && imagePoint.Y >= 0 &&
-                imagePoint.X < imageBounds.Width && imagePoint.Y < imageBounds.Height)
-            {
-                var color = ScreenshotHelper.GetColorAtControl(image, imagePoint);
-                var colorHex = color.ToString().Substring(3);
-                color.ToHsv(out var h, out var s, out var v);
-
-                Canvas.SetLeft(ColoPickerPanel, e.GetPosition(this).X);
-                Canvas.SetTop(ColoPickerPanel, e.GetPosition(this).Y);
-
-                ColorPickerRect.Fill = new SolidColorBrush((uint)color);
-                ColorPickerTextHex.Text = $"#{colorHex}";
-                ColorPickerTextRgb.Text = $"RGB({color.Red,3}, {color.Green,3}, {color.Blue,3})";
-                ColorPickerTextHsv.Text = $"HSV({(int)h,3}, {(int)s,3}, {(int)v,3})";
-            }
-        }
-
-        if (!_isPanning) return;
-        var delta = e.GetPosition(this) - _lastPanPoint;
-        _lastPanPoint = e.GetPosition(this);
-
-        _translateTransform.X += delta.X;
-        _translateTransform.Y += delta.Y;
-    }
+    // private void ImageViewbox_PointerMoved(object? sender, PointerEventArgs e)
+    // {
+    //     if (sender is not Viewbox viewbox) return;
+    //     var currentPoint = e.GetPosition(viewbox);
+    //
+    //     if (viewbox.Child is Image image)
+    //     {
+    //         var imageBounds = image.Bounds;
+    //         var viewboxBounds = viewbox.Bounds;
+    //
+    //         // Calculate the scale factor
+    //         var scaleX = imageBounds.Width / viewboxBounds.Width;
+    //         var scaleY = imageBounds.Height / viewboxBounds.Height;
+    //
+    //         // Convert the point to image coordinates
+    //         var imagePoint = new Point(currentPoint.X * scaleX, currentPoint.Y * scaleY);
+    //
+    //         if (imagePoint.X >= 0 && imagePoint.Y >= 0 &&
+    //             imagePoint.X < imageBounds.Width && imagePoint.Y < imageBounds.Height)
+    //         {
+    //             var color = ScreenshotHelper.GetColorAtControl(image, imagePoint);
+    //             var colorHex = color.ToString().Substring(3);
+    //             color.ToHsv(out var h, out var s, out var v);
+    //
+    //             Canvas.SetLeft(ColoPickerPanel, e.GetPosition(this).X);
+    //             Canvas.SetTop(ColoPickerPanel, e.GetPosition(this).Y);
+    //
+    //             ColorPickerRect.Fill = new SolidColorBrush((uint)color);
+    //             ColorPickerTextHex.Text = $"#{colorHex}";
+    //             ColorPickerTextRgb.Text = $"RGB({color.Red,3}, {color.Green,3}, {color.Blue,3})";
+    //             ColorPickerTextHsv.Text = $"HSV({(int)h,3}, {(int)s,3}, {(int)v,3})";
+    //         }
+    //     }
+    //
+    //     if (!_isPanning) return;
+    //     var delta = e.GetPosition(this) - _lastPanPoint;
+    //     _lastPanPoint = e.GetPosition(this);
+    //
+    //     _translateTransform.X += delta.X;
+    //     _translateTransform.Y += delta.Y;
+    // }
 
     private void OnResetImageViewBox_Click(object? sender, RoutedEventArgs routedEventArgs)
     {

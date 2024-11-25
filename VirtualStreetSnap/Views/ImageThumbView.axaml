@@ -3,13 +3,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
+             xmlns:models="clr-namespace:VirtualStreetSnap.Models"
              mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="100"
              x:Class="VirtualStreetSnap.Views.ImageThumbView"
-             x:DataType="viewModels:ImageBaseViewModel"
+             x:DataType="models:ImageBase"
              Width="100" Height="100">
     
     <Design.DataContext>
-        <viewModels:ImageBaseViewModel />
+        <models:ImageBase />
     </Design.DataContext>
     
     <Border  CornerRadius="5" Padding="2">

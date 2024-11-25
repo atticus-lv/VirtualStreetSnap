@@ -5,28 +5,19 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace VirtualStreetSnap.ViewModels;
+namespace VirtualStreetSnap.Models;
 
-public partial class ImageBaseViewModel : ViewModelBase
+public class ImageBase
 {
     private const string DefaultImagePath = "avares://VirtualStreetSnap/Assets/avalonia-logo.ico";
 
-    [ObservableProperty]
-    private string _imgPath = "";
+    public string ImgPath { get; set; } = "";
+    public string ImgDir { get; set; } = "";
+    public string ImgName { get; set; }
+    public string ImgSize { get; set; } = "0 x 0";
+    public Bitmap Image { get; set; }
 
-    [ObservableProperty]
-    private string _imgDir = "";
-
-    [ObservableProperty]
-    public string _imgName;
-
-    [ObservableProperty]
-    public string _imgSize = "0 x 0";
-
-    [ObservableProperty]
-    private Bitmap _image;
-
-    public ImageBaseViewModel(string imgPath = "")
+    public ImageBase(string imgPath = "")
     {
         ImgPath = File.Exists(imgPath) ? imgPath : DefaultImagePath;
         ImgDir = (Path.GetDirectoryName(ImgPath) ?? "Assets/").Replace("\\", "/");
@@ -34,7 +25,6 @@ public partial class ImageBaseViewModel : ViewModelBase
         LoadImage(ImgPath);
         ImgSize = $"{Image.Size.Width} x {Image.Size.Height}";
     }
-
 
     private void LoadImage(string imagePath)
     {
@@ -45,7 +35,7 @@ public partial class ImageBaseViewModel : ViewModelBase
         catch (Exception)
         {
             var uri = new Uri(DefaultImagePath);
-            Image =  new Bitmap(AssetLoader.Open(uri));
+            Image = new Bitmap(AssetLoader.Open(uri));
         }
     }
 }
