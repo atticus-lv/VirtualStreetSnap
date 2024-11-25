@@ -23,4 +23,6 @@
     <system:String x:Key="My.Lang.Delete">删除</system:String>
     <system:String x:Key="My.Lang.OpenInFolder">在文件夹中打开</system:String>
     <system:String x:Key="My.Lang.OnTop">置顶</system:String>
+    <system:String x:Key="My.Lang.ImageName">图像名称</system:String>
+    <system:String x:Key="My.Lang.ImageSize">图像大小</system:String>
 </ResourceDictionary>

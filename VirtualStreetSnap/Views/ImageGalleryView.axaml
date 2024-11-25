@@ -76,19 +76,17 @@
                     </Viewbox.ContextMenu>
                 </Viewbox>
                 <!-- image info -->
-                <StackPanel>
-                    <TextBlock Text="{Binding SelectedThumbnail.ImgName}" Margin="2">
-                        <TextBlock.Effect>
-                            <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
-                        </TextBlock.Effect>
-                    </TextBlock>
-                    <TextBlock Text="{Binding SelectedThumbnail.ImgSize}" Margin="2">
-                        <TextBlock.Effect>
-                            <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
-                        </TextBlock.Effect>
-                    </TextBlock>
-                </StackPanel>
-
+                <PathIcon Data="{StaticResource InfoRegular}" VerticalAlignment="Top" HorizontalAlignment="Left" 
+                          Margin="10" Width="30" Height="30" Opacity="0.3"
+                          ToolTip.Placement="RightEdgeAlignedTop">
+                    <ToolTip.Tip>
+                        <StackPanel Margin="2" Spacing="2">
+                            <TextBlock Text="{Binding SelectedThumbnail.ImgName}"/>
+                            <TextBlock Text="{Binding SelectedThumbnail.ImgDir}" Foreground="Gray"/>
+                            <TextBlock Text="{Binding SelectedThumbnail.ImgSize}" Foreground="Gray"/>
+                        </StackPanel>
+                    </ToolTip.Tip>
+                </PathIcon>
                 <!-- tool button -->
                 <StackPanel VerticalAlignment="Bottom" Background="Transparent" Orientation="Horizontal" Height="30"
                             Opacity="0.7">
@@ -98,8 +96,16 @@
                     <Button Height="30" Command="{Binding ReLoadThumbnails}">
                         <PathIcon Data="{StaticResource ApprovalsAppRegular}"></PathIcon>
                     </Button>
-
                 </StackPanel>
+                
+                <Button Command="{Binding SelectPreviousThumbnail}" 
+                        Content="←" FontSize="24" Opacity="0.5" Margin="10" Height="50" VerticalContentAlignment="Center"
+                        VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <Button Command="{Binding SelectNextThumbnail}" 
+                        Content="→" FontSize="24" Opacity="0.5" Margin="10" Height="50" VerticalContentAlignment="Center"
+                        VerticalAlignment="Center" HorizontalAlignment="Right" />
+
+
                 <!-- color picker -->
                 <Canvas IsVisible="{Binding ShowColorPicker}">
                     <Border Name="ColoPickerPanel" Canvas.Left="300" Canvas.Top="200"
@@ -107,13 +113,13 @@
                         <Border.Effect>
                             <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
                         </Border.Effect>
-                        <StackPanel Margin="5" Spacing="5">
-                            <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
-                                <Rectangle Name="ColorPickerRect" Fill="Aqua" Width="30" Height="30"></Rectangle>
+                        <StackPanel Margin="5" Spacing="5" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Rectangle Name="ColorPickerRect" Fill="Aqua" Width="30" Height="30" RadiusX="4" RadiusY="4"/>
                                 <TextBlock Name="ColorPickerTextHex" Text="Hex" Foreground="White" FontSize="16"
                                            VerticalAlignment="Center" />
                             </StackPanel>
-                            <TextBlock Name="ColorPickerTextRgb" Text="RGB" Foreground="White" FontSize="16" />
+                            <TextBlock Name="ColorPickerTextRgb" Text="RGB" Foreground="Gray" FontSize="16" />
                         </StackPanel>
                     </Border>
                 </Canvas>

@@ -123,6 +123,22 @@ public partial class ImageGalleryViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    public void SelectNextThumbnail()
+    {
+        if (SelectedThumbnail == null) return;
+        var index = Thumbnails.IndexOf(SelectedThumbnail);
+        if (index < Thumbnails.Count - 1) SelectedThumbnail = Thumbnails[index + 1];
+    }
+
+    [RelayCommand]
+    public void SelectPreviousThumbnail()
+    {
+        if (SelectedThumbnail == null) return;
+        var index = Thumbnails.IndexOf(SelectedThumbnail);
+        if (index > 0) SelectedThumbnail = Thumbnails[index - 1];
+    }
+
+    [RelayCommand]
     public async Task CopySelectedImage()
     {
         if (SelectedThumbnail == null) return;

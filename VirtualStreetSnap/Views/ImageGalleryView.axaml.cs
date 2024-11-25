@@ -9,6 +9,7 @@ using VirtualStreetSnap.ViewModels;
 using Point = Avalonia.Point;
 using System.Windows.Forms;
 using VirtualStreetSnap.Services;
+using Image = Avalonia.Controls.Image;
 
 namespace VirtualStreetSnap.Views;
 
@@ -96,7 +97,7 @@ public partial class ImageGalleryView : UserControl
     }
 
     private void ImageViewbox_PointerReleased(object? sender, PointerReleasedEventArgs e)
-    {   
+    {
         if (sender is not Viewbox) return;
         if (!_isPanning || (e.InitialPressMouseButton != MouseButton.Middle &&
                             e.InitialPressMouseButton != MouseButton.Left)) return;
@@ -105,25 +106,38 @@ public partial class ImageGalleryView : UserControl
     }
 
     private void ImageViewbox_PointerMoved(object? sender, PointerEventArgs e)
-    {   
-        if (sender is not Viewbox) return;
-        var currentPoint = e.GetPosition(this);
+    {
+        if (sender is not Viewbox viewbox) return;
+        var currentPoint = e.GetPosition(viewbox);
 
-        if (sender is Visual visual && currentPoint.X >= 0 && currentPoint.Y >= 0 &&
-            currentPoint.X < visual.Bounds.Width && currentPoint.Y < visual.Bounds.Height)
+        if (viewbox.Child is Image image)
         {
-            var color = ScreenshotHelper.GetColorAtControl(visual, currentPoint);
-            var colorHex = color.ToString().Substring(3);
-            Canvas.SetLeft(ColoPickerPanel, currentPoint.X);
-            Canvas.SetTop(ColoPickerPanel, currentPoint.Y);
-            ColorPickerRect.Fill = new SolidColorBrush((uint)color);
-            ColorPickerTextHex.Text = $"#{colorHex}";
-            ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
+            var imageBounds = image.Bounds;
+            var viewboxBounds = viewbox.Bounds;
+
+            // Calculate the scale factor
+            var scaleX = imageBounds.Width / viewboxBounds.Width;
+            var scaleY = imageBounds.Height / viewboxBounds.Height;
+
+            // Convert the point to image coordinates
+            var imagePoint = new Point(currentPoint.X * scaleX, currentPoint.Y * scaleY);
+
+            if (imagePoint.X >= 0 && imagePoint.Y >= 0 &&
+                imagePoint.X < imageBounds.Width && imagePoint.Y < imageBounds.Height)
+            {
+                var color = ScreenshotHelper.GetColorAtControl(image, imagePoint);
+                var colorHex = color.ToString().Substring(3);
+                Canvas.SetLeft(ColoPickerPanel, e.GetPosition(this).X);
+                Canvas.SetTop(ColoPickerPanel, e.GetPosition(this).Y);
+                ColorPickerRect.Fill = new SolidColorBrush((uint)color);
+                ColorPickerTextHex.Text = $"#{colorHex}";
+                ColorPickerTextRgb.Text = $" RGB({color.Red}, {color.Green}, {color.Blue})";
+            }
         }
-        
+
         if (!_isPanning) return;
-        var delta = currentPoint - _lastPanPoint;
-        _lastPanPoint = currentPoint;
+        var delta = e.GetPosition(this) - _lastPanPoint;
+        _lastPanPoint = e.GetPosition(this);
 
         _translateTransform.X += delta.X;
         _translateTransform.Y += delta.Y;
