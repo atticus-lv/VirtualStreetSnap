@@ -82,7 +82,6 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     partial void OnSelectedThumbnailChanged(ImageBase value)
     {
-        Console.WriteLine("SelectedThumbnail changed");
         SelectedImageViewer.ViewImage = value;
     }
 

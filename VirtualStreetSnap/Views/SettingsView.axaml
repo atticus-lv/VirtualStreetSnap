@@ -13,14 +13,14 @@
     </UserControl.DataContext>
 
     <Grid ColumnDefinitions="150,10,Auto" RowDefinitions="Auto,10,Auto,10,Auto" Margin="50"
-          VerticalAlignment="Center" HorizontalAlignment="Right" >
+          VerticalAlignment="Center" HorizontalAlignment="Center" >
 
         <TextBlock VerticalAlignment="Center"
                    Text="{DynamicResource My.Lang.Language}" FontSize="16"/>
         
         <ListBox Grid.Column="2" ItemsSource="{Binding LanguageModels}"
                  SelectedItem="{Binding SelectedLanguage}" 
-                 HorizontalAlignment="Right" CornerRadius="4"
+                 HorizontalAlignment="Left" CornerRadius="4"
                  SelectionMode="Single">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -29,7 +29,7 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:LanguageModel}">
-                    <TextBlock Text="{Binding Label}" Width="100" TextAlignment="Center"/>
+                    <TextBlock Text="{Binding Label}" Width="150" TextAlignment="Center"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

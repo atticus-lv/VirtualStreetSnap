@@ -24,11 +24,13 @@
         <Border BorderBrush="Brown" BorderThickness="10" Opacity="0.5"
                 IsVisible="{Binding ShowFocusBorder}" />
 
-        <Button Padding="0" Opacity="0.5" Margin="20" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+        <Button Padding="0" Opacity="0.5" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left">
             <PathIcon Data="{StaticResource TableRegular}" ToolTip.Tip="{DynamicResource My.Lang.Guides}" Width="30" Height="30" />
             <Button.Flyout>
-                <Flyout Placement="TopEdgeAlignedLeft" >
-                    <StackPanel Width="100">
+                <Flyout Placement="BottomEdgeAlignedLeft" >
+                    <StackPanel Width="150">
+                        <CheckBox Content="{DynamicResource My.Lang.FocusBorder}"
+                                  IsChecked="{Binding ShowFocusBorder, Mode=TwoWay}" />
                         <CheckBox Content="{DynamicResource My.Lang.Grid}"
                                   IsChecked="{Binding ShowGuideLinesGrid, Mode=TwoWay}" />
                         <CheckBox Content="{DynamicResource My.Lang.Center}"
