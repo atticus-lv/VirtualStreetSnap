@@ -10,7 +10,8 @@ public class WidthToVisibilityConverter : IValueConverter
     {
         if (value is double width && parameter is string thresholdStr &&
             double.TryParse(thresholdStr, out double threshold))
-        {
+        {   
+            // Console.WriteLine($"Width: {width}, Threshold: {threshold}");
             return !(width < threshold);
         }
 
