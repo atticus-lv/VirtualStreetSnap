@@ -97,7 +97,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        UpdateThumbnails();
+        UpdateThumbnails(true);
     }
 
     partial void OnSelectedThumbnailChanged(ImageBase value)
@@ -107,9 +107,9 @@ public partial class ImageGalleryViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void UpdateThumbnails()
+    public void UpdateThumbnails(bool reload = false)
     {
-        if (_lazyLoadManager.IsInitialized)
+        if (_lazyLoadManager.IsInitialized && !reload)
         {
             _lazyLoadManager.LoadNecessary();
         }
