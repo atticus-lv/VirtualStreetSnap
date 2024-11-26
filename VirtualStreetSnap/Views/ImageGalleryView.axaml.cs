@@ -54,7 +54,8 @@ public partial class ImageGalleryView : UserControl
     private void ThumbnailsScrollViewer_ScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
         if (sender is not ScrollViewer scrollViewer) return;
-        if (!(scrollViewer.Offset.X >= scrollViewer.Extent.Width - scrollViewer.Viewport.Width)) return;
+        // if (!(scrollViewer.Offset.X >= scrollViewer.Extent.Width - scrollViewer.Viewport.Width)) return;
+        if (!(scrollViewer.Offset.Y >= scrollViewer.Extent.Height - scrollViewer.Viewport.Height)) return;
         if (DataContext is ImageGalleryViewModel viewModel) viewModel.LoadMoreThumbnailsCommand.Execute(null);
     }
 

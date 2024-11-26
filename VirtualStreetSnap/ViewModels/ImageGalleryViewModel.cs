@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
@@ -57,7 +58,10 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _showThumbnailBar = true;
-
+    
+    [ObservableProperty]
+    private Bitmap _selectedImage;
+    
     [ObservableProperty]
     private ImageBase? _selectedThumbnail;
 
@@ -81,7 +85,8 @@ public partial class ImageGalleryViewModel : ViewModelBase
     }
 
     partial void OnSelectedThumbnailChanged(ImageBase value)
-    {
+    {   
+        value.LoadImage();
         SelectedImageViewer.ViewImage = value;
     }
 

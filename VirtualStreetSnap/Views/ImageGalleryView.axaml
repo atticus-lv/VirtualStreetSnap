@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
              xmlns:views="clr-namespace:VirtualStreetSnap.Views"
+             xmlns:models="clr-namespace:VirtualStreetSnap.Models"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              x:Class="VirtualStreetSnap.Views.ImageGalleryView"
              x:DataType="viewModels:ImageGalleryViewModel">
@@ -12,22 +13,22 @@
         <viewModels:ImageGalleryViewModel />
     </UserControl.DataContext>
 
-    <Grid RowDefinitions="*,Auto" Background="#111111">
-            <Panel Grid.Row="0">
-                <ContentControl Content="{Binding SelectedImageViewer}" />
-                <Button Command="{Binding SelectPreviousThumbnail}"
-                        Content="←" FontSize="24" Opacity="0.5" Margin="10" Height="50"
-                        VerticalContentAlignment="Center"
-                        VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <Button Command="{Binding SelectNextThumbnail}"
-                        Content="→" FontSize="24" Opacity="0.5" Margin="10" Height="50"
-                        VerticalContentAlignment="Center"
-                        VerticalAlignment="Center" HorizontalAlignment="Right" />
-            </Panel>
-
+    <Grid RowDefinitions="*,10,100" Background="#111111">
+        <Panel Grid.Row="0">
+            <ContentControl Content="{Binding SelectedImageViewer}" />
+            <Button Command="{Binding SelectPreviousThumbnail}"
+                    Content="←" FontSize="24" Opacity="0.5" Margin="10" Height="50"
+                    VerticalContentAlignment="Center"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" />
+            <Button Command="{Binding SelectNextThumbnail}"
+                    Content="→" FontSize="24" Opacity="0.5" Margin="10" Height="50"
+                    VerticalContentAlignment="Center"
+                    VerticalAlignment="Center" HorizontalAlignment="Right" />
+        </Panel>
+        <GridSplitter Grid.Row="1" Background="Black"></GridSplitter>
         <!-- Thumbnails Display -->
-        <ScrollViewer x:Name="ThumbnailsScrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Disabled"
+        <ScrollViewer x:Name="ThumbnailsScrollViewer" Grid.Row="2"
+                      VerticalScrollBarVisibility="Auto"
                       ScrollChanged="ThumbnailsScrollViewer_ScrollChanged"
                       IsVisible="{Binding ShowThumbnailBar}">
             <ListBox ItemsSource="{Binding Thumbnails}"
@@ -43,15 +44,20 @@
                 </ListBox.ContextMenu>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
+                        <WrapPanel />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <views:ImageThumbView DataContext="{Binding}" Width="100" Height="100" />
+                    <DataTemplate DataType="{x:Type models:ImageBase}">
+                        <Image Source="{Binding ImageThumb}" Stretch="UniformToFill" ToolTip.ShowDelay = "500" Width="100" Height="100">
+                            <ToolTip.Tip >
+                                <TextBlock Text="{Binding ImgName}" />
+                            </ToolTip.Tip>
+                        </Image>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </ScrollViewer>
+
     </Grid>
 </UserControl>
