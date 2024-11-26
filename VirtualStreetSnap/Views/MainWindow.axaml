@@ -32,6 +32,12 @@
                               SelectedItem="{Binding SelectedSizeRadio}"
                               SelectionChanged="SelectingItemsControl_OnSelectionChanged"
                               Width="100" Margin="0,0,10,0">
+                        <ComboBox.IsEnabled>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="!IsGalleryView" />
+                                <Binding Path="!IsSettingsView" />
+                            </MultiBinding>
+                        </ComboBox.IsEnabled>
                         <ComboBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:SizeRadio}">
                                 <TextBlock Text="{Binding Label}" />
