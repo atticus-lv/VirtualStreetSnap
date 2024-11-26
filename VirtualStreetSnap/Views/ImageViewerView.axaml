@@ -21,7 +21,7 @@
                     <MenuItem Click="OnShowColorPicker_Click">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource ColorRegular}"></PathIcon>
+                                <PathIcon Data="{StaticResource Dropper}"></PathIcon>
                                 <TextBlock VerticalAlignment="Center"
                                            Text="{DynamicResource My.Lang.PickColor}" />
                             </StackPanel>
@@ -49,7 +49,7 @@
                     <MenuItem Click="OnResetImageViewBox_Click">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource ArrowRotateLeftRegular}" />
+                                <PathIcon Data="{StaticResource ResetZoom}" />
                                 <TextBlock VerticalAlignment="Center"
                                            Text="{DynamicResource My.Lang.ResetZoom}" />
                             </StackPanel>

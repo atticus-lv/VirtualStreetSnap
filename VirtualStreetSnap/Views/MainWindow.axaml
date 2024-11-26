@@ -53,7 +53,7 @@
                         </MultiBinding>
                     </Button.IsEnabled>
                     <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="20 0 20 0">
-                        <PathIcon Data="{StaticResource CameraRegular}" />
+                        <PathIcon Data="{StaticResource CameraRegular}"/>
                         <TextBlock Text="{DynamicResource My.Lang.SnapShot}" VerticalAlignment="Center"
                                    IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=600}" />
                     </StackPanel>
@@ -71,7 +71,7 @@
                         <ToggleButton Name="ToggleSettingsButton" CornerRadius="0 5 5 0 "
                                       Click="ToggleSettingsButton_Click" IsChecked="{Binding IsSettingsView}">
                             <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource SettingsRegular}" />
+                                <PathIcon Data="{StaticResource Settings}" />
                                 <TextBlock Text="{DynamicResource My.Lang.Settings}" VerticalAlignment="Center"
                                            IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
                             </StackPanel>
