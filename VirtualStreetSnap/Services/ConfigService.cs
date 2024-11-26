@@ -43,7 +43,13 @@ public class ConfigService
             Console.WriteLine($"Error saving config: {ex.Message}");
         }
     }
-
+    
+    public static void SaveIfNotExists()
+    {
+        if (!File.Exists(_configFilePath))
+            SaveConfig();
+    }
+    
     private static AppConfig NewDefaultConfig()
     {
         return new AppConfig

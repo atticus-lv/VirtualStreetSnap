@@ -32,90 +32,51 @@
                               SelectedItem="{Binding SelectedSizeRadio}"
                               SelectionChanged="SelectingItemsControl_OnSelectionChanged"
                               Width="100" Margin="0,0,10,0">
+                        <ComboBox.IsEnabled>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="!IsGalleryView" />
+                                <Binding Path="!IsSettingsView" />
+                            </MultiBinding>
+                        </ComboBox.IsEnabled>
                         <ComboBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:SizeRadio}">
                                 <TextBlock Text="{Binding Label}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <ToggleButton IsChecked="{Binding !ShowFocusBorder, Mode=TwoWay}">
-                        <PathIcon Data="{StaticResource ScreenshotRegular}" />
-                    </ToggleButton>
-                    <Button>
-                        <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
-                            <PathIcon Data="{StaticResource TableRegular}" />
-                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource My.Lang.Guides}"
-                                       IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
-                        </StackPanel>
-                        <Button.Flyout>
-                            <Flyout Placement="BottomEdgeAlignedLeft">
-                                <StackPanel Width="200">
-                                    <CheckBox Content="{DynamicResource My.Lang.Grid}"
-                                              IsChecked="{Binding ShowGuideLinesGrid, Mode=TwoWay}" />
-                                    <CheckBox Content="{DynamicResource My.Lang.Center}"
-                                              IsChecked="{Binding ShowGuideLinesCenter, Mode=TwoWay}" />
-                                    <CheckBox Content="{DynamicResource My.Lang.Ratio}"
-                                              IsChecked="{Binding ShowGuideLinesRatio, Mode=TwoWay}" />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
-                                                VerticalAlignment="Center">
-                                        <NumericUpDown Maximum="1" Minimum="0" Increment="0.1"
-                                                       Value="{Binding GuideLinesOpacity}" Margin="0 0 10 0" />
-                                        <TextBlock Text="{DynamicResource My.Lang.Opacity}" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
                 </StackPanel>
-                <Button Grid.Column="1" Click="OnSaveImageButtonClick"
-                        IsEnabled="{Binding !IsPreviewMode}"
-                        HorizontalContentAlignment="Center">
+                <Button Grid.Column="1" Click="SnapshotButton_Click" HorizontalContentAlignment="Center">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!IsGalleryView" />
+                            <Binding Path="!IsSettingsView" />
+                        </MultiBinding>
+                    </Button.IsEnabled>
                     <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="20 0 20 0">
-                        <PathIcon Data="{StaticResource CameraRegular}" />
+                        <PathIcon Data="{StaticResource CameraRegular}"/>
                         <TextBlock Text="{DynamicResource My.Lang.SnapShot}" VerticalAlignment="Center"
                                    IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=600}" />
                     </StackPanel>
                 </Button>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10 0 0 0 " Spacing="5">
-                    <ToggleButton Name="ToggleGalleryButton" IsChecked="{Binding IsPreviewMode,Mode=TwoWay}">
-                        <StackPanel Orientation="Horizontal" Spacing="5">
-                            <PathIcon Data="{StaticResource ImageLibraryRegular}" />
-                            <TextBlock Text="{DynamicResource My.Lang.Gallery}" VerticalAlignment="Center"
-                                       IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
-                        </StackPanel>
-                    </ToggleButton>
-                    <Button>
-                        <PathIcon Data="{StaticResource SettingsRegular}" />
-                        <Button.Flyout>
-                            <Flyout Placement='BottomEdgeAlignedRight'>
-                                <StackPanel Spacing="5" Width="200">
-                                    <CheckBox Name="OnTopMostCheckbox" Content="{DynamicResource My.Lang.OnTop}" />
-                                    <TextBlock Text="{DynamicResource My.Lang.Language}" />
-                                    <ComboBox SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
-                                              ItemsSource="{Binding LanguageModels}">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate DataType="{x:Type models:LanguageModel}">
-                                                <TextBlock Text="{Binding Label}" />
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                    
-                                    <TextBlock Text="{DynamicResource My.Lang.FilePrefix}"/>
-                                    <TextBox Text="{Binding FilePrefix}" />
-                                    <TextBlock Text="{DynamicResource My.Lang.SaveDirectory}"/>
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <TextBox Text="{Binding SaveDirectory}" IsReadOnly="True"
-                                                 ToolTip.Tip="{Binding SaveDirectory}" />
-                                        <Button Grid.Column="1" Command="{Binding ChangeDir}"
-                                                CommandParameter="SaveDirectory">
-                                            ...
-                                        </Button>
-                                    </Grid>
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-
+                    <StackPanel Orientation="Horizontal" Spacing="0">
+                        <ToggleButton Name="ToggleGalleryButton" CornerRadius="5 0 0 5 "
+                                      Click="ToggleGalleryButton_Click" IsChecked="{Binding IsGalleryView}">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <PathIcon Data="{StaticResource ImageLibraryRegular}" />
+                                <TextBlock Text="{DynamicResource My.Lang.Gallery}" VerticalAlignment="Center"
+                                           IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
+                            </StackPanel>
+                        </ToggleButton>
+                        <ToggleButton Name="ToggleSettingsButton" CornerRadius="0 5 5 0 "
+                                      Click="ToggleSettingsButton_Click" IsChecked="{Binding IsSettingsView}">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <PathIcon Data="{StaticResource Settings}" />
+                                <TextBlock Text="{DynamicResource My.Lang.Settings}" VerticalAlignment="Center"
+                                           IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
+                            </StackPanel>
+                        </ToggleButton>
+                    </StackPanel>
                     <Button DockPanel.Dock="Right" HorizontalContentAlignment="Center" Width="35"
                             Command="{Binding OnCloseButtonClick}">
                         <TextBlock Text="X" FontSize="16" />
@@ -123,29 +84,24 @@
                 </StackPanel>
             </Grid>
         </Border>
-
+        
         <Panel Grid.Row="1">
-            <Panel Name="CompositionGuides" IsVisible="{Binding !IsPreviewMode}">
-                <Grid Name="GuidesGridThird" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
-                      Opacity="{Binding GuideLinesOpacity}"
-                      IsVisible="{Binding ShowGuideLinesGrid}" />
-                <Grid Name="GuideGridCenter" ShowGridLines="True" RowDefinitions="*,*" ColumnDefinitions="*,*"
-                      Opacity="{Binding GuideLinesOpacity}"
-                      IsVisible="{Binding ShowGuideLinesCenter}" />
-                <Grid Name="GuideGridRatio" ShowGridLines="True" RowDefinitions="1*,0.618*,1*"
-                      ColumnDefinitions="1*,0.618*,1*" Opacity="{Binding GuideLinesOpacity}"
-                      IsVisible="{Binding ShowGuideLinesRatio}" />
-                <Border BorderBrush="Brown" BorderThickness="10" Opacity="0.5"
-                        IsVisible="{Binding ShowFocusBorder}" />
+            <Panel Name="CompositionGuides">
+                <views:CompositionGuidesView></views:CompositionGuidesView>
             </Panel>
 
             <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch"
                        VerticalAlignment="Stretch"
                        IsHitTestVisible="False" />
 
-            <Panel IsVisible="{Binding IsPreviewMode}">
+            <Panel IsVisible="{Binding IsGalleryView}">
                 <views:ImageGalleryView Name="GalleryView" />
             </Panel>
+
+            <Panel IsVisible="{Binding IsSettingsView}" Background="#111111">
+                <views:SettingsView />
+            </Panel>
+
         </Panel>
     </Grid>
 </Window>

@@ -25,4 +25,6 @@
     <system:String x:Key="My.Lang.OnTop">On Top</system:String>
     <system:String x:Key="My.Lang.ImageName">Image Name</system:String>
     <system:String x:Key="My.Lang.ImageSize">Image Size</system:String>
+    <system:String x:Key="My.Lang.Settings">Settings</system:String>
+    <system:String x:Key="My.Lang.FocusBorder">Focus Border</system:String>
 </ResourceDictionary>

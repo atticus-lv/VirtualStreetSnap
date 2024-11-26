@@ -16,12 +16,12 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        OnTopMostCheckbox.IsCheckedChanged += (sender, e) => { Topmost = !Topmost; };
+        // OnTopMostCheckbox.IsCheckedChanged += (sender, e) => { Topmost = !Topmost; };
         ToggleGalleryButton.IsCheckedChanged += (sender, e) =>
         {
             if (ToggleGalleryButton.IsChecked == false) return;
             var viewModel = GalleryView.DataContext as ImageGalleryViewModel;
-            viewModel?.ReLoadThumbnails();
+            viewModel?.UpdateThumbnails();
         };
     }
 
@@ -31,7 +31,7 @@ public partial class MainWindow : Window
         BeginMoveDrag(e);
     }
 
-    private async void OnSaveImageButtonClick(object? sender, RoutedEventArgs e)
+    private async void SnapshotButton_Click(object? sender, RoutedEventArgs e)
     {
         CompositionGuides.IsVisible = false;
         var currentScreen = Screens.Primary;
@@ -51,9 +51,9 @@ public partial class MainWindow : Window
         // save screenshot
 
         var _viewModel = (MainWindowViewModel)DataContext;
-        var saveDir = _viewModel.SaveDirectory;
+        var saveDir = _viewModel.Config.Settings.SaveDirectory;
         if (!Path.Exists(saveDir)) Directory.CreateDirectory(saveDir);
-        var filePrefix = _viewModel.FilePrefix;
+        var filePrefix = _viewModel.Config.Settings.FilePrefix;
         filePrefix = new string(filePrefix.Select(c => Path.GetInvalidFileNameChars().Contains(c) ? '_' : c).ToArray());
 
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
@@ -82,5 +82,15 @@ public partial class MainWindow : Window
         Width = width;
         Height = contentHeight + toolBarHeight;
         Position = new PixelPoint((int)endX, (int)endY);
+    }
+
+    private void ToggleGalleryButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (ToggleGalleryButton.IsChecked == true) ToggleSettingsButton.IsChecked = false;
+    }
+
+    private void ToggleSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (ToggleSettingsButton.IsChecked == true) ToggleGalleryButton.IsChecked = false;
     }
 }

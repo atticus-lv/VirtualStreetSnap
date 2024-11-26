@@ -17,7 +17,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>0.0.5</Version>
+        <Version>0.0.6</Version>
         <Authors>Atticus</Authors>
         <Description>A simple screen shot tool design for VirtualStreetSnap</Description>
     </PropertyGroup>
@@ -44,5 +44,9 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Assets\Images\" />
     </ItemGroup>
 </Project>

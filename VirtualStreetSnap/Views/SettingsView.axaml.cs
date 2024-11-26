@@ -1,12 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using VirtualStreetSnap.ViewModels;
 
 namespace VirtualStreetSnap.Views;
 
-public partial class ImageThumbView : UserControl
+public partial class SettingsView : UserControl
 {
-    public ImageThumbView()
+    public SettingsView()
     {
         InitializeComponent();
     }
