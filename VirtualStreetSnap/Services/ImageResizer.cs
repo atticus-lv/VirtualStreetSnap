@@ -2,6 +2,7 @@
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
@@ -10,6 +11,11 @@ namespace VirtualStreetSnap.Services;
 
 public static class ImageResizer
 {
+    public static async Task<Bitmap> ResizeImageAsync(string inputPath, int targetWidth, int targetHeight)
+    {
+        return await Task.Run(() => ResizeImage(inputPath, targetWidth, targetHeight));
+    }
+
     public static Bitmap ResizeImage(string inputPath, int targetWidth, int targetHeight)
     {
         using var srcImage = Image.FromFile(inputPath);
