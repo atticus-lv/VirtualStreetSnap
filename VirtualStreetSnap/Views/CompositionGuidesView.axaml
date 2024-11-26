@@ -25,7 +25,7 @@
                 IsVisible="{Binding ShowFocusBorder}" />
 
         <Button Padding="0" Opacity="0.5" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <PathIcon Data="{StaticResource TableRegular}" ToolTip.Tip="{DynamicResource My.Lang.Guides}" Width="30" Height="30" />
+            <PathIcon Data="{StaticResource Overlay}" ToolTip.Tip="{DynamicResource My.Lang.Guides}" Width="30" Height="30" />
             <Button.Flyout>
                 <Flyout Placement="BottomEdgeAlignedLeft" >
                     <StackPanel Width="150">
