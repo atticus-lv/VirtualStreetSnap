@@ -21,7 +21,7 @@ public partial class MainWindow : Window
         {
             if (ToggleGalleryButton.IsChecked == false) return;
             var viewModel = GalleryView.DataContext as ImageGalleryViewModel;
-            viewModel?.ReLoadThumbnails();
+            viewModel?.UpdateThumbnails();
         };
     }
 
