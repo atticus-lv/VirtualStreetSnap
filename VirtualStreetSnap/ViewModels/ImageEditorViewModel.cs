@@ -50,6 +50,8 @@ public partial class ImageEditorViewModel : ViewModelBase
 public class LayerManagerViewModel : ViewModelBase
 {
     public Image<Rgba32> InitialImage { get; set; }
+    
+    public Image<Rgba32> FinalImage { get; set; }
 
     public ObservableCollection<LayerBaseViewModel> Layers { get; set; } = new();
 
@@ -61,7 +63,7 @@ public class LayerManagerViewModel : ViewModelBase
         layer.LayerModified += RefreshFinalImage;
         layer.PropertyChanged += (sender, args) =>
         {
-            if (args.PropertyName == nameof(LayerBaseViewModel.IsVisible)) RefreshFinalImage();
+            if (args.PropertyName == nameof(LayerBaseViewModel.IsVisible)) RefreshFinalImage(layer);
         };
     }
 
@@ -81,34 +83,35 @@ public class LayerManagerViewModel : ViewModelBase
         layer.IsVisible = true;
     }
 
-    public Bitmap DisplayImage
-    {
-        get
-        {
-            var finalImage = GenerateFinalImage();
-            return finalImage != null ? ImageEditHelper.ConvertToBitmap(finalImage) : null;
-        }
-    }
+    public Bitmap DisplayImage => ImageEditHelper.ConvertToBitmap(FinalImage);
 
-    private void RefreshFinalImage()
+    private void RefreshFinalImage(LayerBaseViewModel modifiedLayer)
     {
-        var finalImage = GenerateFinalImage();
-        if (finalImage != null)
-        {
-            UpdateImageCallback?.Invoke(ImageEditHelper.ConvertToBitmap(finalImage));
-        }
+        var finalImage = GenerateFinalImage(modifiedLayer);
+        FinalImage = finalImage;
+        UpdateImageCallback?.Invoke(ImageEditHelper.ConvertToBitmap(finalImage));
         OnPropertyChanged(nameof(DisplayImage));
     }
 
-    private Image<Rgba32> GenerateFinalImage()
+    private Image<Rgba32> GenerateFinalImage(LayerBaseViewModel? modifiedLayer)
     {
-        if (Layers.Count == 0 || InitialImage == null) return null;
+        if (Layers.Count == 0) return null;
         var finalImage = InitialImage.Clone();
+        var startApplying = modifiedLayer == null;
+
         foreach (var layer in Layers)
         {
+            if (layer == modifiedLayer)
+            {
+                startApplying = true;
+            }
+
+            if (!startApplying) continue;
+            if (!layer.IsVisible) continue;
+            
             layer.InitialImage = finalImage.Clone();
             layer.ApplyModifiers();
-            if (layer.IsVisible) finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
+            finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
         }
 
         return finalImage;

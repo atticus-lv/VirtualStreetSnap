@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using VirtualStreetSnap.Services;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace VirtualStreetSnap.ViewModels;
 
@@ -14,6 +18,7 @@ public class SliderModel : ViewModelBase
     public string Name { get; set; }
     public float MinValue { get; set; }
     public float MaxValue { get; set; }
+    public float DefaultValue { get; set; }
     public Action<float> OnChange { get; set; }
 
     private float _currentValue;
@@ -27,9 +32,13 @@ public class SliderModel : ViewModelBase
         }
     }
 
+    public ICommand ResetCommand { get; }
+
     public SliderModel(float defaultValue)
     {
-        _currentValue = defaultValue; // Initialize CurrentValue with the default value
+        DefaultValue = defaultValue;
+        _currentValue = defaultValue;
+        ResetCommand = new RelayCommand(() => CurrentValue = DefaultValue);
     }
 }
 
@@ -53,11 +62,11 @@ public abstract class LayerBaseViewModel : ViewModelBase
     public Image<Rgba32> ModifiedImage { get; set; }
     public ObservableCollection<SliderModel> Sliders { get; set; } = new();
 
-    public event Action LayerModified;
+    public event Action<LayerBaseViewModel> LayerModified;
 
     protected void OnLayerModified()
     {
-        LayerModified?.Invoke();
+        LayerModified?.Invoke(this);
     }
 
     public abstract void ApplyModifiers();
