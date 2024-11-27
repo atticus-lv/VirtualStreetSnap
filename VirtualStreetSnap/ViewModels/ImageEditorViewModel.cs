@@ -147,7 +147,7 @@ public class LayerManagerViewModel : ViewModelBase
         {
             if (args.PropertyName == nameof(LayerBaseViewModel.IsVisible)) RefreshFinalImage(layer);
         };
-        GenerateFinalImage(Layers.First());
+        GenerateFinalImage();
     }
 
     public void RemoveLayer(LayerBaseViewModel layer)
@@ -164,7 +164,7 @@ public class LayerManagerViewModel : ViewModelBase
 
     internal async void RefreshFinalImage(LayerBaseViewModel modifiedLayer)
     {
-        var finalImage = GenerateFinalImage(modifiedLayer);
+        var finalImage = GenerateFinalImage();
         FinalImage = finalImage;
         DisplayImage = _asyncDisplay
             ? await Task.Run(() => ImageEditHelper.ConvertToBitmap(finalImage))
@@ -172,7 +172,7 @@ public class LayerManagerViewModel : ViewModelBase
         UpdateImageCallback?.Invoke(DisplayImage);
     }
 
-    private Image<Rgba32> GenerateFinalImage(LayerBaseViewModel? modifiedLayer)
+    private Image<Rgba32> GenerateFinalImage()
         // private Bitmap GenerateFinalImage(LayerBaseViewModel? modifiedLayer)
     {
         if (_isGeneratingImage)
@@ -188,7 +188,6 @@ public class LayerManagerViewModel : ViewModelBase
         {
             if (Layers.Count == 0) return null;
             var finalImage = InitialImage.Clone();
-            var startApplying = modifiedLayer == null;
 
             foreach (var layer in Layers)
             {
@@ -197,13 +196,9 @@ public class LayerManagerViewModel : ViewModelBase
                     GC.Collect();
                     return null;
                 }
-
-                if (layer == modifiedLayer) startApplying = true;
-
-                if (!startApplying) continue;
-                if (!layer.IsVisible) continue;
-
+                
                 layer.InitialImage = finalImage.Clone();
+                if (!layer.IsVisible) continue;
                 layer.ApplyModifiers();
                 finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
             }
