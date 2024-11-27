@@ -41,11 +41,9 @@
                             <StackPanel Margin="10">
                                 <Grid ColumnDefinitions="*,Auto">
                                     <TextBlock Text="{Binding Name}" Grid.Column="0" VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding CurrentValue, StringFormat=F1}" Grid.Column="1" VerticalAlignment="Center"
-                                               Margin="10,0,0,0" />
+                                    <TextBlock Text="{Binding CurrentValue, StringFormat=F1}" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                                 </Grid>
-                                <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}"
-                                        Value="{Binding CurrentValue}" />
+                                <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}" Value="{Binding CurrentValue}" />
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

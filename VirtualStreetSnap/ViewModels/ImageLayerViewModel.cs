@@ -12,7 +12,6 @@ public class ImageLayerViewModel
 public class SliderModel : ViewModelBase
 {
     public string Name { get; set; }
-    public float Value { get; set; }
     public float MinValue { get; set; }
     public float MaxValue { get; set; }
     public Action<float> OnChange { get; set; }
@@ -29,6 +28,11 @@ public class SliderModel : ViewModelBase
                 OnChange?.Invoke(value);
             }
         }
+    }
+
+    public SliderModel(float defaultValue)
+    {
+        _currentValue = defaultValue; // Initialize CurrentValue with the default value
     }
 }
 
@@ -57,12 +61,11 @@ public class BrightnessContrastLayerViewModel : LayerBaseViewModel
 
     public BrightnessContrastLayerViewModel()
     {
-        Sliders.Add(new SliderModel
+        Sliders.Add(new SliderModel(Brightness)
         {
             Name = "Brightness",
             MinValue = 0.0f,
             MaxValue = 2.0f,
-            Value = Brightness,
             OnChange = value =>
             {
                 Brightness = value;
@@ -70,12 +73,11 @@ public class BrightnessContrastLayerViewModel : LayerBaseViewModel
             }
         });
 
-        Sliders.Add(new SliderModel
+        Sliders.Add(new SliderModel(Contrast)
         {
             Name = "Contrast",
             MinValue = 0.0f,
             MaxValue = 2.0f,
-            Value = Contrast,
             OnChange = value =>
             {
                 Contrast = value;
@@ -100,12 +102,11 @@ public class SharpnessLayerViewModel : LayerBaseViewModel
 
     public SharpnessLayerViewModel()
     {
-        Sliders.Add(new SliderModel
+        Sliders.Add(new SliderModel(Sharpness)
         {
             Name = "Sharpness",
             MinValue = 0.0f,
             MaxValue = 10.0f,
-            Value = Sharpness,
             OnChange = value =>
             {
                 Sharpness = value;
@@ -132,12 +133,11 @@ public class HslLayerViewModel : LayerBaseViewModel
 
     public HslLayerViewModel()
     {
-        Sliders.Add(new SliderModel
+        Sliders.Add(new SliderModel(Hue)
         {
             Name = "Hue",
             MinValue = -180.0f,
             MaxValue = 180.0f,
-            Value = Hue,
             OnChange = value =>
             {
                 Hue = value;
@@ -145,12 +145,11 @@ public class HslLayerViewModel : LayerBaseViewModel
             }
         });
 
-        Sliders.Add(new SliderModel
+        Sliders.Add(new SliderModel(Saturation)
         {
             Name = "Saturation",
             MinValue = 0.0f,
             MaxValue = 2.0f,
-            Value = Saturation,
             OnChange = value =>
             {
                 Saturation = value;
@@ -158,12 +157,11 @@ public class HslLayerViewModel : LayerBaseViewModel
             }
         });
 
-        Sliders.Add(new SliderModel
+        Sliders.Add(new SliderModel(Lightness)
         {
             Name = "Lightness",
             MinValue = 0.0f,
             MaxValue = 2.0f,
-            Value = Lightness,
             OnChange = value =>
             {
                 Lightness = value;
