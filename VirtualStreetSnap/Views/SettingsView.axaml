@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
              xmlns:models="clr-namespace:VirtualStreetSnap.Models"
+             xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              x:Class="VirtualStreetSnap.Views.SettingsView"
              x:DataType="viewModels:SettingsViewModel">
@@ -16,7 +17,7 @@
           VerticalAlignment="Center" HorizontalAlignment="Center" >
 
         <TextBlock VerticalAlignment="Center"
-                   Text="{DynamicResource My.Lang.Language}" FontSize="16"/>
+                   Text="{i18n:Localize Language}" FontSize="16"/>
         
         <ListBox Grid.Column="2" ItemsSource="{Binding LanguageModels}"
                  SelectedItem="{Binding SelectedLanguage}" 
