@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -30,7 +31,7 @@ public partial class ImageEditorViewModel : ViewModelBase
 
     public ImageEditorViewModel(ImageBase? image)
     {
-        SetupImage(null);
+        SetupImage(Design.IsDesignMode ? null : image);
     }
 
     public void SetupImage(ImageBase? image)

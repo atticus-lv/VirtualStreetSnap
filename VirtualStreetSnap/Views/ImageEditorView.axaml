@@ -10,7 +10,7 @@
         x:DataType="viewModels:ImageEditorViewModel"
         WindowStartupLocation="CenterScreen"
         Width="1280" Height="720">
-    
+
     <Design.DataContext>
         <viewModels:DesignImageEditorViewModel />
     </Design.DataContext>
@@ -24,7 +24,8 @@
         <Grid RowDefinitions="*,10,*" Grid.Column="2">
             <Grid RowDefinitions="Auto,*,Auto">
                 <StackPanel>
-                    <TextBlock Text="{i18n:Localize Layers}" Margin="10 10 0 0" FontSize="16" HorizontalAlignment="Center" />
+                    <TextBlock Text="{i18n:Localize Layers}" Margin="10 10 0 0" FontSize="16"
+                               HorizontalAlignment="Center" />
                 </StackPanel>
                 <!-- layers -->
                 <ScrollViewer Grid.Row="1">
@@ -35,7 +36,8 @@
                             <DataTemplate>
                                 <Grid ColumnDefinitions="Auto,*,Auto">
                                     <CheckBox IsChecked="{Binding IsVisible}" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Name, Converter={StaticResource LocalizeConverter}}"
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding Name, Converter={StaticResource LocalizeConverter}}"
                                                Margin="5,0,0,0" VerticalAlignment="Center" />
                                     <Button Grid.Column="2" Content="X" Command="{Binding RemoveCommand}"
                                             Margin="5,0,0,0" Background="Transparent" />
@@ -44,7 +46,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </ScrollViewer>
-                
+
                 <StackPanel Grid.Row="2" Margin="5">
                     <Button Name="AddLayerMenuButton" Content="{i18n:Localize Add}" Click="AddLayerMenuButton_Click"
                             HorizontalAlignment="Left">
@@ -65,7 +67,7 @@
             <GridSplitter Grid.Row="1" Background="Black" />
             <!-- selected layer slider -->
             <StackPanel Grid.Row="2">
-                <TextBlock Text="{Binding SelectedLayer.Name,Converter={StaticResource LocalizeConverter}}" 
+                <TextBlock Text="{Binding SelectedLayer.Name,Converter={StaticResource LocalizeConverter}}"
                            HorizontalAlignment="Center" Margin="10" FontSize="16" />
                 <ItemsControl Background="#111111"
                               ItemsSource="{Binding SelectedLayer.Sliders}">
@@ -73,13 +75,13 @@
                         <DataTemplate>
                             <StackPanel Margin="10 0 10 0">
                                 <Grid ColumnDefinitions="*,Auto,Auto">
-                                    <TextBlock Text="{Binding Name, Converter={StaticResource LocalizeConverter}}" 
+                                    <TextBlock Text="{Binding Name, Converter={StaticResource LocalizeConverter}}"
                                                Grid.Column="0" VerticalAlignment="Center" />
                                     <TextBlock Text="{Binding CurrentValue, StringFormat=F1}" Grid.Column="1"
                                                VerticalAlignment="Center" Margin="10,0,0,0" />
                                     <Button Content="←" Command="{Binding ResetCommand}" Grid.Column="2"
-                                            Margin="5,0,0,0" Background="Transparent" 
-                                            IsVisible="True"  />
+                                            Margin="5,0,0,0" Background="Transparent"
+                                            IsVisible="True" />
                                 </Grid>
                                 <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}"
                                         Value="{Binding CurrentValue}" TickFrequency="0.05" />
