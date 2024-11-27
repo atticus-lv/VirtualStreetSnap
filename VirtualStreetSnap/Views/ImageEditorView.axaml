@@ -12,44 +12,78 @@
         <viewModels:ImageEditorViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="*,10,200" Background="#111111">
+    <Grid ColumnDefinitions="*,10,250" Background="#111111">
         <Panel>
             <ContentControl Content="{Binding EditImageViewer}" />
         </Panel>
 
-        <GridSplitter Grid.Column="1" Background="Black"></GridSplitter>
-        <ScrollViewer Grid.Column="2">
-            <StackPanel>
-
+        <GridSplitter Grid.Column="1" Background="Black" />
+        <Grid RowDefinitions="*,10,*" Grid.Column="2">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <StackPanel>
+                    <TextBlock Text="Layers" Margin="10 10 0 0" FontSize="16" HorizontalAlignment="Center" />
+                </StackPanel>
                 <!-- layers -->
-                <ListBox
-                    ItemsSource="{Binding LayerManager.Layers, Converter={StaticResource ReverseCollectionConverter}}"
-                    SelectedItem="{Binding SelectedLayer}" Margin="5">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox IsChecked="{Binding IsVisible}" />
-                                <TextBlock Text="{Binding Name}" Margin="5,0,0,0" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <!-- selected layer slider -->
-                <ItemsControl ItemsSource="{Binding SelectedLayer.Sliders}">
+                <ScrollViewer Grid.Row="1">
+                    <ListBox Background="#111111" CornerRadius="4" Margin="0 10 0 0"
+                             ItemsSource="{Binding LayerManager.Layers, Converter={StaticResource ReverseCollectionConverter}}"
+                             SelectedItem="{Binding SelectedLayer}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <CheckBox IsChecked="{Binding IsVisible}" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                               Margin="5,0,0,0" VerticalAlignment="Center" />
+                                    <Button Grid.Column="2" Content="X" Command="{Binding RemoveCommand}"
+                                            Margin="5,0,0,0" Background="Transparent" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+                <StackPanel Grid.Row="2" Margin="5">
+                    <Button Name="AddLayerMenuButton" Content="Add" Click="AddLayerMenuButton_Click"
+                            HorizontalAlignment="Left">
+                        <Button.ContextMenu>
+                            <ContextMenu Name="LayerTypeMenu" PlacementMode="TopEdgeAlignedLeft">
+                                <MenuItem Header="Brightness/Contrast"
+                                          Command="{Binding AddLayer}" CommandParameter="Brightness/Contrast" />
+                                <MenuItem Header="Sharpness"
+                                          Command="{Binding AddLayer}" CommandParameter="Sharpness" />
+                                <MenuItem Header="HSL"
+                                          Command="{Binding AddLayer}" CommandParameter="HSL" />
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <GridSplitter Grid.Row="1" Background="Black" />
+            <!-- selected layer slider -->
+            <StackPanel Grid.Row="2">
+                <TextBlock Text="{Binding SelectedLayer.Name}" HorizontalAlignment="Center" Margin="10" FontSize="16" />
+                <ItemsControl Background="#111111"
+                              ItemsSource="{Binding SelectedLayer.Sliders}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Margin="10">
+                            <StackPanel Margin="10 0 10 0">
                                 <Grid ColumnDefinitions="*,Auto,Auto">
                                     <TextBlock Text="{Binding Name}" Grid.Column="0" VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding CurrentValue, StringFormat=F1}" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
-                                    <Button Content="Reset" Command="{Binding ResetCommand}" Grid.Column="2" Margin="5,0,0,0" />
+                                    <TextBlock Text="{Binding CurrentValue, StringFormat=F1}" Grid.Column="1"
+                                               VerticalAlignment="Center" Margin="10,0,0,0" />
+                                    <Button Content="←" Command="{Binding ResetCommand}" Grid.Column="2"
+                                            Margin="5,0,0,0" Background="Transparent" 
+                                            IsVisible="True"  />
                                 </Grid>
-                                <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}" Value="{Binding CurrentValue}" />
+                                <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}"
+                                        Value="{Binding CurrentValue}" />
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
-        </ScrollViewer>
+
+        </Grid>
+
     </Grid>
 </Window>

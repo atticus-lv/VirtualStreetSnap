@@ -46,22 +46,48 @@ public partial class ImageEditorViewModel : ViewModelBase
         // Set the first layer as selected
         SelectedLayer = LayerManager.Layers.FirstOrDefault();
     }
+
+    public void AddLayer(string? layerType)
+    {
+        if (string.IsNullOrEmpty(layerType)) return;
+        switch (layerType)
+        {
+            case "Brightness/Contrast":
+                LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
+                break;
+            case "Sharpness":
+                LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
+                break;
+            case "HSL":
+                LayerManager.AddLayer(new HslLayerViewModel { Name = "HSL" });
+                break;
+            default:
+                return;
+        }
+        SelectedLayer = LayerManager.Layers.Last();
+    }
 }
 
 public class LayerManagerViewModel : ViewModelBase
 {
     public Image<Rgba32> InitialImage { get; set; }
-    
+
     public Image<Rgba32> FinalImage { get; set; }
 
     public ObservableCollection<LayerBaseViewModel> Layers { get; set; } = new();
 
     public Action<Bitmap> UpdateImageCallback { get; set; }
 
+    public LayerManagerViewModel()
+    {
+        Layers.CollectionChanged += (sender, args) => { OnPropertyChanged(nameof(Layers)); };
+    }
+
     public void AddLayer(LayerBaseViewModel layer)
     {
         Layers.Add(layer);
         layer.LayerModified += RefreshFinalImage;
+        layer.RequestRemoveLayer += RemoveLayer;
         layer.PropertyChanged += (sender, args) =>
         {
             if (args.PropertyName == nameof(LayerBaseViewModel.IsVisible)) RefreshFinalImage(layer);
@@ -70,18 +96,9 @@ public class LayerManagerViewModel : ViewModelBase
 
     public void RemoveLayer(LayerBaseViewModel layer)
     {
-        Layers.Remove(layer);
         layer.LayerModified -= RefreshFinalImage;
-    }
-
-    public void HideLayer(LayerBaseViewModel layer)
-    {
-        layer.IsVisible = false;
-    }
-
-    public void ShowLayer(LayerBaseViewModel layer)
-    {
-        layer.IsVisible = true;
+        layer.RequestRemoveLayer -= RemoveLayer;
+        Layers.Remove(layer);
     }
 
     public Bitmap DisplayImage => ImageEditHelper.ConvertToBitmap(FinalImage);
@@ -102,14 +119,11 @@ public class LayerManagerViewModel : ViewModelBase
 
         foreach (var layer in Layers)
         {
-            if (layer == modifiedLayer)
-            {
-                startApplying = true;
-            }
+            if (layer == modifiedLayer) startApplying = true;
 
             if (!startApplying) continue;
             if (!layer.IsVisible) continue;
-            
+
             layer.InitialImage = finalImage.Clone();
             layer.ApplyModifiers();
             finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
