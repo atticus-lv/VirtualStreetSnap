@@ -34,6 +34,9 @@ public partial class ImageEditorViewModel : ViewModelBase
         EditImageViewer.ViewImage = initialImage;
         LayerManager.InitialImage = ImageEditHelper.ConvertToImageSharp(initialImage.Image);
 
+        // Set the callback to update the image
+        LayerManager.UpdateImageCallback = bitmap => EditImageViewer.ViewImage.Image = bitmap;
+
         // Add initial layers
         LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
         LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
@@ -49,6 +52,8 @@ public class LayerManagerViewModel : ViewModelBase
     public Image<Rgba32> InitialImage { get; set; }
 
     public ObservableCollection<LayerBaseViewModel> Layers { get; set; } = new();
+
+    public Action<Bitmap> UpdateImageCallback { get; set; }
 
     public void AddLayer(LayerBaseViewModel layer)
     {
@@ -87,9 +92,10 @@ public class LayerManagerViewModel : ViewModelBase
 
     private void RefreshFinalImage()
     {
-        foreach (var layer in Layers)
+        var finalImage = GenerateFinalImage();
+        if (finalImage != null)
         {
-            layer.ApplyModifiers();
+            UpdateImageCallback?.Invoke(ImageEditHelper.ConvertToBitmap(finalImage));
         }
         OnPropertyChanged(nameof(DisplayImage));
     }
