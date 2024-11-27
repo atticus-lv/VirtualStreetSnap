@@ -23,10 +23,7 @@ public class SliderModel : ViewModelBase
         get => _currentValue;
         set
         {
-            if (SetProperty(ref _currentValue, value))
-            {
-                OnChange?.Invoke(value);
-            }
+            if (SetProperty(ref _currentValue, value)) OnChange?.Invoke(value);
         }
     }
 
@@ -39,10 +36,22 @@ public class SliderModel : ViewModelBase
 public abstract class LayerBaseViewModel : ViewModelBase
 {
     public string Name { get; set; }
-    public bool IsVisible { get; set; } = true;
+
+    private bool _isVisible = true;
+
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set
+        {
+            if (!SetProperty(ref _isVisible, value)) return;
+            OnLayerModified();
+        }
+    }
+
     public Image<Rgba32> InitialImage { get; set; }
     public Image<Rgba32> ModifiedImage { get; set; }
-    public ObservableCollection<SliderModel> Sliders { get; set; } = new ObservableCollection<SliderModel>();
+    public ObservableCollection<SliderModel> Sliders { get; set; } = new();
 
     public event Action LayerModified;
 
@@ -98,7 +107,7 @@ public class BrightnessContrastLayerViewModel : LayerBaseViewModel
 
 public class SharpnessLayerViewModel : LayerBaseViewModel
 {
-    public float Sharpness { get; set; } = 0.0f;
+    public float Sharpness { get; set; }
 
     public SharpnessLayerViewModel()
     {
@@ -127,7 +136,7 @@ public class SharpnessLayerViewModel : LayerBaseViewModel
 
 public class HslLayerViewModel : LayerBaseViewModel
 {
-    public float Hue { get; set; } = 0.0f;
+    public float Hue { get; set; }
     public float Saturation { get; set; } = 1.0f;
     public float Lightness { get; set; } = 1.0f;
 
