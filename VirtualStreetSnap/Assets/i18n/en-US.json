@@ -34,5 +34,8 @@
   "Saturation": "Saturation",
   "Lightness": "Lightness",
   "Layers": "Layers",
-  "Add": "Add"
+  "Add": "Add",
+  "Temperature": "Temperature",
+  "Tint": "Tint",
+  "Edit": "Edit"
 }

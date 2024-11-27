@@ -34,5 +34,8 @@
   "Saturation": "饱和度",
   "Lightness": "明度",
   "Layers": "图层",
-  "Add": "添加"
+  "Add": "添加",
+  "Temperature": "色温",
+  "Tint": "色调",
+  "Edit": "编辑"
 }

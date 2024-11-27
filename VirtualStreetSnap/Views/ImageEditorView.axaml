@@ -58,9 +58,9 @@
                                           Command="{Binding AddLayer}" CommandParameter="Sharpness" />
                                 <MenuItem Header="{i18n:Localize HSL}"
                                           Command="{Binding AddLayer}" CommandParameter="HSL" />
-                                <MenuItem Header="Temperature"
+                                <MenuItem Header="{i18n:Localize Temperature}"
                                           Command="{Binding AddLayer}" CommandParameter="Temperature" />
-                                <MenuItem Header="Tint"
+                                <MenuItem Header="{i18n:Localize Tint}"
                                           Command="{Binding AddLayer}" CommandParameter="Tint" />
                             </ContextMenu> 
                         </Button.ContextMenu>
