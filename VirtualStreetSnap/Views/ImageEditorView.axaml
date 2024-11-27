@@ -18,6 +18,8 @@
     <Grid ColumnDefinitions="*,10,250" Background="#111111">
         <Panel>
             <ContentControl Content="{Binding EditImageViewer}" />
+            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="Save" Margin="10"
+                    Command="{Binding SaveImageToGalleryDirectory}"/>
         </Panel>
 
         <GridSplitter Grid.Column="1" Background="Black" />

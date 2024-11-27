@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -91,6 +93,17 @@ public partial class ImageEditorViewModel : ViewModelBase
         }
 
         SelectedLayer = LayerManager.Layers.Last();
+    }
+    
+    [RelayCommand]
+    public void SaveImageToGalleryDirectory()
+    {
+        var config = ConfigService.Instance;
+        var saveDirectory = config.Settings.SaveDirectory;
+        var imageBase = EditImageViewer.ViewImage;
+        var newName = imageBase.ImgName + "_edited";
+        var newFilePath = Path.Combine(saveDirectory, newName + ".png");
+        imageBase.Image.Save(newFilePath);
     }
 }
 
