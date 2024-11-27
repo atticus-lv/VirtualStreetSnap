@@ -44,7 +44,7 @@ public partial class SettingsViewModel : ViewModelBase
     partial void OnSelectedLanguageChanged(LanguageModel value)
     {
         var language = value.Identifier;
-        Translate(language);
+        Localizer.Localizer.Instance.LoadLanguage(language);
         Config.Settings.Language = language;
     }
 
@@ -58,24 +58,5 @@ public partial class SettingsViewModel : ViewModelBase
         await task;
         // save the config
         Config.Settings.SaveDirectory = SaveDirectory;
-    }
-
-    private void Translate(string targetLanguage)
-    {   
-        Localizer.Localizer.Instance.LoadLanguage(targetLanguage);
-
-        var translations = App.Current.Resources.MergedDictionaries.OfType<ResourceInclude>()
-            .FirstOrDefault(x => x.Source?.OriginalString?.Contains("/Lang/") ?? false);
-
-        if (translations != null)
-            App.Current.Resources.MergedDictionaries.Remove(translations);
-
-        // var resource = AssetLoader.Open(new Uri($"avares://LocalizationSample/Assets/Lang/{targetLanguage}.axaml"));
-
-        App.Current.Resources.MergedDictionaries.Add(
-            new ResourceInclude(new Uri($"avares://VirtualStreetSnap/Assets/Lang/{targetLanguage}.axaml"))
-            {
-                Source = new Uri($"avares://VirtualStreetSnap/Assets/Lang/{targetLanguage}.axaml")
-            });
     }
 }

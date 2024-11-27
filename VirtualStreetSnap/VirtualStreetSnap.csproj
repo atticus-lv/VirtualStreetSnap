@@ -50,4 +50,9 @@
     <ItemGroup>
       <Folder Include="Assets\Images\" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Assets\Lang\en-US.axaml" />
+      <UpToDateCheckInput Remove="Assets\Lang\zh-CN.axaml" />
+    </ItemGroup>
 </Project>
