@@ -76,7 +76,7 @@
                                             IsVisible="True"  />
                                 </Grid>
                                 <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}"
-                                        Value="{Binding CurrentValue}" />
+                                        Value="{Binding CurrentValue}" TickFrequency="0.05" />
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

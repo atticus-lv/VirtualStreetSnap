@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -50,7 +52,8 @@ public partial class ImageEditorViewModel : ViewModelBase
         LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
         LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
         LayerManager.AddLayer(new HslLayerViewModel { Name = "HSL" });
-        SelectedLayer = LayerManager.Layers.FirstOrDefault();
+        SelectedLayer = LayerManager.Layers.LastOrDefault();
+        if (SelectedLayer != null) LayerManager.RefreshFinalImage(SelectedLayer);
     }
 
     public void AddLayer(string? layerType)
@@ -77,16 +80,24 @@ public partial class ImageEditorViewModel : ViewModelBase
 
 public class LayerManagerViewModel : ViewModelBase
 {
+    private bool _isGeneratingImage;
+    private CancellationTokenSource _cancellationTokenSource = new();
+    private readonly bool _asyncDisplay;
+
+
     public Image<Rgba32> InitialImage { get; set; }
 
     public Image<Rgba32> FinalImage { get; set; }
+
+    private Bitmap DisplayImage { get; set; }
 
     public ObservableCollection<LayerBaseViewModel> Layers { get; set; } = new();
 
     public Action<Bitmap> UpdateImageCallback { get; set; }
 
-    public LayerManagerViewModel()
+    public LayerManagerViewModel(bool asyncDisplay = true)
     {
+        _asyncDisplay = asyncDisplay;
         Layers.CollectionChanged += (sender, args) => { OnPropertyChanged(nameof(Layers)); };
     }
 
@@ -106,36 +117,64 @@ public class LayerManagerViewModel : ViewModelBase
         layer.LayerModified -= RefreshFinalImage;
         layer.RequestRemoveLayer -= RemoveLayer;
         Layers.Remove(layer);
+        // release
+        layer.InitialImage?.Dispose();
+        layer.ModifiedImage?.Dispose();
+        GC.Collect();
     }
 
-    public Bitmap DisplayImage => ImageEditHelper.ConvertToBitmap(FinalImage);
 
-    private void RefreshFinalImage(LayerBaseViewModel modifiedLayer)
+    internal async void RefreshFinalImage(LayerBaseViewModel modifiedLayer)
     {
         var finalImage = GenerateFinalImage(modifiedLayer);
         FinalImage = finalImage;
-        UpdateImageCallback?.Invoke(ImageEditHelper.ConvertToBitmap(finalImage));
-        OnPropertyChanged(nameof(DisplayImage));
+        DisplayImage = _asyncDisplay
+            ? await Task.Run(() => ImageEditHelper.ConvertToBitmap(finalImage))
+            : ImageEditHelper.ConvertToBitmap(finalImage);
+        UpdateImageCallback?.Invoke(DisplayImage);
     }
 
     private Image<Rgba32> GenerateFinalImage(LayerBaseViewModel? modifiedLayer)
+        // private Bitmap GenerateFinalImage(LayerBaseViewModel? modifiedLayer)
     {
-        if (Layers.Count == 0) return null;
-        var finalImage = InitialImage.Clone();
-        var startApplying = modifiedLayer == null;
-
-        foreach (var layer in Layers)
+        if (_isGeneratingImage)
         {
-            if (layer == modifiedLayer) startApplying = true;
-
-            if (!startApplying) continue;
-            if (!layer.IsVisible) continue;
-
-            layer.InitialImage = finalImage.Clone();
-            layer.ApplyModifiers();
-            finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        return finalImage;
+        _isGeneratingImage = true;
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        try
+        {
+            if (Layers.Count == 0) return null;
+            var finalImage = InitialImage.Clone();
+            var startApplying = modifiedLayer == null;
+
+            foreach (var layer in Layers)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    GC.Collect();
+                    return null;
+                }
+
+                if (layer == modifiedLayer) startApplying = true;
+
+                if (!startApplying) continue;
+                if (!layer.IsVisible) continue;
+
+                layer.InitialImage = finalImage.Clone();
+                layer.ApplyModifiers();
+                finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
+            }
+
+            return finalImage;
+        }
+        finally
+        {
+            _isGeneratingImage = false;
+        }
     }
 }
