@@ -194,6 +194,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
         {
             DataContext = new ImageEditorViewModel(SelectedThumbnail)
         };
+
         editorWindow.Show();
     }
 }

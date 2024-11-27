@@ -30,6 +30,11 @@ public partial class ImageEditorViewModel : ViewModelBase
 
     public ImageEditorViewModel(ImageBase? image)
     {
+        SetupImage(null);
+    }
+
+    public void SetupImage(ImageBase? image)
+    {
         if (image == null)
         {
             var initialImage = new ImageBase
@@ -75,6 +80,14 @@ public partial class ImageEditorViewModel : ViewModelBase
         }
 
         SelectedLayer = LayerManager.Layers.Last();
+    }
+}
+
+public partial class DesignImageEditorViewModel : ImageEditorViewModel
+{
+    public DesignImageEditorViewModel() : base(null)
+    {
+        SetupImage(null);
     }
 }
 

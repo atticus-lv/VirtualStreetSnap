@@ -10,7 +10,7 @@
         x:DataType="viewModels:ImageEditorViewModel">
 
     <Design.DataContext>
-        <viewModels:ImageEditorViewModel />
+        <viewModels:DesignImageEditorViewModel />
     </Design.DataContext>
 
     <Grid ColumnDefinitions="*,10,250" Background="#111111">
