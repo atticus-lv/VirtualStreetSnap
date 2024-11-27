@@ -48,7 +48,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {   
-        Localizer.Localizer.Instance.LoadLanguage("zh-CN");
         SelectedSizeRadio = RadioItems.First();
         ConfigService.SaveIfNotExists();
     }

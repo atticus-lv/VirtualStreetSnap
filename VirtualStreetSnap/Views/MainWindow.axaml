@@ -6,6 +6,7 @@
         xmlns:models="clr-namespace:VirtualStreetSnap.Models"
         xmlns:views="clr-namespace:VirtualStreetSnap.Views"
         xmlns:services="clr-namespace:VirtualStreetSnap.Services"
+        xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="VirtualStreetSnap.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -54,7 +55,7 @@
                     </Button.IsEnabled>
                     <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="20 0 20 0">
                         <PathIcon Data="{StaticResource CameraRegular}"/>
-                        <TextBlock Text="{DynamicResource My.Lang.SnapShot}" VerticalAlignment="Center"
+                        <TextBlock Text="{i18n:Localize  SnapShot}" VerticalAlignment="Center"
                                    IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=600}" />
                     </StackPanel>
                 </Button>
@@ -64,7 +65,7 @@
                                       Click="ToggleGalleryButton_Click" IsChecked="{Binding IsGalleryView}">
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <PathIcon Data="{StaticResource ImageLibraryRegular}" />
-                                <TextBlock Text="{DynamicResource My.Lang.Gallery}" VerticalAlignment="Center"
+                                <TextBlock Text="{i18n:Localize  Gallery}" VerticalAlignment="Center"
                                            IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
                             </StackPanel>
                         </ToggleButton>
@@ -72,7 +73,7 @@
                                       Click="ToggleSettingsButton_Click" IsChecked="{Binding IsSettingsView}">
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <PathIcon Data="{StaticResource Settings}" />
-                                <TextBlock Text="{DynamicResource My.Lang.Settings}" VerticalAlignment="Center"
+                                <TextBlock Text="{i18n:Localize  Settings}" VerticalAlignment="Center"
                                            IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
                             </StackPanel>
                         </ToggleButton>

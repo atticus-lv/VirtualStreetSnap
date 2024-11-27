@@ -61,7 +61,9 @@ public partial class SettingsViewModel : ViewModelBase
     }
 
     private void Translate(string targetLanguage)
-    {
+    {   
+        Localizer.Localizer.Instance.LoadLanguage(targetLanguage);
+
         var translations = App.Current.Resources.MergedDictionaries.OfType<ResourceInclude>()
             .FirstOrDefault(x => x.Source?.OriginalString?.Contains("/Lang/") ?? false);
 
