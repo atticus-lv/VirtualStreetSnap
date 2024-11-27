@@ -27,6 +27,8 @@
                     VerticalContentAlignment="Center"
                     VerticalAlignment="Center" HorizontalAlignment="Right"
                     IsVisible="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Panel}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}" />
+            <Button Content="Edit" VerticalAlignment="Top" HorizontalAlignment="Center"
+                    Command="{Binding EditSelectedImageCommand}" Margin="10" />
         </Panel>
         <GridSplitter Grid.Row="1" Background="Black"></GridSplitter>
         <!-- Thumbnails Display -->

@@ -26,14 +26,22 @@ public partial class ImageEditorViewModel : ViewModelBase
     [ObservableProperty]
     private LayerBaseViewModel? _selectedLayer;
 
-    public ImageEditorViewModel()
+    public ImageEditorViewModel(ImageBase? image)
     {
-        var initialImage = new ImageBase
+        if (image == null)
         {
-            Image = new Bitmap(AssetLoader.Open(new Uri(DefaultImagePath)))
-        };
-        EditImageViewer.ViewImage = initialImage;
-        LayerManager.InitialImage = ImageEditHelper.ConvertToImageSharp(initialImage.Image);
+            var initialImage = new ImageBase
+            {
+                Image = new Bitmap(AssetLoader.Open(new Uri(DefaultImagePath)))
+            };
+            EditImageViewer.ViewImage = initialImage;
+            LayerManager.InitialImage = ImageEditHelper.ConvertToImageSharp(initialImage.Image);
+        }
+        else
+        {
+            EditImageViewer.ViewImage = image;
+            LayerManager.InitialImage = ImageEditHelper.ConvertToImageSharp(image.Image);
+        }
 
         // Set the callback to update the image
         LayerManager.UpdateImageCallback = bitmap => EditImageViewer.ViewImage.Image = bitmap;
@@ -42,8 +50,6 @@ public partial class ImageEditorViewModel : ViewModelBase
         LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
         LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
         LayerManager.AddLayer(new HslLayerViewModel { Name = "HSL" });
-
-        // Set the first layer as selected
         SelectedLayer = LayerManager.Layers.FirstOrDefault();
     }
 
@@ -64,6 +70,7 @@ public partial class ImageEditorViewModel : ViewModelBase
             default:
                 return;
         }
+
         SelectedLayer = LayerManager.Layers.Last();
     }
 }

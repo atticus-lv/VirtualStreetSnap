@@ -6,11 +6,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
+using VirtualStreetSnap.Views;
 
 namespace VirtualStreetSnap.ViewModels;
 
@@ -180,5 +182,18 @@ public partial class ImageGalleryViewModel : ViewModelBase
     {
         if (SelectedThumbnail == null) return;
         await PowerShellClipBoard.SetImage(SelectedThumbnail.ImgPath);
+    }
+    
+    [RelayCommand]
+    public void EditSelectedImage()
+    {
+        if (SelectedThumbnail == null) return;
+        if (Design.IsDesignMode) return;
+
+        var editorWindow = new ImageEditorView
+        {
+            DataContext = new ImageEditorViewModel(SelectedThumbnail)
+        };
+        editorWindow.Show();
     }
 }
