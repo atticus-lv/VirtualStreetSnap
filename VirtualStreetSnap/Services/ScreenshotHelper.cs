@@ -35,6 +35,7 @@ public static class ScreenshotHelper
         ms.Seek(0, SeekOrigin.Begin);
         return new Bitmap(ms);
     }
+
     /// <summary>
     /// Crops the specified source image to the specified bounds.
     /// </summary>
@@ -52,42 +53,28 @@ public static class ScreenshotHelper
         return croppedImage;
     }
 
-    /// <summary>
-    /// Captures the specified control and returns a SKBitmap.
-    /// </summary>
-    /// <param name="target"></param>
-    /// <returns></returns>
-    public static void CaptureControl(Visual target,string savePath)
+
+    // Method to capture the control as an SKBitmap
+    public static SKBitmap CaptureControlSKBitmap(Visual? target)
     {
         var skBitmap = new SKBitmap((int)target.Bounds.Width, (int)target.Bounds.Height);
-        using (var skCanvas = new SKCanvas(skBitmap))
-        {
-            DrawingContextHelper.RenderAsync(skCanvas, target);
-        }
+        using var skCanvas = new SKCanvas(skBitmap);
+        DrawingContextHelper.RenderAsync(skCanvas, target);
 
-        using var image = SKImage.FromBitmap(skBitmap);
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-
-        using (var stream = System.IO.File.OpenWrite(savePath))
-        {
-            data.SaveTo(stream);
-        }
+        return skBitmap;
     }
-    
-    /// <summary>
-    /// Gets the color of the pixel at the specified point in the specified control.
-    /// </summary>
-    /// <param name="target"></param>
-    /// <param name="point"></param>
-    /// <returns></returns>
-    public static SKColor GetColorAtControl(Visual? target, Point point)
-    {
-        var skBitmap = new SKBitmap((int)target.Bounds.Width, (int)target.Bounds.Height);
-        using (var skCanvas = new SKCanvas(skBitmap))
-        {
-            DrawingContextHelper.RenderAsync(skCanvas, target);
-        }
 
-        return skBitmap.GetPixel((int)point.X, (int)point.Y);
+    // Method to get the color at a specific point from an SKBitmap
+    public static SKColor GetColorFromSKBitmap(SKBitmap bitmap, Point point)
+    {
+        return bitmap.GetPixel((int)point.X, (int)point.Y);
+    }
+
+    public static void SaveSkBitmap(SKBitmap bitmap, string path)
+    {
+        using var image = SKImage.FromBitmap(bitmap);
+        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        using var stream = File.OpenWrite(path);
+        data.SaveTo(stream);
     }
 }
