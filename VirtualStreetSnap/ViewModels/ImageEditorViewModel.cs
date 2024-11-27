@@ -55,9 +55,13 @@ public partial class ImageEditorViewModel : ViewModelBase
         LayerManager.UpdateImageCallback = bitmap => EditImageViewer.ViewImage.Image = bitmap;
 
         // Add initial layers
-        LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "BrightnessContrast" });
-        LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
-        LayerManager.AddLayer(new HslLayerViewModel { Name = "HSL" });
+        if (LayerManager.Layers.Count == 0)
+        {
+            LayerManager.AddLayer(new TemperatureLayerViewModel());
+            LayerManager.AddLayer(new BrightnessContrastLayerViewModel());
+            LayerManager.AddLayer(new HslLayerViewModel());
+        }
+
         SelectedLayer = LayerManager.Layers.LastOrDefault();
         if (SelectedLayer != null) LayerManager.RefreshFinalImage(SelectedLayer);
     }
@@ -68,13 +72,19 @@ public partial class ImageEditorViewModel : ViewModelBase
         switch (layerType)
         {
             case "BrightnessContrast":
-                LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "BrightnessContrast" });
+                LayerManager.AddLayer(new BrightnessContrastLayerViewModel());
                 break;
             case "Sharpness":
-                LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
+                LayerManager.AddLayer(new SharpnessLayerViewModel());
                 break;
             case "HSL":
-                LayerManager.AddLayer(new HslLayerViewModel { Name = "HSL" });
+                LayerManager.AddLayer(new HslLayerViewModel());
+                break;
+            case "Temperature":
+                LayerManager.AddLayer(new TemperatureLayerViewModel());
+                break;
+            case "Tint":
+                LayerManager.AddLayer(new TintLayerViewModel());
                 break;
             default:
                 return;

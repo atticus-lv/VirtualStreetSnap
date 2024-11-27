@@ -3,7 +3,8 @@
 namespace VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
 public class BrightnessContrastLayerViewModel : LayerBaseViewModel
-{
+{   
+    public override string Name { get; set; } = "BrightnessContrast";
     public float Brightness { get; set; } = 1.0f;
     public float Contrast { get; set; } = 1.0f;
 

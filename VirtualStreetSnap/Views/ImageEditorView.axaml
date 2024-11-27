@@ -52,13 +52,17 @@
                             HorizontalAlignment="Left">
                         <Button.ContextMenu>
                             <ContextMenu Name="LayerTypeMenu" PlacementMode="TopEdgeAlignedLeft">
-                                <MenuItem Header="{i18n:Localize BrightnessAndContrast}"
+                                <MenuItem Header="{i18n:Localize BrightnessContrast}"
                                           Command="{Binding AddLayer}" CommandParameter="BrightnessContrast" />
                                 <MenuItem Header="{i18n:Localize Sharpness}"
                                           Command="{Binding AddLayer}" CommandParameter="Sharpness" />
                                 <MenuItem Header="{i18n:Localize HSL}"
                                           Command="{Binding AddLayer}" CommandParameter="HSL" />
-                            </ContextMenu>
+                                <MenuItem Header="Temperature"
+                                          Command="{Binding AddLayer}" CommandParameter="Temperature" />
+                                <MenuItem Header="Tint"
+                                          Command="{Binding AddLayer}" CommandParameter="Tint" />
+                            </ContextMenu> 
                         </Button.ContextMenu>
                     </Button>
                 </StackPanel>
