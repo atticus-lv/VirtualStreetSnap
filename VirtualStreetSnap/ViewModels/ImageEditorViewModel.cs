@@ -147,6 +147,7 @@ public class LayerManagerViewModel : ViewModelBase
         {
             if (args.PropertyName == nameof(LayerBaseViewModel.IsVisible)) RefreshFinalImage(layer);
         };
+        GenerateFinalImage(Layers.First());
     }
 
     public void RemoveLayer(LayerBaseViewModel layer)
