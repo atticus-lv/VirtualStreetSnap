@@ -9,6 +9,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
+using VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
 namespace VirtualStreetSnap.ViewModels;
 
