@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -30,6 +31,11 @@ public partial class ImageEditorViewModel : ViewModelBase
 
     public ImageEditorViewModel(ImageBase? image)
     {
+        SetupImage(Design.IsDesignMode ? null : image);
+    }
+
+    public void SetupImage(ImageBase? image)
+    {
         if (image == null)
         {
             var initialImage = new ImageBase
@@ -49,7 +55,7 @@ public partial class ImageEditorViewModel : ViewModelBase
         LayerManager.UpdateImageCallback = bitmap => EditImageViewer.ViewImage.Image = bitmap;
 
         // Add initial layers
-        LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
+        LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "BrightnessContrast" });
         LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
         LayerManager.AddLayer(new HslLayerViewModel { Name = "HSL" });
         SelectedLayer = LayerManager.Layers.LastOrDefault();
@@ -61,8 +67,8 @@ public partial class ImageEditorViewModel : ViewModelBase
         if (string.IsNullOrEmpty(layerType)) return;
         switch (layerType)
         {
-            case "Brightness/Contrast":
-                LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
+            case "BrightnessContrast":
+                LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "BrightnessContrast" });
                 break;
             case "Sharpness":
                 LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
@@ -75,6 +81,14 @@ public partial class ImageEditorViewModel : ViewModelBase
         }
 
         SelectedLayer = LayerManager.Layers.Last();
+    }
+}
+
+public partial class DesignImageEditorViewModel : ImageEditorViewModel
+{
+    public DesignImageEditorViewModel() : base(null)
+    {
+        SetupImage(null);
     }
 }
 

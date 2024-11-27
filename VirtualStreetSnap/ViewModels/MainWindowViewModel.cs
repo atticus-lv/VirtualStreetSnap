@@ -47,7 +47,7 @@ public partial class MainWindowViewModel : ViewModelBase
     ];
 
     public MainWindowViewModel()
-    {
+    {   
         SelectedSizeRadio = RadioItems.First();
         ConfigService.SaveIfNotExists();
     }

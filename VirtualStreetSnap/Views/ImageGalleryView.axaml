@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
              xmlns:views="clr-namespace:VirtualStreetSnap.Views"
+             xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
              xmlns:models="clr-namespace:VirtualStreetSnap.Models"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              x:Class="VirtualStreetSnap.Views.ImageGalleryView"
@@ -42,8 +43,8 @@
                      SelectionMode="Single">
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="{DynamicResource My.Lang.Delete}" Command="{Binding DeleteSelectedThumbnail}" />
-                        <MenuItem Header="{DynamicResource My.Lang.OpenInFolder}"
+                        <MenuItem Header="{i18n:Localize  Delete}" Command="{Binding DeleteSelectedThumbnail}" />
+                        <MenuItem Header="{i18n:Localize  OpenInFolder}"
                                   Command="{Binding OpenSelectedThumbnailFolder}" />
                     </ContextMenu>
                 </ListBox.ContextMenu>

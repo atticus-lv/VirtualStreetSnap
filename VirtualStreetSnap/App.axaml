@@ -4,20 +4,19 @@
              xmlns:local="using:VirtualStreetSnap"
              xmlns:converters="clr-namespace:VirtualStreetSnap.Converters"
              xmlns:global="clr-namespace:"
+             xmlns:localizer="clr-namespace:VirtualStreetSnap.Localizer"
              RequestedThemeVariant="Dark">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Resources>
         <ResourceDictionary>
             <converters:WidthToVisibilityConverter x:Key="WidthToVisibilityConverter" />
             <converters:ReverseCollectionConverter x:Key="ReverseCollectionConverter" />
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="/Assets/Lang/en-US.axaml" />
-            </ResourceDictionary.MergedDictionaries>
+            <localizer:LocalizeConverter x:Key="LocalizeConverter" />
         </ResourceDictionary>
     </Application.Resources>
 
