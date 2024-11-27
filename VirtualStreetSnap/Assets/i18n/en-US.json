@@ -23,5 +23,16 @@
   "ImageName": "Image Name",
   "ImageSize": "Image Size",
   "Settings": "Settings",
-  "FocusBorder": "Focus Border"
+  "FocusBorder": "Focus Border",
+  "ImageEditor": "Image Editor",
+  "BrightnessContrast": "Brightness/Contrast",
+  "Brightness": "Brightness",
+  "Contrast": "Contrast",
+  "HSL": "Hue/Saturation/Lightness",
+  "Sharpness": "Sharpness",
+  "Hue": "Hue",
+  "Saturation": "Saturation",
+  "Lightness": "Lightness",
+  "Layers": "Layers",
+  "Add": "Add"
 }

@@ -23,5 +23,16 @@
   "ImageName": "图像名称",
   "ImageSize": "图像大小",
   "Settings": "设置",
-  "FocusBorder": "边界框"
+  "FocusBorder": "边界框",
+  "ImageEditor": "图像编辑器",
+  "BrightnessContrast": "亮度/对比度",
+  "Brightness": "亮度",
+  "Contrast": "对比度",
+  "HSL": "色相/饱和度/亮度",
+  "Sharpness": "锐化",
+  "Hue": "色相",
+  "Saturation": "饱和度",
+  "Lightness": "明度",
+  "Layers": "图层",
+  "Add": "添加"
 }

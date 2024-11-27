@@ -54,7 +54,7 @@ public partial class ImageEditorViewModel : ViewModelBase
         LayerManager.UpdateImageCallback = bitmap => EditImageViewer.ViewImage.Image = bitmap;
 
         // Add initial layers
-        LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
+        LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "BrightnessContrast" });
         LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
         LayerManager.AddLayer(new HslLayerViewModel { Name = "HSL" });
         SelectedLayer = LayerManager.Layers.LastOrDefault();
@@ -66,8 +66,8 @@ public partial class ImageEditorViewModel : ViewModelBase
         if (string.IsNullOrEmpty(layerType)) return;
         switch (layerType)
         {
-            case "Brightness/Contrast":
-                LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
+            case "BrightnessContrast":
+                LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "BrightnessContrast" });
                 break;
             case "Sharpness":
                 LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
