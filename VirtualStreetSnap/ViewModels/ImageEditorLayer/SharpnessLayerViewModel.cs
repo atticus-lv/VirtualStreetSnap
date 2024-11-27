@@ -3,7 +3,8 @@
 namespace VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
 public class SharpnessLayerViewModel : LayerBaseViewModel
-{
+{   
+    public override string Name { get; set; } = "Sharpness";
     public float Sharpness { get; set; }
 
     public SharpnessLayerViewModel()
