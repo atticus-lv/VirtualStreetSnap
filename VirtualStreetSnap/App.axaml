@@ -3,6 +3,7 @@
              x:Class="VirtualStreetSnap.App"
              xmlns:local="using:VirtualStreetSnap"
              xmlns:converters="clr-namespace:VirtualStreetSnap.Converters"
+             xmlns:global="clr-namespace:"
              RequestedThemeVariant="Dark">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
@@ -13,6 +14,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <converters:WidthToVisibilityConverter x:Key="WidthToVisibilityConverter" />
+            <converters:ReverseCollectionConverter x:Key="ReverseCollectionConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="/Assets/Lang/en-US.axaml" />
             </ResourceDictionary.MergedDictionaries>

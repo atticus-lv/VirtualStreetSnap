@@ -1,0 +1,56 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+        x:Class="VirtualStreetSnap.Views.ImageEditorView"
+        Title="ImageEditorView"
+        x:DataType="viewModels:ImageEditorViewModel">
+
+    <Design.DataContext>
+        <viewModels:ImageEditorViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="*,10,200" Background="#111111">
+        <Panel>
+            <ContentControl Content="{Binding EditImageViewer}" />
+        </Panel>
+
+        <GridSplitter Grid.Column="1" Background="Black"></GridSplitter>
+        <ScrollViewer Grid.Column="2">
+            <StackPanel>
+
+                <!-- layers -->
+                <ListBox
+                    ItemsSource="{Binding LayerManager.Layers, Converter={StaticResource ReverseCollectionConverter}}"
+                    SelectedItem="{Binding SelectedLayer}" Margin="5">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding IsVisible}" />
+                                <TextBlock Text="{Binding Name}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <!-- selected layer slider -->
+                <ItemsControl ItemsSource="{Binding SelectedLayer.Sliders}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="10">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Text="{Binding Name}" Grid.Column="0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding CurrentValue, StringFormat=F1}" Grid.Column="1" VerticalAlignment="Center"
+                                               Margin="10,0,0,0" />
+                                </Grid>
+                                <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}"
+                                        Value="{Binding CurrentValue}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
