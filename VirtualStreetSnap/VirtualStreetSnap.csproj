@@ -17,7 +17,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>0.0.7</Version>
+        <Version>0.0.8</Version>
         <Authors>Atticus</Authors>
         <Description>A simple screen shot tool design for VirtualStreetSnap</Description>
     </PropertyGroup>
@@ -49,5 +49,10 @@
     
     <ItemGroup>
       <Folder Include="Assets\Images\" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Assets\Lang\en-US.axaml" />
+      <UpToDateCheckInput Remove="Assets\Lang\zh-CN.axaml" />
     </ItemGroup>
 </Project>

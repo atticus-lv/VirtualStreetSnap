@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
+             xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="VirtualStreetSnap.Views.CompositionGuidesView"
              x:DataType="viewModels:CompositionGuidesViewModel">
@@ -25,23 +26,23 @@
                 IsVisible="{Binding ShowFocusBorder}" />
 
         <Button Padding="0" Opacity="0.5" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <PathIcon Data="{StaticResource Overlay}" ToolTip.Tip="{DynamicResource My.Lang.Guides}" Width="30" Height="30" />
+            <PathIcon Data="{StaticResource Overlay}" ToolTip.Tip="{i18n:Localize  Guides}" Width="30" Height="30" />
             <Button.Flyout>
                 <Flyout Placement="BottomEdgeAlignedLeft" >
                     <StackPanel Width="150">
-                        <CheckBox Content="{DynamicResource My.Lang.FocusBorder}"
+                        <CheckBox Content="{i18n:Localize  FocusBorder}"
                                   IsChecked="{Binding ShowFocusBorder, Mode=TwoWay}" />
-                        <CheckBox Content="{DynamicResource My.Lang.Grid}"
+                        <CheckBox Content="{i18n:Localize  Grid}"
                                   IsChecked="{Binding ShowGuideLinesGrid, Mode=TwoWay}" />
-                        <CheckBox Content="{DynamicResource My.Lang.Center}"
+                        <CheckBox Content="{i18n:Localize  Center}"
                                   IsChecked="{Binding ShowGuideLinesCenter, Mode=TwoWay}" />
-                        <CheckBox Content="{DynamicResource My.Lang.Ratio}"
+                        <CheckBox Content="{i18n:Localize  Ratio}"
                                   IsChecked="{Binding ShowGuideLinesRatio, Mode=TwoWay}" />
                         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Slider Width="80" Maximum="1" Minimum="0" TickFrequency="0.1"
                                     Value="{Binding GuideLinesOpacity}" Margin="0 0 10 0" />
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                <TextBlock Text="{DynamicResource My.Lang.Opacity}" VerticalAlignment="Center"
+                                <TextBlock Text="{i18n:Localize  Opacity}" VerticalAlignment="Center"
                                            Margin="10,0,0,0" />
                                 <TextBlock>:</TextBlock>
                                 <TextBlock Text="{Binding GuideLinesOpacity, StringFormat='{}{0:F1}'}"

@@ -4,6 +4,7 @@ namespace VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
 public class HslLayerViewModel : LayerBaseViewModel
 {
+    public override string Name { get; set; } = "HSL";
     public float Hue { get; set; }
     public float Saturation { get; set; } = 1.0f;
     public float Lightness { get; set; } = 1.0f;

@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -28,6 +33,11 @@ public partial class ImageEditorViewModel : ViewModelBase
 
     public ImageEditorViewModel(ImageBase? image)
     {
+        SetupImage(Design.IsDesignMode ? null : image);
+    }
+
+    public void SetupImage(ImageBase? image)
+    {
         if (image == null)
         {
             var initialImage = new ImageBase
@@ -47,46 +57,110 @@ public partial class ImageEditorViewModel : ViewModelBase
         LayerManager.UpdateImageCallback = bitmap => EditImageViewer.ViewImage.Image = bitmap;
 
         // Add initial layers
-        LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
-        LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
-        LayerManager.AddLayer(new HslLayerViewModel { Name = "HSL" });
-        SelectedLayer = LayerManager.Layers.FirstOrDefault();
+        if (LayerManager.Layers.Count == 0)
+        {
+            LayerManager.AddLayer(new TemperatureLayerViewModel());
+            LayerManager.AddLayer(new BrightnessContrastLayerViewModel());
+            LayerManager.AddLayer(new HslLayerViewModel());
+        }
+
+        SelectedLayer = LayerManager.Layers.LastOrDefault();
+        if (SelectedLayer != null) LayerManager.RefreshFinalImage(SelectedLayer);
+    }
+    [RelayCommand]
+    public void RemoveLayer()
+    {   
+        var index = LayerManager.Layers.IndexOf(SelectedLayer);
+        LayerManager.RemoveLayer(SelectedLayer);
+        // If the removed layer was the selected layer, select the nearest layer
+        if (index == LayerManager.Layers.Count) index--;
+        SelectedLayer = LayerManager.Layers.ElementAtOrDefault(index);
+    }
+    
+    [RelayCommand]
+    public void MoveLayerUp()
+    {
+        var index = LayerManager.Layers.IndexOf(SelectedLayer);
+        LayerManager.MoveLayer(SelectedLayer, index + 1);
     }
 
+    [RelayCommand]
+    public void MoveLayerDown(LayerBaseViewModel layer)
+    {
+        var index = LayerManager.Layers.IndexOf(SelectedLayer);
+        LayerManager.MoveLayer(SelectedLayer, index - 1);
+    }
+    
     public void AddLayer(string? layerType)
     {
         if (string.IsNullOrEmpty(layerType)) return;
         switch (layerType)
         {
-            case "Brightness/Contrast":
-                LayerManager.AddLayer(new BrightnessContrastLayerViewModel { Name = "Brightness/Contrast" });
+            case "BrightnessContrast":
+                LayerManager.AddLayer(new BrightnessContrastLayerViewModel());
                 break;
             case "Sharpness":
-                LayerManager.AddLayer(new SharpnessLayerViewModel { Name = "Sharpness" });
+                LayerManager.AddLayer(new SharpnessLayerViewModel());
                 break;
             case "HSL":
-                LayerManager.AddLayer(new HslLayerViewModel { Name = "HSL" });
+                LayerManager.AddLayer(new HslLayerViewModel());
+                break;
+            case "Temperature":
+                LayerManager.AddLayer(new TemperatureLayerViewModel());
+                break;
+            case "Tint":
+                LayerManager.AddLayer(new TintLayerViewModel());
                 break;
             default:
                 return;
         }
 
-        SelectedLayer = LayerManager.Layers.Last();
+        // move the layer to the top of selected layer, if no layer is selected, move to the top
+        var index = SelectedLayer == null ? 0 : LayerManager.Layers.IndexOf(SelectedLayer);
+        LayerManager.MoveLayer(LayerManager.Layers.Last(), index);
+        
+    }
+    
+    [RelayCommand]
+    public void SaveImageToGalleryDirectory()
+    {
+        var config = ConfigService.Instance;
+        var saveDirectory = config.Settings.SaveDirectory;
+        var imageBase = EditImageViewer.ViewImage;
+        var newName = imageBase.ImgName + "_edited";
+        var newFilePath = Path.Combine(saveDirectory, newName + ".png");
+        imageBase.Image.Save(newFilePath);
+    }
+}
+
+public partial class DesignImageEditorViewModel : ImageEditorViewModel
+{
+    public DesignImageEditorViewModel() : base(null)
+    {
+        SetupImage(null);
     }
 }
 
 public class LayerManagerViewModel : ViewModelBase
 {
+    private bool _isGeneratingImage;
+    private CancellationTokenSource _cancellationTokenSource = new();
+    private readonly bool _asyncDisplay;
+
+
     public Image<Rgba32> InitialImage { get; set; }
 
     public Image<Rgba32> FinalImage { get; set; }
+
+    private Bitmap DisplayImage { get; set; }
 
     public ObservableCollection<LayerBaseViewModel> Layers { get; set; } = new();
 
     public Action<Bitmap> UpdateImageCallback { get; set; }
 
-    public LayerManagerViewModel()
+    public LayerManagerViewModel(bool asyncDisplay = true)
     {
+        _asyncDisplay = asyncDisplay;
         Layers.CollectionChanged += (sender, args) => { OnPropertyChanged(nameof(Layers)); };
     }
 
@@ -99,6 +173,7 @@ public class LayerManagerViewModel : ViewModelBase
         {
             if (args.PropertyName == nameof(LayerBaseViewModel.IsVisible)) RefreshFinalImage(layer);
         };
+        GenerateFinalImage();
     }
 
     public void RemoveLayer(LayerBaseViewModel layer)
@@ -106,36 +181,67 @@ public class LayerManagerViewModel : ViewModelBase
         layer.LayerModified -= RefreshFinalImage;
         layer.RequestRemoveLayer -= RemoveLayer;
         Layers.Remove(layer);
+        layer.InitialImage?.Dispose();
+        layer.ModifiedImage?.Dispose();
+        GC.Collect();
+        RefreshFinalImage();
+    }
+    
+    public void MoveLayer(LayerBaseViewModel layer, int newIndex)
+    {
+        var oldIndex = Layers.IndexOf(layer);
+        if (oldIndex == -1 || newIndex < 0 || newIndex >= Layers.Count || oldIndex == newIndex) return;
+        Layers.Move(oldIndex, newIndex);
+        OnPropertyChanged(nameof(Layers));
+        RefreshFinalImage();
     }
 
-    public Bitmap DisplayImage => ImageEditHelper.ConvertToBitmap(FinalImage);
-
-    private void RefreshFinalImage(LayerBaseViewModel modifiedLayer)
+    internal async void RefreshFinalImage(LayerBaseViewModel? modifiedLayer = null)
     {
-        var finalImage = GenerateFinalImage(modifiedLayer);
+        var finalImage = GenerateFinalImage();
         FinalImage = finalImage;
-        UpdateImageCallback?.Invoke(ImageEditHelper.ConvertToBitmap(finalImage));
-        OnPropertyChanged(nameof(DisplayImage));
+        DisplayImage = _asyncDisplay
+            ? await Task.Run(() => ImageEditHelper.ConvertToBitmap(finalImage))
+            : ImageEditHelper.ConvertToBitmap(finalImage);
+        UpdateImageCallback?.Invoke(DisplayImage);
     }
 
-    private Image<Rgba32> GenerateFinalImage(LayerBaseViewModel? modifiedLayer)
+    private Image<Rgba32> GenerateFinalImage()
+        // private Bitmap GenerateFinalImage(LayerBaseViewModel? modifiedLayer)
     {
-        if (Layers.Count == 0) return null;
-        var finalImage = InitialImage.Clone();
-        var startApplying = modifiedLayer == null;
-
-        foreach (var layer in Layers)
+        if (_isGeneratingImage)
         {
-            if (layer == modifiedLayer) startApplying = true;
-
-            if (!startApplying) continue;
-            if (!layer.IsVisible) continue;
-
-            layer.InitialImage = finalImage.Clone();
-            layer.ApplyModifiers();
-            finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        return finalImage;
+        _isGeneratingImage = true;
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        try
+        {
+            if (Layers.Count == 0) return null;
+            var finalImage = InitialImage.Clone();
+
+            foreach (var layer in Layers)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    GC.Collect();
+                    return null;
+                }
+                
+                layer.InitialImage = finalImage.Clone();
+                if (!layer.IsVisible) continue;
+                layer.ApplyModifiers();
+                finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
+            }
+
+            return finalImage;
+        }
+        finally
+        {
+            _isGeneratingImage = false;
+        }
     }
 }

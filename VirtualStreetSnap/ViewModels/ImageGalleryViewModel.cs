@@ -39,7 +39,7 @@ public class LazyLoadManager
         _lastCheckedDirectory = saveDirectory;
 
         _allImagePaths = Directory.GetFiles(saveDirectory, "*.png").ToList();
-        _allImagePaths.Reverse();
+        _allImagePaths.Sort((a, b) => File.GetLastWriteTime(b).CompareTo(File.GetLastWriteTime(a)));
         Thumbnails.Clear();
         _currentBatchIndex = 0;
         LoadNextBatch();
@@ -118,8 +118,9 @@ public partial class ImageGalleryViewModel : ViewModelBase
         else
         {
             _lazyLoadManager.Initialize(Config.Settings.SaveDirectory);
-            if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails[0];
         }
+
+        if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails[0];
     }
 
 
@@ -183,17 +184,22 @@ public partial class ImageGalleryViewModel : ViewModelBase
         if (SelectedThumbnail == null) return;
         await PowerShellClipBoard.SetImage(SelectedThumbnail.ImgPath);
     }
-    
+
     [RelayCommand]
     public void EditSelectedImage()
     {
         if (SelectedThumbnail == null) return;
         if (Design.IsDesignMode) return;
 
+        var newImage = new ImageBase(SelectedThumbnail.ImgPath);
+        newImage.LoadImage();
+        
         var editorWindow = new ImageEditorView
         {
-            DataContext = new ImageEditorViewModel(SelectedThumbnail)
+            DataContext = new ImageEditorViewModel(newImage)
         };
+
         editorWindow.Show();
+        editorWindow.Closed += (sender, args) => { UpdateThumbnails(reload:true); };
     }
 }

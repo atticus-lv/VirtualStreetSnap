@@ -9,7 +9,7 @@ namespace VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
 public abstract class LayerBaseViewModel : ViewModelBase
 {
-    public string Name { get; set; }
+    public abstract string Name { get; set; }
 
     private bool _isVisible = true;
 

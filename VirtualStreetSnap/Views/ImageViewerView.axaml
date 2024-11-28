@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
+             xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="VirtualStreetSnap.Views.ImageViewerView"
              x:DataType="viewModels:ImageViewerViewModel">
@@ -23,7 +24,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <PathIcon Data="{StaticResource Dropper}"></PathIcon>
                                 <TextBlock VerticalAlignment="Center"
-                                           Text="{DynamicResource My.Lang.PickColor}" />
+                                           Text="{i18n:Localize  PickColor}" />
                             </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>
@@ -33,7 +34,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <PathIcon Data="{StaticResource FlipHorizontalRegular}" />
                                 <TextBlock VerticalAlignment="Center"
-                                           Text="{DynamicResource My.Lang.FlipHorizontally}" />
+                                           Text="{i18n:Localize  FlipHorizontally}" />
                             </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>
@@ -42,7 +43,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <PathIcon Data="{StaticResource FlipVerticalRegular}" />
                                 <TextBlock VerticalAlignment="Center"
-                                           Text="{DynamicResource My.Lang.FlipVertically}" />
+                                           Text="{i18n:Localize  FlipVertically}" />
                             </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>
@@ -51,7 +52,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <PathIcon Data="{StaticResource ResetZoom}" />
                                 <TextBlock VerticalAlignment="Center"
-                                           Text="{DynamicResource My.Lang.ResetZoom}" />
+                                           Text="{i18n:Localize  ResetZoom}" />
                             </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>
@@ -61,7 +62,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <PathIcon Data="{StaticResource ImageCopyRegular}" />
                                 <TextBlock VerticalAlignment="Center"
-                                           Text="{DynamicResource My.Lang.CopyImage}" />
+                                           Text="{i18n:Localize  CopyImage}" />
                             </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>
