@@ -1,6 +1,6 @@
 ﻿## VirtualStreetSnap
 
-VirtualStreetSnap is a screenshot tool for save virtual street view.
+VirtualStreetSnap is a screenshot tool for save virtual street view basic on avaloniaui.
 
 Compare to other screenshot tool, VirtualStreetSnap provide a more camera-like experience.
 
@@ -8,9 +8,12 @@ Compare to other screenshot tool, VirtualStreetSnap provide a more camera-like e
 
 ![ImageGallery](docs/images/gallery.png)
 
+![ImageEditor](docs/images/ImageEditor.png)
+
+
 ### Features
 
-> v0.0.4
+> v0.0.8
 
 + Radio button: select different size of screenshot.
     + 4:3 16:9 3:2 9:16 3:4 1:1
@@ -26,7 +29,7 @@ Compare to other screenshot tool, VirtualStreetSnap provide a more camera-like e
     + on top: always on top.
     + file prefix: custom file prefix for saving screenshot.
     + save directory: custom save directory for saving screenshots.
-    + _translation\[en/zh\]: change the language. developing.._
+    + translation\[en/zh\]: change the language
 
 + Image gallery: review the screenshot.
     + Image viewer: view the screenshot.
@@ -38,6 +41,18 @@ Compare to other screenshot tool, VirtualStreetSnap provide a more camera-like e
     + Thumbnail viewer: view the thumbnail.
         + right click thumbnail to delete/open in explorer.
         + scroll to view more thumbnails.
+        + async load thumbnail.
+        + grab to fill the window.
+  
++ Image Editor
+  + simple adjust layer system
+    + add / move / delete layer; save and load with the gallery.
+    + layer type
+      + hsl
+      + brightness/contrast
+      + temperature
+      + tint
+      + sharpen
 
 ### Download
 
@@ -47,12 +62,10 @@ Compare to other screenshot tool, VirtualStreetSnap provide a more camera-like e
 
 Environment
 
-+ .net 8.0
-+ C# 12.0
++ .net 8.0 (C# 12.0)
 + win10 x64
 
-Build (default with aot)
-
+Build (aot by default)
 ```
 dotnet publish
 ```
