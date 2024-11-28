@@ -131,6 +131,7 @@ public partial class ImageEditorViewModel : ViewModelBase
         var saveDirectory = config.Settings.SaveDirectory;
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
         imageBase.Image.Save(newFilePath);
+        imageBase.LoadThumbAsync();
         return imageBase;
     }
 }

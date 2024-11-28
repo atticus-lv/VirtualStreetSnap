@@ -59,7 +59,7 @@ public class ImageBase : INotifyPropertyChanged
         LoadThumbAsync();
     }
 
-    private async void LoadThumbAsync()
+    public async void LoadThumbAsync()
     {
         try
         {

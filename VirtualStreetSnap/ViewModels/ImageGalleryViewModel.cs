@@ -186,7 +186,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public async void EditSelectedImage(Window window)
+    public void EditSelectedImage(Window window)
     {
         if (SelectedThumbnail == null) return;
         if (Design.IsDesignMode) return;
@@ -198,8 +198,8 @@ public partial class ImageGalleryViewModel : ViewModelBase
         {
             DataContext = new ImageEditorViewModel(newImage)
         };
-        editorWindow.Closed += (sender, args) => UpdateThumbnails(true);
-        await editorWindow.ShowDialog(window);
+        editorWindow.Closed += (sender, args) => UpdateThumbnails(true); 
+        editorWindow.Show();
         GC.Collect();
     }
 }
