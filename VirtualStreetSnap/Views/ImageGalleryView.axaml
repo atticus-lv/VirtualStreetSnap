@@ -29,7 +29,7 @@
                     VerticalAlignment="Center" HorizontalAlignment="Right"
                     IsVisible="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Panel}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}" />
             <Button Content="{i18n:Localize Edit}" VerticalAlignment="Top" HorizontalAlignment="Right"
-                    Command="{Binding EditSelectedImageCommand}" Margin="10" />
+                    Command="{Binding EditSelectedImageCommand} " CommandParameter="{Binding $parent[Window]}" Margin="10" />
         </Panel>
         <GridSplitter Grid.Row="1" Background="Black"></GridSplitter>
         <!-- Thumbnails Display -->

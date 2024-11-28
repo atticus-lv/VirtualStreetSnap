@@ -1,7 +1,12 @@
-﻿using Avalonia;
+﻿using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
+using Avalonia.VisualTree;
+using VirtualStreetSnap.ViewModels;
 
 namespace VirtualStreetSnap.Views;
 
@@ -10,6 +15,7 @@ public partial class ImageEditorView : Window
     public ImageEditorView()
     {
         InitializeComponent();
+            
     }
     
     private void AddLayerMenuButton_Click(object? sender, RoutedEventArgs e)
@@ -19,4 +25,17 @@ public partial class ImageEditorView : Window
         LayerTypeMenu.PlacementTarget = button;
         LayerTypeMenu.Open(button);
     }
+    
+    private void ToolBar_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!Equals(e.Source, ToolBar)) return;
+        BeginMoveDrag(e);
+    }
+    
+    private void CloseButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        var viewModel = (ImageEditorViewModel)DataContext;
+        Close(viewModel.SaveImageToGalleryDirectory(true));
+    }
+    
 }

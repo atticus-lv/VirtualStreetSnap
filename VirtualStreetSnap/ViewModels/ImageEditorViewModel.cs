@@ -121,15 +121,17 @@ public partial class ImageEditorViewModel : ViewModelBase
         
     }
     
-    [RelayCommand]
-    public void SaveImageToGalleryDirectory()
+    public ImageBase SaveImageToGalleryDirectory(bool saveAsNew = true)
     {
+        
+        var imageBase = EditImageViewer.ViewImage;
+        if (!saveAsNew) return imageBase;
+        var newName = imageBase.ImgName + "_edited";
         var config = ConfigService.Instance;
         var saveDirectory = config.Settings.SaveDirectory;
-        var imageBase = EditImageViewer.ViewImage;
-        var newName = imageBase.ImgName + "_edited";
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
         imageBase.Image.Save(newFilePath);
+        return imageBase;
     }
 }
 
