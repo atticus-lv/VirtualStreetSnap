@@ -25,9 +25,9 @@
         <GridSplitter Grid.Column="1" Background="Black" />
         <Grid RowDefinitions="*,10,*" Grid.Column="2">
             <Grid RowDefinitions="Auto,*,Auto">
-                <StackPanel>
+                <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{i18n:Localize Layers}" Margin="10 10 0 0" FontSize="16"
-                               HorizontalAlignment="Center" />
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </StackPanel>
                 <!-- layers -->
                 <ScrollViewer Grid.Row="1">
@@ -36,22 +36,21 @@
                              SelectedItem="{Binding SelectedLayer}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid ColumnDefinitions="Auto,*,Auto">
-                                    <CheckBox IsChecked="{Binding IsVisible}" />
+                                <Grid ColumnDefinitions="Auto,*">
                                     <TextBlock Grid.Column="1"
                                                Text="{Binding Name, Converter={StaticResource LocalizeConverter}}"
-                                               Margin="5,0,0,0" VerticalAlignment="Center" />
-                                    <Button Grid.Column="2" Content="X" Command="{Binding RemoveCommand}"
-                                            Margin="5,0,0,0" Background="Transparent" />
+                                               Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                    <CheckBox IsChecked="{Binding IsVisible}" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </ScrollViewer>
 
-                <StackPanel Grid.Row="2" Margin="5">
-                    <Button Name="AddLayerMenuButton" Content="{i18n:Localize Add}" Click="AddLayerMenuButton_Click"
-                            HorizontalAlignment="Left">
+                <StackPanel Grid.Row="2" Margin="5" Orientation="Horizontal">
+                    <Button Name="AddLayerMenuButton"  Click="AddLayerMenuButton_Click"
+                            HorizontalAlignment="Left" Background="Transparent" ToolTip.Tip="{i18n:Localize Add}">
+                        <PathIcon Data="{StaticResource Add}" Width="14"/>
                         <Button.ContextMenu>
                             <ContextMenu Name="LayerTypeMenu" PlacementMode="TopEdgeAlignedLeft">
                                 <MenuItem Header="{i18n:Localize BrightnessContrast}"
@@ -66,6 +65,15 @@
                                           Command="{Binding AddLayer}" CommandParameter="Tint" />
                             </ContextMenu> 
                         </Button.ContextMenu>
+                        
+                    </Button>
+                    <Separator Opacity="0.2"></Separator>
+                    <Button Background="Transparent" FontSize="18" Content="↑" Command="{Binding MoveLayerUp}" />
+                    <Button Background="Transparent" FontSize="18" Content="↓" Command="{Binding MoveLayerDown}" />
+                    <Separator Opacity="0.2"></Separator>
+
+                    <Button Background="Transparent" Command="{Binding RemoveLayer}">
+                        <PathIcon Data="{StaticResource Trash}" Width="14"/>
                     </Button>
                 </StackPanel>
             </Grid>

@@ -191,10 +191,12 @@ public partial class ImageGalleryViewModel : ViewModelBase
         if (SelectedThumbnail == null) return;
         if (Design.IsDesignMode) return;
 
-
+        var newImage = new ImageBase(SelectedThumbnail.ImgPath);
+        newImage.LoadImage();
+        
         var editorWindow = new ImageEditorView
         {
-            DataContext = new ImageEditorViewModel(SelectedThumbnail)
+            DataContext = new ImageEditorViewModel(newImage)
         };
 
         editorWindow.Show();

@@ -67,7 +67,30 @@ public partial class ImageEditorViewModel : ViewModelBase
         SelectedLayer = LayerManager.Layers.LastOrDefault();
         if (SelectedLayer != null) LayerManager.RefreshFinalImage(SelectedLayer);
     }
+    [RelayCommand]
+    public void RemoveLayer()
+    {   
+        var index = LayerManager.Layers.IndexOf(SelectedLayer);
+        LayerManager.RemoveLayer(SelectedLayer);
+        // If the removed layer was the selected layer, select the nearest layer
+        if (index == LayerManager.Layers.Count) index--;
+        SelectedLayer = LayerManager.Layers.ElementAtOrDefault(index);
+    }
+    
+    [RelayCommand]
+    public void MoveLayerUp()
+    {
+        var index = LayerManager.Layers.IndexOf(SelectedLayer);
+        LayerManager.MoveLayer(SelectedLayer, index + 1);
+    }
 
+    [RelayCommand]
+    public void MoveLayerDown(LayerBaseViewModel layer)
+    {
+        var index = LayerManager.Layers.IndexOf(SelectedLayer);
+        LayerManager.MoveLayer(SelectedLayer, index - 1);
+    }
+    
     public void AddLayer(string? layerType)
     {
         if (string.IsNullOrEmpty(layerType)) return;
@@ -92,7 +115,10 @@ public partial class ImageEditorViewModel : ViewModelBase
                 return;
         }
 
-        SelectedLayer = LayerManager.Layers.Last();
+        // move the layer to the top of selected layer, if no layer is selected, move to the top
+        var index = SelectedLayer == null ? 0 : LayerManager.Layers.IndexOf(SelectedLayer);
+        LayerManager.MoveLayer(LayerManager.Layers.Last(), index);
+        
     }
     
     [RelayCommand]
@@ -155,14 +181,22 @@ public class LayerManagerViewModel : ViewModelBase
         layer.LayerModified -= RefreshFinalImage;
         layer.RequestRemoveLayer -= RemoveLayer;
         Layers.Remove(layer);
-        // release
         layer.InitialImage?.Dispose();
         layer.ModifiedImage?.Dispose();
         GC.Collect();
+        RefreshFinalImage();
+    }
+    
+    public void MoveLayer(LayerBaseViewModel layer, int newIndex)
+    {
+        var oldIndex = Layers.IndexOf(layer);
+        if (oldIndex == -1 || newIndex < 0 || newIndex >= Layers.Count || oldIndex == newIndex) return;
+        Layers.Move(oldIndex, newIndex);
+        OnPropertyChanged(nameof(Layers));
+        RefreshFinalImage();
     }
 
-
-    internal async void RefreshFinalImage(LayerBaseViewModel modifiedLayer)
+    internal async void RefreshFinalImage(LayerBaseViewModel? modifiedLayer = null)
     {
         var finalImage = GenerateFinalImage();
         FinalImage = finalImage;
