@@ -10,6 +10,10 @@ public partial class ImageEditorView : Window
     public ImageEditorView()
     {
         InitializeComponent();
+        var scale = Screens.Primary.Scaling;
+        var currentScreen = Screens.Primary;
+        Width = currentScreen.Bounds.Width / 2 / scale;
+        Height = currentScreen.Bounds.Height / 2 / scale;
     }
     
     private void AddLayerMenuButton_Click(object? sender, RoutedEventArgs e)
