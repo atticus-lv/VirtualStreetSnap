@@ -16,6 +16,12 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        // get screen width and height, then set window size 1/2
+        var scale = Screens.Primary.Scaling;
+        var currentScreen = Screens.Primary;
+        Width = currentScreen.Bounds.Width / 2 / scale;
+        Height = currentScreen.Bounds.Height / 2 / scale;
+        
         // OnTopMostCheckbox.IsCheckedChanged += (sender, e) => { Topmost = !Topmost; };
         ToggleGalleryButton.IsCheckedChanged += (sender, e) =>
         {
