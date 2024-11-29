@@ -9,119 +9,124 @@
         Title="{i18n:Localize ImageEditor}"
         x:DataType="viewModels:ImageEditorViewModel"
         WindowStartupLocation="CenterScreen"
-        Width="1280" Height="720"
-        ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaTitleBarHeightHint="0">
+        Width="1280" Height="720">
 
     <Design.DataContext>
         <viewModels:DesignImageEditorViewModel />
     </Design.DataContext>
-
-    <Grid ColumnDefinitions="*,10,250" Background="#111111">
-        <Panel>
-            <ContentControl Content="{Binding EditImageViewer}" />
-            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="Save" Margin="10"
-                    Command="{Binding SaveImageToGalleryDirectory}" />
-        </Panel>
-
-        <GridSplitter Grid.Column="1" Background="Black" />
-        <Grid RowDefinitions="*,10,*" Grid.Column="2">
-            <Grid RowDefinitions="Auto,*,Auto">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{i18n:Localize Layers}" Margin="10 10 0 0" FontSize="16"
-                               HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </StackPanel>
-                <!-- layers -->
-                
-                
-                <ScrollViewer Grid.Row="1">
-                    <ListBox Name="LayerListBox"
-                             Background="#111111" CornerRadius="4" Margin="0 10 0 0"
-                             ItemsSource="{Binding LayerManager.Layers, Converter={StaticResource ReverseCollectionConverter}}"
-                             SelectedItem="{Binding SelectedLayer}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="Auto,*">
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding Name, Converter={StaticResource LocalizeConverter}}"
-                                               Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                    <CheckBox IsChecked="{Binding IsVisible}" />
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </ScrollViewer>
-                
-                <Panel Grid.Row="1" >
-                    <Canvas>
-                        <Border Name="VisualDragItem" IsVisible="False" Background="Gray" Margin="10" Width="100" Height="25" Opacity="0.8" CornerRadius="4">
-                            <TextBlock Text="DragMe" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                        </Border>
-                    </Canvas>
-                </Panel>
-                
-                <StackPanel Grid.Row="2" Margin="5" Orientation="Horizontal">
-                    <Button Name="AddLayerMenuButton" Click="AddLayerMenuButton_Click"
-                            HorizontalAlignment="Left" Background="Transparent" ToolTip.Tip="{i18n:Localize Add}">
-                        <PathIcon Data="{StaticResource Add}" Width="14" />
-                        <Button.ContextMenu>
-                            <ContextMenu Name="LayerTypeMenu" PlacementMode="TopEdgeAlignedLeft">
-                                <MenuItem Header="{i18n:Localize BrightnessContrast}"
-                                          Command="{Binding AddLayer}" CommandParameter="BrightnessContrast" />
-                                <MenuItem Header="{i18n:Localize Sharpness}"
-                                          Command="{Binding AddLayer}" CommandParameter="Sharpness" />
-                                <MenuItem Header="{i18n:Localize HSL}"
-                                          Command="{Binding AddLayer}" CommandParameter="HSL" />
-                                <MenuItem Header="{i18n:Localize Temperature}"
-                                          Command="{Binding AddLayer}" CommandParameter="Temperature" />
-                                <MenuItem Header="{i18n:Localize Tint}"
-                                          Command="{Binding AddLayer}" CommandParameter="Tint" />
-                            </ContextMenu>
-                        </Button.ContextMenu>
-
-                    </Button>
-                    <Separator Opacity="0.2"></Separator>
-                    <Button Background="Transparent" FontSize="18" Content="↑" Command="{Binding MoveLayerUp}" />
-                    <Button Background="Transparent" FontSize="18" Content="↓" Command="{Binding MoveLayerDown}" />
-                    <Separator Opacity="0.2"></Separator>
-
-                    <Button Background="Transparent" Command="{Binding RemoveLayer}">
-                        <PathIcon Data="{StaticResource Trash}" Width="14" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-
-            <GridSplitter Grid.Row="1" Background="Black" />
-            <!-- selected layer slider -->
-            <ScrollViewer Grid.Row="2">
-                <StackPanel>
-                    <TextBlock Text="{Binding SelectedLayer.Name,Converter={StaticResource LocalizeConverter}}"
-                               HorizontalAlignment="Center" Margin="10" FontSize="16" />
-                    <ItemsControl Background="#111111"
-                                  ItemsSource="{Binding SelectedLayer.Sliders}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Margin="10 0 10 0">
-                                    <Grid ColumnDefinitions="*,Auto,Auto">
-                                        <TextBlock Text="{Binding Name, Converter={StaticResource LocalizeConverter}}"
-                                                   Grid.Column="0" VerticalAlignment="Center" />
-                                        <TextBlock Text="{Binding CurrentValue, StringFormat=F1}" Grid.Column="1"
-                                                   VerticalAlignment="Center" Margin="10,0,0,0" />
-                                        <Button Content="←" Command="{Binding ResetCommand}" Grid.Column="2"
-                                                Margin="5,0,0,0" Background="Transparent"
-                                                IsVisible="True" />
-                                    </Grid>
-                                    <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}"
-                                            Value="{Binding CurrentValue}" TickFrequency="0.05" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </ScrollViewer>
-
-
-        </Grid>
-
-    </Grid>
+    <Panel>
+        <Grid ColumnDefinitions="*,10,250" Background="#111111">
+                   <Panel>
+                       <ContentControl Content="{Binding EditImageViewer}" />
+                       <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="Save" Margin="10"
+                               Command="{Binding SaveImageToGalleryDirectory}" />
+                   </Panel>
+           
+                   <GridSplitter Grid.Column="1" Background="Black" />
+                   <Grid RowDefinitions="*,10,*" Grid.Column="2">
+                       <Grid RowDefinitions="Auto,*,Auto">
+                           <StackPanel Orientation="Horizontal">
+                               <TextBlock Text="{i18n:Localize Layers}" Margin="10 10 0 0" FontSize="16"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center" />
+                           </StackPanel>
+                           <!-- layers -->
+           
+                               <ScrollViewer Grid.Row="1">
+                                   <StackPanel>
+                                       <ListBox Name="LayerListBox"
+                                                Background="#111111" CornerRadius="4" Margin="0 10 0 0"
+                                                ItemsSource="{Binding LayerManager.Layers, Converter={StaticResource ReverseCollectionConverter}}"
+                                                SelectedItem="{Binding SelectedLayer}">
+                                           <ListBox.ItemTemplate>
+                                               <DataTemplate>
+                                                   <Grid ColumnDefinitions="Auto,*">
+                                                       <TextBlock Grid.Column="1"
+                                                                  Text="{Binding Name, Converter={StaticResource LocalizeConverter}}"
+                                                                  Margin="5,0,0,0" VerticalAlignment="Center"
+                                                                  HorizontalAlignment="Left" />
+                                                       <CheckBox IsChecked="{Binding IsVisible}" />
+                                                   </Grid>
+                                               </DataTemplate>
+                                           </ListBox.ItemTemplate>
+                                       </ListBox>
+           
+                                   </StackPanel>
+                               </ScrollViewer>
+           
+                               
+                         
+           
+           
+                           <StackPanel Grid.Row="2" Margin="5" Orientation="Horizontal">
+                               <Button Name="AddLayerMenuButton" Click="AddLayerMenuButton_Click"
+                                       HorizontalAlignment="Left" Background="Transparent" ToolTip.Tip="{i18n:Localize Add}">
+                                   <PathIcon Data="{StaticResource Add}" Width="14" />
+                                   <Button.ContextMenu>
+                                       <ContextMenu Name="LayerTypeMenu" PlacementMode="TopEdgeAlignedLeft">
+                                           <MenuItem Header="{i18n:Localize BrightnessContrast}"
+                                                     Command="{Binding AddLayer}" CommandParameter="BrightnessContrast" />
+                                           <MenuItem Header="{i18n:Localize Sharpness}"
+                                                     Command="{Binding AddLayer}" CommandParameter="Sharpness" />
+                                           <MenuItem Header="{i18n:Localize HSL}"
+                                                     Command="{Binding AddLayer}" CommandParameter="HSL" />
+                                           <MenuItem Header="{i18n:Localize Temperature}"
+                                                     Command="{Binding AddLayer}" CommandParameter="Temperature" />
+                                           <MenuItem Header="{i18n:Localize Tint}"
+                                                     Command="{Binding AddLayer}" CommandParameter="Tint" />
+                                       </ContextMenu>
+                                   </Button.ContextMenu>
+           
+                               </Button>
+                               <Separator Opacity="0.2"></Separator>
+                               <Button Background="Transparent" FontSize="18" Content="↑" Command="{Binding MoveLayerUp}" />
+                               <Button Background="Transparent" FontSize="18" Content="↓" Command="{Binding MoveLayerDown}" />
+                               <Separator Opacity="0.2"></Separator>
+           
+                               <Button Background="Transparent" Command="{Binding RemoveLayer}">
+                                   <PathIcon Data="{StaticResource Trash}" Width="14" />
+                               </Button>
+                           </StackPanel>
+                       </Grid>
+           
+                       <GridSplitter Grid.Row="1" Background="Black" />
+                       <!-- selected layer slider -->
+                       <ScrollViewer Grid.Row="2">
+                           <StackPanel>
+                               <TextBlock Text="{Binding SelectedLayer.Name,Converter={StaticResource LocalizeConverter}}"
+                                          HorizontalAlignment="Center" Margin="10" FontSize="16" />
+                               <ItemsControl Background="#111111"
+                                             ItemsSource="{Binding SelectedLayer.Sliders}">
+                                   <ItemsControl.ItemTemplate>
+                                       <DataTemplate>
+                                           <StackPanel Margin="10 0 10 0">
+                                               <Grid ColumnDefinitions="*,Auto,Auto">
+                                                   <TextBlock Text="{Binding Name, Converter={StaticResource LocalizeConverter}}"
+                                                              Grid.Column="0" VerticalAlignment="Center" />
+                                                   <TextBlock Text="{Binding CurrentValue, StringFormat=F1}" Grid.Column="1"
+                                                              VerticalAlignment="Center" Margin="10,0,0,0" />
+                                                   <Button Content="←" Command="{Binding ResetCommand}" Grid.Column="2"
+                                                           Margin="5,0,0,0" Background="Transparent"
+                                                           IsVisible="True" />
+                                               </Grid>
+                                               <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}"
+                                                       Value="{Binding CurrentValue}" TickFrequency="0.05" />
+                                           </StackPanel>
+                                       </DataTemplate>
+                                   </ItemsControl.ItemTemplate>
+                               </ItemsControl>
+                           </StackPanel>
+                       </ScrollViewer>
+           
+           
+                   </Grid>
+           
+               </Grid>
+        <Canvas >
+            <Border Name="GhostDragItem" Background="#111111" Margin="10" IsHitTestVisible="False" IsVisible="False" BorderBrush="{DynamicResource SystemAccentColor}" BorderThickness="1"
+                    Width="150" Height="30" Opacity="0.8" CornerRadius="4">
+                <TextBlock Text="{Binding DragItemText,Converter={StaticResource LocalizeConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" ></TextBlock>
+            </Border>
+        </Canvas>
+    </Panel>
+    
 </Window>

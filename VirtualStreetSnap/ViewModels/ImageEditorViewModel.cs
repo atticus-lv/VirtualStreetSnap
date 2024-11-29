@@ -31,6 +31,9 @@ public partial class ImageEditorViewModel : ViewModelBase
     [ObservableProperty]
     private LayerBaseViewModel? _selectedLayer;
 
+    [ObservableProperty]
+    private string _dragItemText;
+    
     public ImageEditorViewModel(ImageBase? image)
     {
         SetupImage(Design.IsDesignMode ? null : image);
