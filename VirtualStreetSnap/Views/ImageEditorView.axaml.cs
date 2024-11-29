@@ -16,6 +16,7 @@ public partial class ImageEditorView : Window
 {
     private LayerBaseViewModel? _dragItem;
     private Point _startPoint;
+    private LayerBaseViewModel? _previousDropItem;
 
     public ImageEditorView()
     {
@@ -62,6 +63,25 @@ public partial class ImageEditorView : Window
     private void LayerListBox_OnPointerMove(object? sender, PointerEventArgs e)
     {
         if (_dragItem == null) return;
+
+        var dropItem = GetMouseOverItem(sender, e);
+        if (dropItem != null && dropItem != _dragItem)
+        {
+            if (_previousDropItem != null && _previousDropItem != dropItem)
+            {
+                _previousDropItem.IsDropTarget = false;
+            }
+            dropItem.IsDropTarget = true;
+            _previousDropItem = dropItem;
+        }
+        else
+        {
+            if (_previousDropItem != null)
+            {
+                _previousDropItem.IsDropTarget = false;
+                _previousDropItem = null;
+            }
+        }
 
         if (IsPointerOutsideLayerListBox(e))
         {
@@ -112,7 +132,7 @@ public partial class ImageEditorView : Window
 
     private void UpdateGhostDragItemPosition(Point position)
     {
-        Canvas.SetLeft(GhostDragItem, position.X - GhostDragItem.Width / 2);
+        Canvas.SetLeft(GhostDragItem, position.X + 20);
         Canvas.SetTop(GhostDragItem, position.Y - GhostDragItem.Height / 2);
     }
 
@@ -126,5 +146,8 @@ public partial class ImageEditorView : Window
     {
         GhostDragItem.IsVisible = false;
         _dragItem = null;
+        if (_previousDropItem == null) return;
+        _previousDropItem.IsDropTarget = false;
+        _previousDropItem = null;
     }
 }
