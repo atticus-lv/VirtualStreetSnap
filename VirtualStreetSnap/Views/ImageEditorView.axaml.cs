@@ -29,7 +29,13 @@ public partial class ImageEditorView : Window
         LayerListBox.AddHandler(PointerReleasedEvent, LayerListBox_OnPointerRelease);
         LayerListBox.AddHandler(PointerMovedEvent, LayerListBox_OnPointerMove);
     }
-
+    
+    private bool IsPointerOutsideLayerListBox(PointerEventArgs e)
+    {
+        var position = e.GetPosition(LayerListBox);
+        return position.X < 0 || position.Y < 0 || position.X > LayerListBox.Bounds.Width || position.Y > LayerListBox.Bounds.Height;
+    }
+    
     private LayerBaseViewModel? GetMouseOverItem(object? sender, PointerEventArgs e)
     {
         var point = e.GetPosition((Visual)sender);
@@ -40,69 +46,85 @@ public partial class ImageEditorView : Window
 
     private void LayerListBox_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        var dragItem = GetMouseOverItem(sender, e);
-        if (dragItem == null)
+        _dragItem = GetMouseOverItem(sender, e);
+        if (_dragItem == null)
         {
             GhostDragItem.IsVisible = false;
             return;
         }
         _startPoint = e.GetPosition(this);
-        _dragItem = dragItem;
         var viewModel = DataContext as ImageEditorViewModel;
-        viewModel.DragItemText = dragItem.Name;
-        var currentPosition = e.GetPosition(this);
-        Canvas.SetLeft(GhostDragItem, currentPosition.X - GhostDragItem.Width / 2);
-        Canvas.SetTop(GhostDragItem, currentPosition.Y - GhostDragItem.Height / 2);
-        Console.WriteLine($"Pressed on {dragItem}, at {GhostDragItem}");
+        viewModel.DragItemText = _dragItem.Name;
+        UpdateGhostDragItemPosition(e.GetPosition(this));
+        Console.WriteLine($"Pressed on {_dragItem}, at {GhostDragItem}");
     }
 
     private void LayerListBox_OnPointerMove(object? sender, PointerEventArgs e)
     {
         if (_dragItem == null) return;
 
-        var currentPosition = e.GetPosition(this);
-        var distance = Math.Sqrt(Math.Pow(currentPosition.X - _startPoint.X, 2) + Math.Pow(currentPosition.Y - _startPoint.Y, 2));
-
-        // 设置一个阈值，例如10像素
-        if (distance < 10) return;
-        if (GhostDragItem.IsVisible == false)
+        if (IsPointerOutsideLayerListBox(e))
         {
-            GhostDragItem.IsVisible = true;
+            ResetDragState();
+            return;
         }
-        Canvas.SetLeft(GhostDragItem, currentPosition.X - GhostDragItem.Width / 2);
-        Canvas.SetTop(GhostDragItem, currentPosition.Y - GhostDragItem.Height / 2);
+
+        var currentPosition = e.GetPosition(this);
+        if (!IsDragThresholdExceeded(currentPosition)) return;
+        GhostDragItem.IsVisible = true;
+        UpdateGhostDragItemPosition(currentPosition);
     }
 
-
-    private void LayerListBox_OnPointerRelease(object? sender, PointerEventArgs e)
+    private void LayerListBox_OnPointerRelease(object? sender, PointerReleasedEventArgs e)
     {
         if (_dragItem == null) return;
+
         var dropItem = GetMouseOverItem(sender, e);
         if (dropItem == null || dropItem == _dragItem)
         {
-            GhostDragItem.IsVisible = false;
-            _dragItem = null;
+            ResetDragState();
             return;
-        };
+        }
+
         var viewModel = DataContext as ImageEditorViewModel;
         var targetIndex = viewModel?.LayerManager.Layers.IndexOf(dropItem);
-        if (targetIndex == null) return;
-        viewModel?.LayerManager.MoveLayer(_dragItem, targetIndex.Value);
-        _dragItem = null;
-        GhostDragItem.IsVisible = false;
+        if (targetIndex.HasValue)
+        {
+            viewModel.LayerManager.MoveLayer(_dragItem, targetIndex.Value);
+        }
+        ResetDragState();
     }
 
     private void AddLayerMenuButton_Click(object? sender, RoutedEventArgs e)
     {
-        // Add a new layer to the image
-        if (sender is not Button button) return;
-        LayerTypeMenu.PlacementTarget = button;
-        LayerTypeMenu.Open(button);
+        if (sender is Button button)
+        {
+            LayerTypeMenu.PlacementTarget = button;
+            LayerTypeMenu.Open(button);
+        }
     }
 
     private void CloseButtonOnClick(object? sender, RoutedEventArgs e)
     {
         var viewModel = (ImageEditorViewModel)DataContext;
         Close(viewModel.SaveImageToGalleryDirectory(true));
+    }
+
+    private void UpdateGhostDragItemPosition(Point position)
+    {
+        Canvas.SetLeft(GhostDragItem, position.X - GhostDragItem.Width / 2);
+        Canvas.SetTop(GhostDragItem, position.Y - GhostDragItem.Height / 2);
+    }
+
+    private bool IsDragThresholdExceeded(Point currentPosition)
+    {
+        var distance = Math.Sqrt(Math.Pow(currentPosition.X - _startPoint.X, 2) + Math.Pow(currentPosition.Y - _startPoint.Y, 2));
+        return distance >= 10;
+    }
+
+    private void ResetDragState()
+    {
+        GhostDragItem.IsVisible = false;
+        _dragItem = null;
     }
 }
