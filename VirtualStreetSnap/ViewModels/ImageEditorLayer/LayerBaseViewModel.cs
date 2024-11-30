@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -22,7 +23,13 @@ public abstract class LayerBaseViewModel : ViewModelBase
             OnLayerModified();
         }
     }
-
+    private bool _isDropTarget;
+    public bool IsDropTarget
+    {
+        get => _isDropTarget;
+        set => SetProperty(ref _isDropTarget, value);
+    }
+    
     public Image<Rgba32> InitialImage { get; set; }
     public Image<Rgba32> ModifiedImage { get; set; }
     public ObservableCollection<SliderViewModel> Sliders { get; set; } = new();
