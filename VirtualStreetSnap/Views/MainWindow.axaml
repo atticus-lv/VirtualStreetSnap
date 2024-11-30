@@ -24,85 +24,85 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="Auto,*" Margin="2">
-        <Border Grid.Row="0" Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
-                Background="#111111" HorizontalAlignment="Stretch">
-            <Grid ColumnDefinitions="*,Auto,Auto" Margin="5">
-                <StackPanel Orientation="Horizontal" Spacing="5">
-                    <ComboBox ItemsSource="{Binding RadioItems}"
-                              SelectedItem="{Binding SelectedSizeRadio}"
-                              SelectionChanged="SelectingItemsControl_OnSelectionChanged"
-                              Width="100" Margin="0,0,10,0">
-                        <ComboBox.IsEnabled>
-                            <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                <Binding Path="!IsGalleryView" />
-                                <Binding Path="!IsSettingsView" />
-                            </MultiBinding>
-                        </ComboBox.IsEnabled>
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models:SizeRadio}">
-                                <TextBlock Text="{Binding Label}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </StackPanel>
-                <Button Grid.Column="1" Click="SnapshotButton_Click" HorizontalContentAlignment="Center">
-                    <Button.IsEnabled>
-                        <MultiBinding Converter="{x:Static BoolConverters.And}">
-                            <Binding Path="!IsGalleryView" />
-                            <Binding Path="!IsSettingsView" />
-                        </MultiBinding>
-                    </Button.IsEnabled>
-                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="20 0 20 0">
-                        <PathIcon Data="{StaticResource CameraRegular}"/>
-                        <TextBlock Text="{i18n:Localize  SnapShot}" VerticalAlignment="Center"
-                                   IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=600}" />
-                    </StackPanel>
-                </Button>
-                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10 0 0 0 " Spacing="5">
-                    <StackPanel Orientation="Horizontal" Spacing="0">
-                        <ToggleButton Name="ToggleGalleryButton" CornerRadius="5 0 0 5 "
-                                      Click="ToggleGalleryButton_Click" IsChecked="{Binding IsGalleryView}">
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource ImageLibraryRegular}" />
-                                <TextBlock Text="{i18n:Localize  Gallery}" VerticalAlignment="Center"
-                                           IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
-                            </StackPanel>
-                        </ToggleButton>
-                        <ToggleButton Name="ToggleSettingsButton" CornerRadius="0 5 5 0 "
-                                      Click="ToggleSettingsButton_Click" IsChecked="{Binding IsSettingsView}">
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource Settings}" />
-                                <TextBlock Text="{i18n:Localize  Settings}" VerticalAlignment="Center"
-                                           IsVisible="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=800}" />
-                            </StackPanel>
-                        </ToggleButton>
-                    </StackPanel>
-                    <Button DockPanel.Dock="Right" HorizontalContentAlignment="Center" Width="35"
-                            Command="{Binding OnCloseButtonClick}">
-                        <TextBlock Text="X" FontSize="16" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
-        
-        <Panel Grid.Row="1">
-            <Panel Name="CompositionGuides">
-                <views:CompositionGuidesView></views:CompositionGuidesView>
-            </Panel>
+    <Window.Styles>
+        <!-- close button -->
+        <Style Selector="Button#CloseWindowButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Width" Value="100" />
+        </Style>
+        <Style Selector="Button#CloseWindowButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Firebrick" />
+        </Style>
 
-            <Rectangle Name="CaptureArea" Fill="Transparent" HorizontalAlignment="Stretch"
-                       VerticalAlignment="Stretch"
-                       IsHitTestVisible="False" />
+        <Style Selector="Panel#ToolBarArea> Border#ToolBar">
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Panel#ToolBarArea:pointerover > Border#ToolBar">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+        </Style>
 
-            <Panel IsVisible="{Binding IsGalleryView}">
-                <views:ImageGalleryView Name="GalleryView" />
-            </Panel>
+    </Window.Styles>
 
-            <Panel IsVisible="{Binding IsSettingsView}" Background="#111111">
-                <views:SettingsView />
-            </Panel>
-
+    <Panel>
+        <Panel>
+            <TransitioningContentControl Content="{Binding CurrentPage.Page}">
+                <TransitioningContentControl.PageTransition>
+                    <PageSlide Orientation="Vertical" Duration="0:00:00.2" />
+                </TransitioningContentControl.PageTransition>
+            </TransitioningContentControl>
         </Panel>
-    </Grid>
+
+        <StackPanel>
+            <Panel Name="ToolBarArea">
+                <Rectangle Fill="Transparent" Height="50"></Rectangle>
+                <Border Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
+                        Background="#111111" HorizontalAlignment="Stretch">
+                    <Panel>
+                        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0 ">
+                            <TextBlock Text="VirtualStreetSnap" FontSize="18" />
+                            <TextBlock Text="Created by Atticus" Foreground="DimGray" Opacity="0.8" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="5"
+                                    HorizontalAlignment="Right" Margin="0 0 10 0">
+                            <ListBox ItemsSource="{Binding Pages}"
+                                     SelectedItem="{Binding CurrentPage}"
+                                     Height="40" CornerRadius="4">
+
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"></StackPanel>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:PagesModel}">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <PathIcon Data="{Binding ItemIcon}"></PathIcon>
+                                            <TextBlock
+                                                Text="{Binding Name, 
+                                            Converter={StaticResource LocalizeConverter}}"
+                                                VerticalAlignment="Center" />
+                                        </StackPanel>
+
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
+                            </ListBox>
+                            <Button Name="CloseWindowButton" HorizontalContentAlignment="Center"
+                                    Background="Transparent" Width="35"
+                                    Command="{Binding OnCloseButtonClick}">
+                                <TextBlock Text="X" FontSize="16" />
+                            </Button>
+                        </StackPanel>
+                    </Panel>
+                </Border>
+            </Panel>
+        </StackPanel>
+    </Panel>
 </Window>

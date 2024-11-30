@@ -22,21 +22,21 @@
                     VerticalContentAlignment="Center"
                     VerticalAlignment="Center" HorizontalAlignment="Left"
                     IsVisible="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Panel}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}" />
-
             <Button Command="{Binding SelectNextThumbnail}"
                     Content="→" FontSize="24" Opacity="0.5" Margin="10" Height="50"
                     VerticalContentAlignment="Center"
                     VerticalAlignment="Center" HorizontalAlignment="Right"
                     IsVisible="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Panel}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}" />
-            <Button Content="{i18n:Localize Edit}" VerticalAlignment="Top" HorizontalAlignment="Right"
-                    Command="{Binding EditSelectedImageCommand} " CommandParameter="{Binding $parent[Window]}" Margin="10" />
+            <Button Content="{i18n:Localize SendToEditor}" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                    FontSize="16"
+                    Command="{Binding EditSelectedImageCommand} " CommandParameter="{Binding $parent[Window]}"
+                    Margin="10" />
         </Panel>
         <GridSplitter Grid.Row="1" Background="Black"></GridSplitter>
         <!-- Thumbnails Display -->
         <ScrollViewer x:Name="ThumbnailsScrollViewer" Grid.Row="2"
                       VerticalScrollBarVisibility="Auto"
-                      ScrollChanged="ThumbnailsScrollViewer_ScrollChanged"
-                      IsVisible="{Binding ShowThumbnailBar}">
+                      ScrollChanged="ThumbnailsScrollViewer_ScrollChanged">
             <ListBox ItemsSource="{Binding Thumbnails}"
                      SelectedItem="{Binding SelectedThumbnail}"
                      HorizontalAlignment="Left" Background="#111111"
@@ -56,8 +56,9 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:ImageBase}">
                         <Panel>
-                            <Image Source="{Binding ImageThumb}" Stretch="UniformToFill" ToolTip.ShowDelay = "500" Width="100" Height="100">
-                                <ToolTip.Tip >
+                            <Image Source="{Binding ImageThumb}" Stretch="UniformToFill" ToolTip.ShowDelay="500"
+                                   Width="100" Height="100">
+                                <ToolTip.Tip>
                                     <TextBlock Text="{Binding ImgName}" />
                                 </ToolTip.Tip>
                             </Image>

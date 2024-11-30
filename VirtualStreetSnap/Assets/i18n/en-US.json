@@ -37,6 +37,7 @@
   "Add": "Add",
   "Temperature": "Temperature",
   "Tint": "Tint",
-  "Edit": "Edit",
-  "Save": "Save"
+  "SendToEditor": "Send To Editor",
+  "Save": "Save",
+  "SaveCopy": "Save Copy"
 }

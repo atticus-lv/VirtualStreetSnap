@@ -1,55 +1,71 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
+using VirtualStreetSnap.Views;
 
 namespace VirtualStreetSnap.ViewModels;
 
+public class PagesModel
+{
+    public PagesModel(string name, UserControl page, string? iconKey = null)
+    {
+        Name = name;
+        Page = page;
+        if (iconKey == null) return;
+        Application.Current!.TryFindResource(iconKey, out var res);
+        ItemIcon = (StreamGeometry)res!;
+    }
+
+    public string Name { get; set; }
+    public UserControl Page { get; set; }
+    public StreamGeometry? ItemIcon { get; }
+}
+
 public partial class MainWindowViewModel : ViewModelBase
 {
-    // When the app is in preview mode, the user can't take a screenshot
-
     [ObservableProperty]
-    private bool _isGalleryView;
+    private PagesModel? _currentPage;
 
-    [ObservableProperty]
-    private bool _isSettingsView;
+    public ObservableCollection<PagesModel> Pages { get; } =
+    [
+        new("SnapShot", new SnapShotView(), "CameraRegular"),
+        new("Gallery", new ImageGalleryView(), "ImageCopyRegular"),
+        new("Settings", new SettingsView(), "Settings")
+    ];
 
-    [ObservableProperty]
-    private SizeRadio? _selectedSizeRadio;
+    partial void OnCurrentPageChanged(PagesModel value)
+    {
+        CurrentPage = value;
+        switch (value.Name)
+        {
+            case "Gallery":
+            {
+                var viewModel = value.Page.DataContext as ImageGalleryViewModel;
+                viewModel?.UpdateThumbnails();
+                Console.WriteLine($"Update thumbnails for {value.Name}");
+                break;
+            }
+        }
+    }
+
 
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
 
 
-    public ObservableCollection<LanguageModel> LanguageModels { get; } =
-    [
-        new("English", "en-US"),
-        new("中文", "zh-CN"),
-    ];
-
-    public ObservableCollection<SizeRadio> RadioItems { get; } =
-    [
-        new("16:9"),
-        new("4:3"),
-        new("3:2"),
-        new("1:1"),
-        new("3:4"),
-        new("9:16")
-    ];
-
     public MainWindowViewModel()
-    {   
-        SelectedSizeRadio = RadioItems.First();
+    {
+        CurrentPage = Pages.First();
         ConfigService.SaveIfNotExists();
+        StartFixWindowSizeTimer();
     }
 
     [RelayCommand]
@@ -60,5 +76,26 @@ public partial class MainWindowViewModel : ViewModelBase
         Config.Version = "1.0";
         ConfigService.SaveConfig();
         Environment.Exit(0);
+    }
+
+
+    private void StartFixWindowSizeTimer()
+    {
+        var maxTry = 20;
+        var tryCount = 0;
+        var timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(0.2)
+        };
+        timer.Tick += (sender, args) =>
+        {
+            var snapView = Pages[0].Page as SnapShotView;
+            if (snapView.FixWindowSize() || tryCount >= 10)
+            {
+                timer.Stop();
+            }
+            tryCount++;
+        };
+        timer.Start();
     }
 }

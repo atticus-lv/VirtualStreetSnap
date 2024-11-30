@@ -19,7 +19,7 @@ namespace VirtualStreetSnap.ViewModels;
 public class LazyLoadManager
 {
     private const int BatchSize = 20;
-    private List<string> _allImagePaths = new();
+    private Dictionary<string, DateTime> _allImagePaths = new();
     private int _currentBatchIndex;
     private DateTime _lastCheckedTime = DateTime.MinValue;
     private string _lastCheckedDirectory = string.Empty;
@@ -38,8 +38,9 @@ public class LazyLoadManager
         _lastCheckedTime = lastWriteTime;
         _lastCheckedDirectory = saveDirectory;
 
-        _allImagePaths = Directory.GetFiles(saveDirectory, "*.png").ToList();
-        _allImagePaths.Sort((a, b) => File.GetLastWriteTime(b).CompareTo(File.GetLastWriteTime(a)));
+        _allImagePaths = Directory.GetFiles(saveDirectory, "*.png")
+            .ToDictionary(file => file, file => File.GetLastWriteTime(file));
+        _allImagePaths = _allImagePaths.OrderByDescending(kv => kv.Value).ToDictionary(kv => kv.Key, kv => kv.Value);
         Thumbnails.Clear();
         _currentBatchIndex = 0;
         LoadNextBatch();
@@ -49,21 +50,36 @@ public class LazyLoadManager
     public void LoadNextBatch()
     {
         var nextBatch = _allImagePaths.Skip(_currentBatchIndex * BatchSize).Take(BatchSize);
-        foreach (var file in nextBatch) Thumbnails.Add(new ImageBase(file));
+        foreach (var kv in nextBatch) Thumbnails.Add(new ImageBase(kv.Key));
         _currentBatchIndex++;
     }
 
     public void LoadNecessary()
     {
-        var newImagePaths = Directory.GetFiles(_lastCheckedDirectory, "*.png")
-            .Except(_allImagePaths)
-            .Reverse()
-            .ToList();
+        var currentImagePaths = Directory.GetFiles(_lastCheckedDirectory, "*.png")
+            .ToDictionary(file => file, file => File.GetLastWriteTime(file));
 
+        // Detect and remove missing files
+        var missingFiles = _allImagePaths.Keys.Except(currentImagePaths.Keys).ToList();
+        foreach (var missingFile in missingFiles)
+        {
+            var imageToRemove = Thumbnails.FirstOrDefault(img => img.ImgPath == missingFile);
+            if (imageToRemove != null)
+            {
+                Thumbnails.Remove(imageToRemove);
+            }
+            _allImagePaths.Remove(missingFile);
+        }
+
+        // Detect and add new files
+        var newImagePaths = currentImagePaths.Keys.Except(_allImagePaths.Keys).Reverse().ToList();
         if (newImagePaths.Count == 0) return;
 
-        _allImagePaths.InsertRange(0, newImagePaths);
-        foreach (var file in newImagePaths) Thumbnails.Insert(0, new ImageBase(file));
+        foreach (var file in newImagePaths)
+        {
+            _allImagePaths[file] = currentImagePaths[file];
+            Thumbnails.Insert(0, new ImageBase(file));
+        }
     }
 }
 
@@ -73,12 +89,6 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _showColorPicker;
-
-    [ObservableProperty]
-    private bool _showThumbnailBar = true;
-
-    [ObservableProperty]
-    private Bitmap _selectedImage;
 
     [ObservableProperty]
     private ImageBase? _selectedThumbnail;
@@ -120,7 +130,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
             _lazyLoadManager.Initialize(Config.Settings.SaveDirectory);
         }
 
-        if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails[0];
+        if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails.First();
     }
 
 
@@ -128,12 +138,6 @@ public partial class ImageGalleryViewModel : ViewModelBase
     public void LoadMoreThumbnails()
     {
         _lazyLoadManager.LoadNextBatch();
-    }
-
-    [RelayCommand]
-    public void ToggleThumbnailBar()
-    {
-        ShowThumbnailBar = !ShowThumbnailBar;
     }
 
     [RelayCommand]
@@ -198,8 +202,16 @@ public partial class ImageGalleryViewModel : ViewModelBase
         {
             DataContext = new ImageEditorViewModel(newImage)
         };
-        editorWindow.Closed += (sender, args) => UpdateThumbnails(true); 
+        var viewModel = editorWindow.DataContext as ImageEditorViewModel;
+        viewModel.ImageSaved += (sender, args) =>
+        {
+            UpdateThumbnails(true);
+            if (Thumbnails.Count > 0)
+            {   
+                SelectedThumbnail = Thumbnails.First();
+            }
+            GC.Collect();
+        };
         editorWindow.Show();
-        GC.Collect();
     }
 }

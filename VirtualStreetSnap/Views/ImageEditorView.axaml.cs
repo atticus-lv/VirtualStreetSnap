@@ -21,6 +21,8 @@ public partial class ImageEditorView : Window
     public ImageEditorView()
     {
         InitializeComponent();
+        CloseWindowButton.Click += CloseButtonOnClick;
+        
         var scale = Screens.Primary.Scaling;
         var currentScreen = Screens.Primary;
         Width = currentScreen.Bounds.Width / 2 / scale;
@@ -29,6 +31,12 @@ public partial class ImageEditorView : Window
         LayerListBox.AddHandler(PointerPressedEvent, LayerListBox_OnPointerPressed, RoutingStrategies.Tunnel);
         LayerListBox.AddHandler(PointerReleasedEvent, LayerListBox_OnPointerRelease);
         LayerListBox.AddHandler(PointerMovedEvent, LayerListBox_OnPointerMove);
+    }
+    
+    private void ToolBar_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!Equals(e.Source, ToolBar)) return;
+        BeginMoveDrag(e);
     }
     
     private bool IsPointerOutsideLayerListBox(PointerEventArgs e)
@@ -57,7 +65,6 @@ public partial class ImageEditorView : Window
         var viewModel = DataContext as ImageEditorViewModel;
         viewModel.DragItemText = _dragItem.Name;
         UpdateGhostDragItemPosition(e.GetPosition(this));
-        Console.WriteLine($"Pressed on {_dragItem}, at {GhostDragItem}");
     }
 
     private void LayerListBox_OnPointerMove(object? sender, PointerEventArgs e)
@@ -92,6 +99,7 @@ public partial class ImageEditorView : Window
         var currentPosition = e.GetPosition(this);
         if (!IsDragThresholdExceeded(currentPosition)) return;
         GhostDragItem.IsVisible = true;
+        Cursor = new Cursor(StandardCursorType.DragMove);
         UpdateGhostDragItemPosition(currentPosition);
     }
 
@@ -117,11 +125,9 @@ public partial class ImageEditorView : Window
 
     private void AddLayerMenuButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (sender is Button button)
-        {
-            LayerTypeMenu.PlacementTarget = button;
-            LayerTypeMenu.Open(button);
-        }
+        if (sender is not Button button) return;
+        LayerTypeMenu.PlacementTarget = button;
+        LayerTypeMenu.Open(button);
     }
 
     private void CloseButtonOnClick(object? sender, RoutedEventArgs e)
@@ -146,6 +152,7 @@ public partial class ImageEditorView : Window
     {
         GhostDragItem.IsVisible = false;
         _dragItem = null;
+        Cursor = Cursor.Default;
         if (_previousDropItem == null) return;
         _previousDropItem.IsDropTarget = false;
         _previousDropItem = null;

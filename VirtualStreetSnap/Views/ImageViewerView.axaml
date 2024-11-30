@@ -11,6 +11,7 @@
     <UserControl.DataContext>
         <viewModels:ImageViewerViewModel />
     </UserControl.DataContext>
+    
     <Panel Background="#111111">
         <Viewbox x:Name="ImageViewbox" Stretch="Uniform"
                  PointerPressed="ImageViewbox_PointerPressed"
@@ -70,17 +71,14 @@
             </Viewbox.ContextMenu>
         </Viewbox>
         <!-- image info -->
-        <PathIcon Data="{StaticResource Info}" VerticalAlignment="Top" HorizontalAlignment="Left"
-                  Margin="10" Width="30" Height="30" Opacity="0.3"
-                  ToolTip.Placement="RightEdgeAlignedTop">
-            <ToolTip.Tip>
-                <StackPanel Margin="2" Spacing="2">
-                    <TextBlock Text="{Binding ViewImage.ImgName}" FontSize="14" />
-                    <TextBlock Text="{Binding ViewImage.ImgDir}" Foreground="Gray" />
-                    <TextBlock Text="{Binding ViewImage.ImgSize}" Foreground="Gray" />
-                </StackPanel>
-            </ToolTip.Tip>
-        </PathIcon>
+        <StackPanel Margin="10" Spacing="2" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            <StackPanel.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
+            </StackPanel.Effect>
+            <TextBlock Text="{Binding ViewImage.ImgName}" FontSize="14" />
+            <TextBlock Text="{Binding ViewImage.ImgDir}" Foreground="Gray" />
+            <TextBlock Text="{Binding ViewImage.ImgSize}" Foreground="Gray" />
+        </StackPanel>
         <!-- color picker -->
         <Canvas IsVisible="{Binding ShowColorPicker}">
             <Border Name="ColoPickerPanel" Canvas.Left="300" Canvas.Top="200"
