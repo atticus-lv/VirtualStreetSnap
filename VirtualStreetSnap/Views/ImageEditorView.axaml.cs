@@ -21,6 +21,8 @@ public partial class ImageEditorView : Window
     public ImageEditorView()
     {
         InitializeComponent();
+        CloseWindowButton.Click += CloseButtonOnClick;
+        
         var scale = Screens.Primary.Scaling;
         var currentScreen = Screens.Primary;
         Width = currentScreen.Bounds.Width / 2 / scale;
@@ -29,6 +31,12 @@ public partial class ImageEditorView : Window
         LayerListBox.AddHandler(PointerPressedEvent, LayerListBox_OnPointerPressed, RoutingStrategies.Tunnel);
         LayerListBox.AddHandler(PointerReleasedEvent, LayerListBox_OnPointerRelease);
         LayerListBox.AddHandler(PointerMovedEvent, LayerListBox_OnPointerMove);
+    }
+    
+    private void ToolBar_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!Equals(e.Source, ToolBar)) return;
+        BeginMoveDrag(e);
     }
     
     private bool IsPointerOutsideLayerListBox(PointerEventArgs e)

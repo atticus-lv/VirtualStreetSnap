@@ -9,13 +9,39 @@
         Title="{i18n:Localize ImageEditor}"
         x:DataType="viewModels:ImageEditorViewModel"
         WindowStartupLocation="CenterScreen"
-        Width="1280" Height="720">
+        Width="1280" Height="720"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="0">
 
     <Design.DataContext>
         <viewModels:DesignImageEditorViewModel />
     </Design.DataContext>
     
-    
+    <Window.Styles>
+        <!-- close button -->
+        <Style Selector="Button#CloseWindowButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Width" Value="100" />
+        </Style>
+        <Style Selector="Button#CloseWindowButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Firebrick" />
+        </Style>
+
+        <Style Selector="Panel#ToolBarArea> Border#ToolBar">
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Panel#ToolBarArea:pointerover > Border#ToolBar">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+        </Style>
+
+    </Window.Styles>
     
     <Panel>
         <Grid ColumnDefinitions="*,10,250" Background="#111111">
@@ -133,6 +159,28 @@
                 </TextBlock>
             </Border>
         </Canvas>
+        <StackPanel>
+            <Panel Name="ToolBarArea">
+                <Rectangle Fill="Transparent" Height="50"></Rectangle>
+                <Border Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
+                        Background="#111111" HorizontalAlignment="Stretch">
+                    <Panel>
+                        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0 ">
+                            <TextBlock Text="Image Editor" FontSize="18" />
+                            <TextBlock Text="Created by Atticus" Foreground="DimGray" Opacity="0.8" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="5"
+                                    HorizontalAlignment="Right" Margin="0 0 10 0">
+
+                            <Button Name="CloseWindowButton" HorizontalContentAlignment="Center"
+                                    Background="Transparent" Width="35">
+                                <TextBlock Text="X" FontSize="16" />
+                            </Button>
+                        </StackPanel>
+                    </Panel>
+                </Border>
+            </Panel>
+        </StackPanel>
     </Panel>
 
 </Window>
