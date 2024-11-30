@@ -6,9 +6,9 @@ namespace  VirtualStreetSnap.Models;
 /// This class is used to store the size of the camera like 16:9, 4:3, 1:1.
 /// It provides methods to get the width and height based on the aspect ratio.
 /// </summary>
-public class SizeRadio
+public class SizeRatio
 {
-    public SizeRadio(string label)
+    public SizeRatio(string label)
     {
         Label = label;
     }

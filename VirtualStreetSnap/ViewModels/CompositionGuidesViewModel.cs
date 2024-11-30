@@ -26,11 +26,11 @@ public partial class CompositionGuidesViewModel : ViewModelBase
 
     [ObservableProperty]
     private Color _borderColor = Colors.Brown;
-    
-    [ObservableProperty]
-    private SizeRadio? _selectedSizeRadio;
 
-    public ObservableCollection<SizeRadio> RadioItems { get; } =
+    [ObservableProperty]
+    private SizeRatio? _selectedSizeRatio;
+
+    public ObservableCollection<SizeRatio> RatioItems { get; } =
     [
         new("16:9"),
         new("4:3"),
@@ -39,12 +39,20 @@ public partial class CompositionGuidesViewModel : ViewModelBase
         new("3:4"),
         new("9:16")
     ];
-    
+
+
+    [ObservableProperty]
+    private int _realCaptureAreaWidth;
+
+    [ObservableProperty]
+    private int _realCaptureAreaHeight;
+
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
+
     public CompositionGuidesViewModel()
-    {   
-        SelectedSizeRadio = RadioItems.First();
+    {
+        SelectedSizeRatio = RatioItems.First();
         ShowGuideLinesGrid = Config.Overlays.Guides.Grid;
         ShowGuideLinesCenter = Config.Overlays.Guides.Center;
         ShowGuideLinesRatio = Config.Overlays.Guides.Ratio;

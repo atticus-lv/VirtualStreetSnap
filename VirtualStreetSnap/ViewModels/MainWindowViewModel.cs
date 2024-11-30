@@ -37,7 +37,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<PagesModel> Pages { get; } =
     [
-        new("SnapShot", new CompositionGuidesView(), "CameraRegular"),
+        new("SnapShot", new SnapShotView(), "CameraRegular"),
         new("Gallery", new ImageGalleryView(), "ImageCopyRegular"),
         new("Settings", new SettingsView(), "Settings")
     ];
@@ -45,7 +45,9 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnCurrentPageChanged(PagesModel value)
     {
         CurrentPage = value;
-        ShowSizeRadioComboBox = value is { Name: "SnapShot" };
+        if (value.Name != "Gallery") return;
+        var viewModel = value.Page.DataContext as ImageGalleryViewModel;
+        viewModel?.UpdateThumbnails();
     }
 
 
@@ -53,27 +55,11 @@ public partial class MainWindowViewModel : ViewModelBase
     private AppConfig _config = ConfigService.Instance;
 
 
-    [ObservableProperty]
-    private SizeRadio? _selectedSizeRadio;
-
-    [ObservableProperty]
-    private bool _showSizeRadioComboBox = true;
-
-
-    public ObservableCollection<SizeRadio> RadioItems { get; } =
-    [
-        new("16:9"),
-        new("4:3"),
-        new("3:2"),
-        new("1:1"),
-        new("3:4"),
-        new("9:16")
-    ];
-
     public MainWindowViewModel()
     {
         CurrentPage = Pages.First();
-        SelectedSizeRadio = RadioItems.First();
+        var snapView = Pages[0].Page as SnapShotView;
+        snapView?.FixWindowSize();
         ConfigService.SaveIfNotExists();
     }
 
