@@ -92,6 +92,7 @@ public partial class ImageEditorView : Window
         var currentPosition = e.GetPosition(this);
         if (!IsDragThresholdExceeded(currentPosition)) return;
         GhostDragItem.IsVisible = true;
+        Cursor = new Cursor(StandardCursorType.DragMove);
         UpdateGhostDragItemPosition(currentPosition);
     }
 
@@ -117,11 +118,9 @@ public partial class ImageEditorView : Window
 
     private void AddLayerMenuButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (sender is Button button)
-        {
-            LayerTypeMenu.PlacementTarget = button;
-            LayerTypeMenu.Open(button);
-        }
+        if (sender is not Button button) return;
+        LayerTypeMenu.PlacementTarget = button;
+        LayerTypeMenu.Open(button);
     }
 
     private void CloseButtonOnClick(object? sender, RoutedEventArgs e)
@@ -146,6 +145,7 @@ public partial class ImageEditorView : Window
     {
         GhostDragItem.IsVisible = false;
         _dragItem = null;
+        Cursor = Cursor.Default;
         if (_previousDropItem == null) return;
         _previousDropItem.IsDropTarget = false;
         _previousDropItem = null;
