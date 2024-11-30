@@ -25,10 +25,8 @@ public partial class SnapShotView : UserControl
     private void GetCurrentScreenInfo()
     {
         var topLevel = TopLevel.GetTopLevel(this);
-        Console.WriteLine("TopLevel: " + topLevel);
         if (topLevel == null) return;
         var screen = topLevel.Screens.ScreenFromVisual(topLevel);
-        Console.WriteLine("Screen: " + screen);
         if (screen == null) return;
         _window = topLevel as Window;
         _currentScreen = screen;
@@ -105,13 +103,17 @@ public partial class SnapShotView : UserControl
         viewModel.RealCaptureAreaHeight = (int)(CaptureArea.Bounds.Height * scaling);
     }
     // call when init
-    public void FixWindowSize()
+    public bool FixWindowSize()
     {   
         GetCurrentScreenInfo();
-        if (_currentScreen == null) return;
-        if (_window == null) return;
+        if (_currentScreen == null || _window == null)
+        {
+            Console.WriteLine("No screen or window");
+            return false;
+        }
         var borderSize = FocusBorder.BorderThickness.Left + FocusBorder.BorderThickness.Right;
         _window.Width += borderSize;
         _window.Height += borderSize;
+        return true;
     }
 }

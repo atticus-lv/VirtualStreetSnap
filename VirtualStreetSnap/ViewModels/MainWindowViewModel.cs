@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
@@ -30,8 +31,6 @@ public class PagesModel
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    // When the app is in preview mode, the user can't take a screenshot
-
     [ObservableProperty]
     private PagesModel? _currentPage;
 
@@ -45,9 +44,16 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnCurrentPageChanged(PagesModel value)
     {
         CurrentPage = value;
-        if (value.Name != "Gallery") return;
-        var viewModel = value.Page.DataContext as ImageGalleryViewModel;
-        viewModel?.UpdateThumbnails();
+        switch (value.Name)
+        {
+            case "Gallery":
+            {
+                var viewModel = value.Page.DataContext as ImageGalleryViewModel;
+                viewModel?.UpdateThumbnails();
+                Console.WriteLine($"Update thumbnails for {value.Name}");
+                break;
+            }
+        }
     }
 
 
@@ -58,9 +64,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         CurrentPage = Pages.First();
-        var snapView = Pages[0].Page as SnapShotView;
-        snapView?.FixWindowSize();
         ConfigService.SaveIfNotExists();
+        StartFixWindowSizeTimer();
     }
 
     [RelayCommand]
@@ -71,5 +76,26 @@ public partial class MainWindowViewModel : ViewModelBase
         Config.Version = "1.0";
         ConfigService.SaveConfig();
         Environment.Exit(0);
+    }
+
+
+    private void StartFixWindowSizeTimer()
+    {
+        var maxTry = 20;
+        var tryCount = 0;
+        var timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(0.2)
+        };
+        timer.Tick += (sender, args) =>
+        {
+            var snapView = Pages[0].Page as SnapShotView;
+            if (snapView.FixWindowSize() || tryCount >= 10)
+            {
+                timer.Stop();
+            }
+            tryCount++;
+        };
+        timer.Start();
     }
 }
