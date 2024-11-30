@@ -37,6 +37,7 @@
   "Add": "添加",
   "Temperature": "色温",
   "Tint": "色调",
-  "Edit": "编辑",
-  "Save": "保存"
+  "SendToEditor": "发送到编辑器",
+  "Save": "保存",
+  "SaveCopy": "保存副本"
 }

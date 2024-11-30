@@ -123,23 +123,43 @@ public partial class ImageEditorViewModel : ViewModelBase
         var index = SelectedLayer == null ? 0 : LayerManager.Layers.IndexOf(SelectedLayer);
         LayerManager.MoveLayer(LayerManager.Layers.Last(), index);
     }
-    
+
+    public event EventHandler? ImageSaved;
+
+    protected virtual void OnImageSaved()
+    {
+        ImageSaved?.Invoke(this, EventArgs.Empty);
+    }
+
     [RelayCommand]
     public void SaveImage()
     {
-        var imageBase = SaveImageToGalleryDirectory(saveAsNew: true);
+        SaveImageToGalleryDirectory(saveAsNew: false);
+        OnImageSaved();
     }
-    
+
+    [RelayCommand]
+    public void SaveCopy()
+    {
+        SaveImageToGalleryDirectory(saveAsNew: true);
+        OnImageSaved();
+    }
+
     public ImageBase SaveImageToGalleryDirectory(bool saveAsNew = true)
     {
-        var imageBase = EditImageViewer.ViewImage;
-        if (!saveAsNew) return imageBase;
-        var newName = imageBase.ImgName + "_edited";
         var config = ConfigService.Instance;
         var saveDirectory = config.Settings.SaveDirectory;
+        var imageBase = EditImageViewer.ViewImage;
+        var newName = Path.GetFileNameWithoutExtension(imageBase.ImgName);
+        if (saveAsNew)
+        {
+            while (Path.Exists(Path.Combine(saveDirectory, newName + ".png")))
+            {
+                newName += "_edited";
+            }
+        }
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
         imageBase.Image.Save(newFilePath);
-        imageBase.LoadThumbAsync();
         return imageBase;
     }
 }

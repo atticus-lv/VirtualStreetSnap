@@ -21,8 +21,12 @@
         <Grid ColumnDefinitions="*,10,250" Background="#111111">
             <Panel>
                 <ContentControl Content="{Binding EditImageViewer}" />
-                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="{i18n:Localize Save}" Margin="10"
-                        Command="{Binding SaveImage}" />
+                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal" >
+                    <Button Content="{i18n:Localize Save}"  FontSize="16"
+                            Command="{Binding SaveImage}" />
+                    <Button Content="{i18n:Localize SaveCopy}" FontSize="16"
+                            Command="{Binding SaveCopy}" />
+                </StackPanel>
             </Panel>
 
             <GridSplitter Grid.Column="1" Background="Black" />
