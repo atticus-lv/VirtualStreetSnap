@@ -29,6 +29,9 @@
         </Border>
 
         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20" Spacing="10" Orientation="Horizontal">
+            <StackPanel.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
+            </StackPanel.Effect>
             <Button Background="Transparent" Opacity="0.5">
                 <PathIcon Data="{StaticResource Overlay}" ToolTip.Tip="{i18n:Localize  Guides}" Width="30" Height="30" />
                 <Button.Flyout>
@@ -68,6 +71,9 @@
                   ItemsSource="{Binding RatioItems}"
                   SelectedItem="{Binding SelectedSizeRatio}"
                   SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+            <ComboBox.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
+            </ComboBox.Effect>
             <ComboBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:SizeRatio}">
                     <TextBlock Text="{Binding Label}" />
@@ -77,7 +83,10 @@
 
 
             
-        <StackPanel Orientation="Horizontal" Spacing="5" Opacity="0.5" VerticalAlignment="Bottom" Margin="20">
+        <StackPanel Orientation="Horizontal" Spacing="5" Opacity="1" VerticalAlignment="Bottom" Margin="20">
+            <StackPanel.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
+            </StackPanel.Effect>
             <TextBlock Text="{Binding RealCaptureAreaWidth}" FontSize="24" />
             <TextBlock VerticalAlignment="Center">X</TextBlock>
             <TextBlock Text="{Binding RealCaptureAreaHeight}" FontSize="24" />
