@@ -27,10 +27,12 @@
                     VerticalContentAlignment="Center"
                     VerticalAlignment="Center" HorizontalAlignment="Right"
                     IsVisible="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Panel}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}" />
-            <Button Content="{i18n:Localize SendToEditor}" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                    FontSize="16"
-                    Command="{Binding EditSelectedImageCommand} " CommandParameter="{Binding $parent[Window]}"
-                    Margin="10" />
+            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal">
+                <Button Content="{i18n:Localize CopyImage}" Command="{Binding CopySelectedImage}"></Button>
+                <Button Content="{i18n:Localize SendToEditor}"
+                        Command="{Binding EditSelectedImageCommand} " CommandParameter="{Binding $parent[Window]}" />
+            </StackPanel>
+
         </Panel>
         <GridSplitter Grid.Row="1" Background="Black"></GridSplitter>
         <!-- Thumbnails Display -->

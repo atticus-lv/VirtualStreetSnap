@@ -22,11 +22,4 @@ public partial class ImageViewerViewModel : ViewModelBase
     {
         ViewImage = new ImageBase();
     }
-
-    [RelayCommand]
-    public async Task CopySelectedImage()
-    {
-        if (ViewImage == null) return;
-        await PowerShellClipBoard.SetImage(ViewImage.ImgPath);
-    }
 }
