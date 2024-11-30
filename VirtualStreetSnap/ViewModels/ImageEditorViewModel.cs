@@ -33,7 +33,7 @@ public partial class ImageEditorViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _dragItemText;
-    
+
     public ImageEditorViewModel(ImageBase? image)
     {
         SetupImage(Design.IsDesignMode ? null : image);
@@ -70,16 +70,17 @@ public partial class ImageEditorViewModel : ViewModelBase
         SelectedLayer = LayerManager.Layers.LastOrDefault();
         if (SelectedLayer != null) LayerManager.RefreshFinalImage(SelectedLayer);
     }
+
     [RelayCommand]
     public void RemoveLayer()
-    {   
+    {
         var index = LayerManager.Layers.IndexOf(SelectedLayer);
         LayerManager.RemoveLayer(SelectedLayer);
         // If the removed layer was the selected layer, select the nearest layer
         if (index == LayerManager.Layers.Count) index--;
         SelectedLayer = LayerManager.Layers.ElementAtOrDefault(index);
     }
-    
+
     [RelayCommand]
     public void MoveLayerUp()
     {
@@ -93,7 +94,7 @@ public partial class ImageEditorViewModel : ViewModelBase
         var index = LayerManager.Layers.IndexOf(SelectedLayer);
         LayerManager.MoveLayer(SelectedLayer, index - 1);
     }
-    
+
     public void AddLayer(string? layerType)
     {
         if (string.IsNullOrEmpty(layerType)) return;
@@ -121,12 +122,16 @@ public partial class ImageEditorViewModel : ViewModelBase
         // move the layer to the top of selected layer, if no layer is selected, move to the top
         var index = SelectedLayer == null ? 0 : LayerManager.Layers.IndexOf(SelectedLayer);
         LayerManager.MoveLayer(LayerManager.Layers.Last(), index);
-        
+    }
+    
+    [RelayCommand]
+    public void SaveImage()
+    {
+        var imageBase = SaveImageToGalleryDirectory(saveAsNew: true);
     }
     
     public ImageBase SaveImageToGalleryDirectory(bool saveAsNew = true)
     {
-        
         var imageBase = EditImageViewer.ViewImage;
         if (!saveAsNew) return imageBase;
         var newName = imageBase.ImgName + "_edited";
@@ -192,7 +197,7 @@ public class LayerManagerViewModel : ViewModelBase
         GC.Collect();
         RefreshFinalImage();
     }
-    
+
     public void MoveLayer(LayerBaseViewModel layer, int newIndex)
     {
         var oldIndex = Layers.IndexOf(layer);
@@ -236,7 +241,7 @@ public class LayerManagerViewModel : ViewModelBase
                     GC.Collect();
                     return null;
                 }
-                
+
                 layer.InitialImage = finalImage.Clone();
                 if (!layer.IsVisible) continue;
                 layer.ApplyModifiers();

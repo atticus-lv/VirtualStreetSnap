@@ -21,8 +21,8 @@
         <Grid ColumnDefinitions="*,10,250" Background="#111111">
             <Panel>
                 <ContentControl Content="{Binding EditImageViewer}" />
-                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="Save" Margin="10"
-                        Command="{Binding SaveImageToGalleryDirectory}" />
+                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="{i18n:Localize Save}" Margin="10"
+                        Command="{Binding SaveImage}" />
             </Panel>
 
             <GridSplitter Grid.Column="1" Background="Black" />
@@ -47,9 +47,9 @@
                                 
                                 <ListBox.ItemTemplate >
                                     <DataTemplate>
-                                        <Panel Margin="10 0 0 0">
+                                        <Panel >
                                             <Rectangle Fill="{DynamicResource SystemAccentColor}" IsVisible="{Binding IsDropTarget}" Opacity="0.5"/>
-                                            <Grid ColumnDefinitions="Auto,*">
+                                            <Grid ColumnDefinitions="Auto,*" Margin="10 0 10 0">
                                                 <CheckBox IsChecked="{Binding IsVisible}" />
                                                 <TextBlock Grid.Column="1"
                                                            Text="{Binding Name, Converter={StaticResource LocalizeConverter}}"
@@ -65,7 +65,7 @@
                     </ScrollViewer>
 
 
-                    <StackPanel Grid.Row="2" Margin="5" Orientation="Horizontal">
+                    <Grid Grid.Row="2" Margin="5" ColumnDefinitions="*,Auto">
                         <Button Name="AddLayerMenuButton" Click="AddLayerMenuButton_Click"
                                 HorizontalAlignment="Left" Background="Transparent" ToolTip.Tip="{i18n:Localize Add}">
                             <PathIcon Data="{StaticResource Add}" Width="14" />
@@ -83,17 +83,11 @@
                                               Command="{Binding AddLayer}" CommandParameter="Tint" />
                                 </ContextMenu>
                             </Button.ContextMenu>
-
                         </Button>
-                        <Separator Opacity="0.2"></Separator>
-                        <Button Background="Transparent" FontSize="18" Content="↑" Command="{Binding MoveLayerUp}" />
-                        <Button Background="Transparent" FontSize="18" Content="↓" Command="{Binding MoveLayerDown}" />
-                        <Separator Opacity="0.2"></Separator>
-
-                        <Button Background="Transparent" Command="{Binding RemoveLayer}">
+                        <Button Grid.Column="2" Background="Transparent" Command="{Binding RemoveLayer}">
                             <PathIcon Data="{StaticResource Trash}" Width="14" />
                         </Button>
-                    </StackPanel>
+                    </Grid>
                 </Grid>
 
                 <GridSplitter Grid.Row="1" Background="Black" />
