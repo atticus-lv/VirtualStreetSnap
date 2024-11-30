@@ -16,6 +16,7 @@
 
     <Grid RowDefinitions="*,10,100" Background="#111111">
         <Panel Grid.Row="0">
+            <ContentControl Content="{Binding SelectedImageViewer}" />
             <Button Command="{Binding SelectPreviousThumbnail}"
                     Content="←" FontSize="24" Opacity="0.5" Margin="10" Height="50"
                     VerticalContentAlignment="Center"
