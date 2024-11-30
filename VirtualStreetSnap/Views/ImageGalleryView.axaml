@@ -16,19 +16,17 @@
 
     <Grid RowDefinitions="*,10,100" Background="#111111">
         <Panel Grid.Row="0">
-            <ContentControl Content="{Binding SelectedImageViewer}" />
             <Button Command="{Binding SelectPreviousThumbnail}"
                     Content="←" FontSize="24" Opacity="0.5" Margin="10" Height="50"
                     VerticalContentAlignment="Center"
                     VerticalAlignment="Center" HorizontalAlignment="Left"
                     IsVisible="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Panel}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}" />
-
             <Button Command="{Binding SelectNextThumbnail}"
                     Content="→" FontSize="24" Opacity="0.5" Margin="10" Height="50"
                     VerticalContentAlignment="Center"
                     VerticalAlignment="Center" HorizontalAlignment="Right"
                     IsVisible="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Panel}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}" />
-            <Button Content="{i18n:Localize Edit}" VerticalAlignment="Top" HorizontalAlignment="Right"
+            <Button Content="{i18n:Localize Edit}" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="20"
                     Command="{Binding EditSelectedImageCommand} " CommandParameter="{Binding $parent[Window]}" Margin="10" />
         </Panel>
         <GridSplitter Grid.Row="1" Background="Black"></GridSplitter>

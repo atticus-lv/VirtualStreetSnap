@@ -7,7 +7,8 @@
              xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              x:Class="VirtualStreetSnap.Views.SettingsView"
-             x:DataType="viewModels:SettingsViewModel">
+             x:DataType="viewModels:SettingsViewModel"
+             Background="#111111">
 
     <UserControl.DataContext>
         <viewModels:SettingsViewModel />

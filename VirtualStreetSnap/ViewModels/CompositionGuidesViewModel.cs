@@ -1,4 +1,6 @@
-﻿using Avalonia.Media;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
@@ -26,9 +28,23 @@ public partial class CompositionGuidesViewModel : ViewModelBase
     private Color _borderColor = Colors.Brown;
     
     [ObservableProperty]
+    private SizeRadio? _selectedSizeRadio;
+
+    public ObservableCollection<SizeRadio> RadioItems { get; } =
+    [
+        new("16:9"),
+        new("4:3"),
+        new("3:2"),
+        new("1:1"),
+        new("3:4"),
+        new("9:16")
+    ];
+    
+    [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
     public CompositionGuidesViewModel()
-    {
+    {   
+        SelectedSizeRadio = RadioItems.First();
         ShowGuideLinesGrid = Config.Overlays.Guides.Grid;
         ShowGuideLinesCenter = Config.Overlays.Guides.Center;
         ShowGuideLinesRatio = Config.Overlays.Guides.Ratio;

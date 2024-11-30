@@ -1,40 +1,64 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
+using VirtualStreetSnap.Views;
 
 namespace VirtualStreetSnap.ViewModels;
+
+public class PagesModel
+{
+    public PagesModel(string name, UserControl page, string? iconKey = null)
+    {
+        Name = name;
+        Page = page;
+        if (iconKey == null) return;
+        Application.Current!.TryFindResource(iconKey, out var res);
+        ItemIcon = (StreamGeometry)res!;
+    }
+
+    public string Name { get; set; }
+    public UserControl Page { get; set; }
+    public StreamGeometry? ItemIcon { get; }
+}
 
 public partial class MainWindowViewModel : ViewModelBase
 {
     // When the app is in preview mode, the user can't take a screenshot
 
     [ObservableProperty]
-    private bool _isGalleryView;
+    private PagesModel? _currentPage;
 
-    [ObservableProperty]
-    private bool _isSettingsView;
+    public ObservableCollection<PagesModel> Pages { get; } =
+    [
+        new("SnapShot", new CompositionGuidesView(), "CameraRegular"),
+        new("Gallery", new ImageGalleryView(), "ImageCopyRegular"),
+        new("Settings", new SettingsView(), "Settings")
+    ];
 
-    [ObservableProperty]
-    private SizeRadio? _selectedSizeRadio;
+    partial void OnCurrentPageChanged(PagesModel value)
+    {
+        CurrentPage = value;
+        ShowSizeRadioComboBox = value is { Name: "SnapShot" };
+    }
+
 
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
 
 
-    public ObservableCollection<LanguageModel> LanguageModels { get; } =
-    [
-        new("English", "en-US"),
-        new("中文", "zh-CN"),
-    ];
+    [ObservableProperty]
+    private SizeRadio? _selectedSizeRadio;
+
+    [ObservableProperty]
+    private bool _showSizeRadioComboBox = true;
+
 
     public ObservableCollection<SizeRadio> RadioItems { get; } =
     [
@@ -47,7 +71,8 @@ public partial class MainWindowViewModel : ViewModelBase
     ];
 
     public MainWindowViewModel()
-    {   
+    {
+        CurrentPage = Pages.First();
         SelectedSizeRadio = RadioItems.First();
         ConfigService.SaveIfNotExists();
     }

@@ -12,7 +12,7 @@
         <viewModels:CompositionGuidesViewModel />
     </UserControl.DataContext>
 
-    <Panel Background="Transparent">
+    <Panel Background="Transparent" Name="CaptureArea">
         <Grid Name="GuidesGridThird" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
               Opacity="{Binding GuideLinesOpacity}"
               IsVisible="{Binding ShowGuideLinesGrid}" />
@@ -25,7 +25,7 @@
         <Border BorderBrush="Brown" BorderThickness="10" Opacity="0.5"
                 IsVisible="{Binding ShowFocusBorder}" />
 
-        <Button Padding="0" Opacity="0.5" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Button Padding="0" Opacity="0.5" Margin="20" VerticalAlignment="Bottom" HorizontalAlignment="Left">
             <PathIcon Data="{StaticResource Overlay}" ToolTip.Tip="{i18n:Localize  Guides}" Width="30" Height="30" />
             <Button.Flyout>
                 <Flyout Placement="BottomEdgeAlignedLeft" >
@@ -52,6 +52,11 @@
                     </StackPanel>
                 </Flyout>
             </Button.Flyout>
+        </Button>
+        
+        <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20" Background="Transparent"
+                Click="SnapshotButton_Click">
+            <PathIcon Data="{StaticResource CameraRegular}" Width="30" Height="30"/>
         </Button>
     </Panel>
 

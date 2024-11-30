@@ -11,6 +11,7 @@
     <UserControl.DataContext>
         <viewModels:ImageViewerViewModel />
     </UserControl.DataContext>
+    
     <Panel Background="#111111">
         <Viewbox x:Name="ImageViewbox" Stretch="Uniform"
                  PointerPressed="ImageViewbox_PointerPressed"
