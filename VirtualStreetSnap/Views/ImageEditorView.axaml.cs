@@ -92,13 +92,14 @@ public partial class ImageEditorView : Window
 
         if (IsPointerOutsideLayerListBox(e))
         {
-            ResetDragState();
+            Cursor = new Cursor(StandardCursorType.No);
+            GhostDragItem.IsVisible = false;
             return;
         }
 
         var currentPosition = e.GetPosition(this);
         if (!IsDragThresholdExceeded(currentPosition)) return;
-        GhostDragItem.IsVisible = true;
+        if (!GhostDragItem.IsVisible) GhostDragItem.IsVisible = true;
         Cursor = new Cursor(StandardCursorType.DragMove);
         UpdateGhostDragItemPosition(currentPosition);
     }

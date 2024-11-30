@@ -154,6 +154,9 @@
         <Canvas>
             <Border Name="GhostDragItem" Background="Transparent" Margin="10" IsHitTestVisible="False" IsVisible="False"
                     Height="30" Opacity="0.8" CornerRadius="4">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="2" Color="Black" OffsetX="0" OffsetY="0" />
+                </Border.Effect>
                 <TextBlock Text="{Binding DragItemText,Converter={StaticResource LocalizeConverter}}"
                            VerticalAlignment="Center" HorizontalAlignment="Center">
                 </TextBlock>
