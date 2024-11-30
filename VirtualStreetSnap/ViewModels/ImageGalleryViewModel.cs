@@ -120,7 +120,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
             _lazyLoadManager.Initialize(Config.Settings.SaveDirectory);
         }
 
-        if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails[0];
+        if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails.First();
     }
 
 

@@ -57,7 +57,6 @@ public partial class ImageEditorView : Window
         var viewModel = DataContext as ImageEditorViewModel;
         viewModel.DragItemText = _dragItem.Name;
         UpdateGhostDragItemPosition(e.GetPosition(this));
-        Console.WriteLine($"Pressed on {_dragItem}, at {GhostDragItem}");
     }
 
     private void LayerListBox_OnPointerMove(object? sender, PointerEventArgs e)
