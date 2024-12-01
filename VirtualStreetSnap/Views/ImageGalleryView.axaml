@@ -14,7 +14,7 @@
         <viewModels:ImageGalleryViewModel />
     </UserControl.DataContext>
 
-    <Grid RowDefinitions="*,10,100" Background="#111111">
+    <Grid RowDefinitions="*,10,0.2*" Background="#111111">
         <Panel Grid.Row="0">
             <ContentControl Content="{Binding SelectedImageViewer}" />
             <Button Command="{Binding SelectPreviousThumbnail}"
@@ -32,7 +32,7 @@
                 <Button Content="{i18n:Localize SendToEditor}"
                         Command="{Binding EditSelectedImageCommand} " CommandParameter="{Binding $parent[Window]}" />
             </StackPanel>
-
+        
         </Panel>
         <GridSplitter Grid.Row="1" Background="Black"></GridSplitter>
         <!-- Thumbnails Display -->
