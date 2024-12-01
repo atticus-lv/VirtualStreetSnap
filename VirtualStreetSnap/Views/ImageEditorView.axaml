@@ -99,21 +99,18 @@
 
 
                     <Grid Grid.Row="2" Margin="5" ColumnDefinitions="*,Auto">
-                        <Button Name="AddLayerMenuButton" Click="AddLayerMenuButton_Click"
+                        <Button Name="AddLayerMenuButton" Click="PopupLayerMenuButton_Click"
                                 HorizontalAlignment="Left" Background="Transparent" ToolTip.Tip="{i18n:Localize Add}">
                             <PathIcon Data="{StaticResource Add}" Width="14" />
                             <Button.ContextMenu>
-                                <ContextMenu Name="LayerTypeMenu" PlacementMode="TopEdgeAlignedLeft">
-                                    <MenuItem Header="{i18n:Localize BrightnessContrast}"
-                                              Command="{Binding AddLayer}" CommandParameter="BrightnessContrast" />
-                                    <MenuItem Header="{i18n:Localize Sharpness}"
-                                              Command="{Binding AddLayer}" CommandParameter="Sharpness" />
-                                    <MenuItem Header="{i18n:Localize HSL}"
-                                              Command="{Binding AddLayer}" CommandParameter="HSL" />
-                                    <MenuItem Header="{i18n:Localize Temperature}"
-                                              Command="{Binding AddLayer}" CommandParameter="Temperature" />
-                                    <MenuItem Header="{i18n:Localize Tint}"
-                                              Command="{Binding AddLayer}" CommandParameter="Tint" />
+                                <ContextMenu Name="LayerTypeMenu" 
+                                             ItemsSource="{Binding LayerTypes}" Placement="TopEdgeAlignedLeft">
+                                    <ContextMenu.ItemTemplate>
+                                        <DataTemplate>
+                                            <MenuItem Header="{Binding LayerName,Converter={StaticResource LocalizeConverter}}"
+                                                      Click="MenuItem_OnClick" />
+                                        </DataTemplate>
+                                    </ContextMenu.ItemTemplate>
                                 </ContextMenu>
                             </Button.ContextMenu>
                         </Button>

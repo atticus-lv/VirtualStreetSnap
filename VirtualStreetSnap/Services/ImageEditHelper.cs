@@ -20,6 +20,29 @@ public static class ImageEditHelper
     {
         image.Mutate(x => x.GaussianSharpen(sharpness));
     }
+    public static void ApplyGaussianBlur<TPixel>(Image<TPixel> image, float blur)
+        where TPixel : unmanaged, IPixel<TPixel>
+    {
+        image.Mutate(x => x.GaussianBlur(blur));
+    }
+    
+    public static void ApplyGrayscale<TPixel>(Image<TPixel> image)
+        where TPixel : unmanaged, IPixel<TPixel>
+    {
+        image.Mutate(x => x.Grayscale());
+    }
+    
+    public static void ApplyPixelate <TPixel>(Image<TPixel> image, int pixelSize)
+        where TPixel : unmanaged, IPixel<TPixel>
+    {
+        image.Mutate(x => x.Pixelate(pixelSize));
+    }
+    
+    public static void ApplyVignette <TPixel>(Image<TPixel> image, float radius, float darkness)
+        where TPixel : unmanaged, IPixel<TPixel>
+    {
+        image.Mutate(x => x.Vignette(radius, darkness));
+    }
 
     public static void ApplyHsl<TPixel>(Image<TPixel> image, float hue, float saturation, float lightness)
         where TPixel : unmanaged, IPixel<TPixel>

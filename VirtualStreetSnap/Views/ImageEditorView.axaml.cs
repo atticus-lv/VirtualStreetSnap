@@ -130,7 +130,7 @@ public partial class ImageEditorView : Window
         ResetDragState();
     }
 
-    private void AddLayerMenuButton_Click(object? sender, RoutedEventArgs e)
+    private void PopupLayerMenuButton_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is not Button button) return;
         LayerTypeMenu.PlacementTarget = button;
@@ -187,5 +187,15 @@ public partial class ImageEditorView : Window
         ensureNotificationManager();
         var viewModel = (ImageEditorViewModel)DataContext;
         viewModel.SaveImageToGalleryDirectory(true);
+    }
+
+    private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {   
+        if (sender is not MenuItem menuItem) return;
+        var viewModel = (ImageEditorViewModel)DataContext;
+        Console.WriteLine(menuItem.Header.ToString());
+        // get real name instead of data passing localized string
+        var dataContext = menuItem.GetLogicalAncestors() .OfType<Control>() .FirstOrDefault(c => c.DataContext is LayerTypeItem)? .DataContext as LayerTypeItem;
+        viewModel.AddLayer(dataContext?.LayerName);
     }
 }
