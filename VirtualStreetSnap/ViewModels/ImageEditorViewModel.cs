@@ -98,9 +98,12 @@ public partial class ImageEditorViewModel : ViewModelBase
     {
         { "BrightnessContrast", () => new BrightnessContrastLayerViewModel() },
         { "Sharpness", () => new SharpnessLayerViewModel() },
+        { "GaussianBlur", () => new GaussianBlurLayerViewModel() },
         { "HSL", () => new HslLayerViewModel() },
         { "Temperature", () => new TemperatureLayerViewModel() },
         { "Tint", () => new TintLayerViewModel() },
+        // { "Vignette", () => new VignetteLayerViewModel() },
+        // { "Grayscale", () => new GrayscaleLayerViewModel() }
     };
 
     public void AddLayer(string? layerType)
