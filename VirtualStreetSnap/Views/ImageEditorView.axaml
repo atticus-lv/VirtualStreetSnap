@@ -16,7 +16,7 @@
     <Design.DataContext>
         <viewModels:DesignImageEditorViewModel />
     </Design.DataContext>
-    
+
     <Window.Styles>
         <!-- close button -->
         <Style Selector="Button#CloseWindowButton">
@@ -42,16 +42,16 @@
         </Style>
 
     </Window.Styles>
-    
+
     <Panel>
         <Grid ColumnDefinitions="*,10,250" Background="#111111">
             <Panel>
                 <ContentControl Content="{Binding EditImageViewer}" />
-                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal" >
-                    <Button Content="{i18n:Localize Save}"  FontSize="16"
-                            Command="{Binding SaveImage}" />
+                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal">
+                    <Button Content="{i18n:Localize Save}" FontSize="16"
+                            Click="SaveImageOverwrite" />
                     <Button Content="{i18n:Localize SaveCopy}" FontSize="16"
-                            Command="{Binding SaveCopy}" />
+                            Click="SaveImageCopy" />
                 </StackPanel>
             </Panel>
 
@@ -70,15 +70,18 @@
                                      Background="#111111" Margin="0 10 0 0"
                                      ItemsSource="{Binding LayerManager.Layers, Converter={StaticResource ReverseCollectionConverter}}"
                                      SelectedItem="{Binding SelectedLayer}">
-                                
-                                <ListBox.Styles> 
-                                    <Style Selector="ListBoxItem"> <Setter Property="Padding" Value="2" /> </Style> 
+
+                                <ListBox.Styles>
+                                    <Style Selector="ListBoxItem">
+                                        <Setter Property="Padding" Value="2" />
+                                    </Style>
                                 </ListBox.Styles>
-                                
-                                <ListBox.ItemTemplate >
+
+                                <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Panel >
-                                            <Rectangle Fill="{DynamicResource SystemAccentColor}" IsVisible="{Binding IsDropTarget}" Opacity="0.5"/>
+                                        <Panel>
+                                            <Rectangle Fill="{DynamicResource SystemAccentColor}"
+                                                       IsVisible="{Binding IsDropTarget}" Opacity="0.5" />
                                             <Grid ColumnDefinitions="Auto,*" Margin="10 0 10 0">
                                                 <CheckBox IsChecked="{Binding IsVisible}" />
                                                 <TextBlock Grid.Column="1"
@@ -152,7 +155,8 @@
             </Grid>
         </Grid>
         <Canvas>
-            <Border Name="GhostDragItem" Background="Transparent" Margin="10" IsHitTestVisible="False" IsVisible="False"
+            <Border Name="GhostDragItem" Background="Transparent" Margin="10" IsHitTestVisible="False"
+                    IsVisible="False"
                     Height="30" Opacity="0.8" CornerRadius="4">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="2" Color="Black" OffsetX="0" OffsetY="0" />

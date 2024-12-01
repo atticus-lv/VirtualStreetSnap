@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -21,7 +22,9 @@ namespace VirtualStreetSnap.ViewModels;
 public partial class ImageEditorViewModel : ViewModelBase
 {
     private const string DefaultImagePath = "avares://VirtualStreetSnap/Assets/avalonia-logo.ico";
-
+    
+    public WindowNotificationManager NotificationManager;
+    
     [ObservableProperty]
     private ImageViewerViewModel _editImageViewer = new();
 
@@ -126,24 +129,11 @@ public partial class ImageEditorViewModel : ViewModelBase
 
     public event EventHandler? ImageSaved;
 
-    protected virtual void OnImageSaved()
+    internal void OnImageSaved()
     {
         ImageSaved?.Invoke(this, EventArgs.Empty);
     }
 
-    [RelayCommand]
-    public void SaveImage()
-    {
-        SaveImageToGalleryDirectory(saveAsNew: false);
-        OnImageSaved();
-    }
-
-    [RelayCommand]
-    public void SaveCopy()
-    {
-        SaveImageToGalleryDirectory(saveAsNew: true);
-        OnImageSaved();
-    }
 
     public ImageBase SaveImageToGalleryDirectory(bool saveAsNew = true)
     {
@@ -158,8 +148,11 @@ public partial class ImageEditorViewModel : ViewModelBase
                 newName += "_edited";
             }
         }
+
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
         imageBase.Image.Save(newFilePath);
+        NotificationManager.Show(new Notification(Localizer.Localizer.Instance["SaveSuccess"],$"{newFilePath}"));
+        OnImageSaved();
         return imageBase;
     }
 }

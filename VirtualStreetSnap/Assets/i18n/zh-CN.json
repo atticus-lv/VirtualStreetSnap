@@ -39,5 +39,6 @@
   "Tint": "色调",
   "SendToEditor": "发送到编辑器",
   "Save": "保存",
-  "SaveCopy": "保存副本"
+  "SaveCopy": "保存副本",
+  "SaveSuccess": "保存成功"
 }
