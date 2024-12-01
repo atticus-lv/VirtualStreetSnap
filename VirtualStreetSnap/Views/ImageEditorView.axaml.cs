@@ -23,7 +23,7 @@ public partial class ImageEditorView : Window
     public ImageEditorView()
     {
         InitializeComponent();
-        CloseWindowButton.Click += CloseButtonOnClick;
+        CloseWindowButton.Click += (sender,e) => { Close();};
 
         var scale = Screens.Primary.Scaling;
         var currentScreen = Screens.Primary;
