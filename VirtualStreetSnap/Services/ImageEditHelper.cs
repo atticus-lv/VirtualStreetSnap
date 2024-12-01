@@ -20,6 +20,7 @@ public static class ImageEditHelper
     {
         image.Mutate(x => x.GaussianSharpen(sharpness));
     }
+
     public static void ApplyGaussianBlur<TPixel>(Image<TPixel> image, float blur)
         where TPixel : unmanaged, IPixel<TPixel>
     {
@@ -42,11 +43,22 @@ public static class ImageEditHelper
         where TPixel : unmanaged, IPixel<TPixel>
     {
         const float minRadius = 0.5f;
+        const float defaultFactor = 0.3f;
         float maxRadiusX = image.Width / 2;
         float maxRadiusY = image.Height / 2;
-        float radiusX = maxRadiusX * (1 - factor) + minRadius;
-        float radiusY = maxRadiusY * (1 - factor) + minRadius;
-        image.Mutate(x => x.Vignette(radiusX, radiusY));
+        var radiusX = maxRadiusX * (1 - defaultFactor) + minRadius;
+        var radiusY = maxRadiusY * (1 - defaultFactor) + minRadius;
+        // use darkness to control the Color of the vignette
+
+        Rgba32 color = factor switch
+        {
+            >= 0 => new Rgba32(255, 255, 255, (byte)(255 * factor)),
+            < 0 => new Rgba32(0, 0, 0, (byte)(255 * (1-factor))),
+            _ => default
+        };
+
+        image.Mutate(x => x.Vignette(new GraphicsOptions(), color, radiusX, radiusY,
+            new Rectangle(0, 0, image.Width, image.Height)));
     }
 
     public static void ApplyHsl<TPixel>(Image<TPixel> image, float hue, float saturation, float lightness)

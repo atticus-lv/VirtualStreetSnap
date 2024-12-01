@@ -12,7 +12,7 @@ public class VignetteLayerViewModel : LayerBaseViewModel
         Sliders.Add(new SliderViewModel(Factor)
         {
             Name = "Factor",
-            MinValue = 0.0f,
+            MinValue = -1.0f,
             MaxValue = 1.0f,
             OnChange = value =>
             {
