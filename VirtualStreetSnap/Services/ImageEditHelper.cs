@@ -33,9 +33,12 @@ public static class ImageEditHelper
         image.Mutate(x => x.Grayscale());
     }
 
-    public static void ApplyPixelate<TPixel>(Image<TPixel> image, int pixelSize)
+    public static void ApplyPixelate<TPixel>(Image<TPixel> image, float factor)
         where TPixel : unmanaged, IPixel<TPixel>
     {
+        if (factor == 0) return;
+        var imageSize = Math.Min(image.Width, image.Height);
+        int pixelSize = Math.Min((int)(factor * imageSize), 1);
         image.Mutate(x => x.Pixelate(pixelSize));
     }
 
@@ -53,7 +56,7 @@ public static class ImageEditHelper
         Rgba32 color = factor switch
         {
             >= 0 => new Rgba32(255, 255, 255, (byte)(255 * factor)),
-            < 0 => new Rgba32(0, 0, 0, (byte)(255 * (1-factor))),
+            < 0 => new Rgba32(0, 0, 0, (byte)(255 * (1 - factor))),
             _ => default
         };
 
@@ -67,16 +70,16 @@ public static class ImageEditHelper
         image.Mutate(x => x.Hue(hue).Saturate(saturation).Lightness(lightness));
     }
 
-    public static void ApplyWhiteBalance<TPixel>(Image<TPixel> image, float temperature,float tint)
+    public static void ApplyWhiteBalance<TPixel>(Image<TPixel> image, float temperature, float tint)
         where TPixel : unmanaged, IPixel<TPixel>
     {
         ApplyTemperature(image, temperature);
         ApplyTint(image, tint);
     }
-    
+
     public static void ApplyTemperature<TPixel>(Image<TPixel> image, float temperature)
         where TPixel : unmanaged, IPixel<TPixel>
-    {   
+    {
         if (temperature == 0) return;
         image.Mutate(ctx => ctx.ProcessPixelRowsAsVector4(row =>
         {
@@ -93,7 +96,7 @@ public static class ImageEditHelper
 
     public static void ApplyTint<TPixel>(Image<TPixel> image, float tint)
         where TPixel : unmanaged, IPixel<TPixel>
-    {   
+    {
         if (tint == 0) return;
         image.Mutate(ctx => ctx.ProcessPixelRowsAsVector4(row =>
         {

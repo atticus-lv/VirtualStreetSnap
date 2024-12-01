@@ -102,7 +102,8 @@ public partial class ImageEditorViewModel : ViewModelBase
         { "HSL", () => new HslLayerViewModel() },
         { "WhiteBalance", () => new WhiteBalanceLayerViewModel() },
         { "Vignette", () => new VignetteLayerViewModel() },
-        { "Grayscale", () => new GrayscaleLayerViewModel() }
+        { "Grayscale", () => new GrayscaleLayerViewModel() },
+        { "Pixelate", () => new PixelateLayerViewModel() }
     };
 
     public void AddLayer(string? layerType)
