@@ -23,7 +23,7 @@ public partial class ImageEditorView : Window
     public ImageEditorView()
     {
         InitializeComponent();
-        CloseWindowButton.Click += (sender,e) => { Close();};
+        CloseWindowButton.Click += (sender, e) => { Close(); };
 
         var scale = Screens.Primary.Scaling;
         var currentScreen = Screens.Primary;
@@ -52,6 +52,7 @@ public partial class ImageEditorView : Window
     {
         var point = e.GetPosition((Visual)sender);
         var visual = ((Visual)sender).GetVisualsAt(point).FirstOrDefault();
+        if (visual is Border) return null; // ignore border of checkbox
         var listBoxItem = visual?.GetLogicalAncestors().OfType<ListBoxItem>().FirstOrDefault();
         return listBoxItem?.DataContext as LayerBaseViewModel;
     }
@@ -95,7 +96,7 @@ public partial class ImageEditorView : Window
             }
         }
 
-        if (IsPointerOutsideLayerListBox(e))
+        if (IsPointerOutsideLayerListBox(e) || _dragItem == null)
         {
             Cursor = new Cursor(StandardCursorType.No);
             GhostDragItem.IsVisible = false;
@@ -105,7 +106,11 @@ public partial class ImageEditorView : Window
         var currentPosition = e.GetPosition(this);
         if (!IsDragThresholdExceeded(currentPosition)) return;
         if (!GhostDragItem.IsVisible) GhostDragItem.IsVisible = true;
-        Cursor = new Cursor(StandardCursorType.DragMove);
+        if (GhostDragItem.IsVisible)
+        {
+            Cursor = new Cursor(StandardCursorType.DragMove);
+        }
+
         UpdateGhostDragItemPosition(currentPosition);
     }
 
@@ -138,8 +143,7 @@ public partial class ImageEditorView : Window
     }
 
     private void CloseButtonOnClick(object? sender, RoutedEventArgs e)
-    {
-    }
+    { }
 
     private void UpdateGhostDragItemPosition(Point position)
     {
@@ -190,12 +194,14 @@ public partial class ImageEditorView : Window
     }
 
     private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {   
+    {
         if (sender is not MenuItem menuItem) return;
         var viewModel = (ImageEditorViewModel)DataContext;
         Console.WriteLine(menuItem.Header.ToString());
         // get real name instead of data passing localized string
-        var dataContext = menuItem.GetLogicalAncestors() .OfType<Control>() .FirstOrDefault(c => c.DataContext is LayerTypeItem)? .DataContext as LayerTypeItem;
+        var dataContext = menuItem.GetLogicalAncestors().OfType<Control>()
+            .FirstOrDefault(c => c.DataContext is LayerTypeItem)
+            ?.DataContext as LayerTypeItem;
         viewModel.AddLayer(dataContext?.LayerName);
     }
 }
