@@ -13,6 +13,7 @@ namespace VirtualStreetSnap.Views;
 public partial class ImageViewerView : UserControl
 {
     private double _currentScale = 1.0;
+    private const double InfoDisplayScaleThreshold = 1.2;
     private const double ScaleStep = 0.1;
     private const double MinScale = 0.5;
     private const double MaxScale = 10.0;
@@ -46,7 +47,7 @@ public partial class ImageViewerView : UserControl
         _currentScale = e.Delta.Y > 0
             ? Math.Min(_currentScale + ScaleStep, MaxScale)
             : Math.Max(_currentScale - ScaleStep, MinScale);
-
+        ImageInfoPanel.Opacity = _currentScale > InfoDisplayScaleThreshold? 0 : 1;
         _scaleTransform.ScaleX = _currentScale;
         _scaleTransform.ScaleY = _currentScale;
         e.Handled = true;

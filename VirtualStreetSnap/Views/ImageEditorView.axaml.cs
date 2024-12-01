@@ -2,6 +2,7 @@
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
@@ -14,6 +15,7 @@ namespace VirtualStreetSnap.Views;
 
 public partial class ImageEditorView : Window
 {
+    private WindowNotificationManager? _notificationManager;
     private LayerBaseViewModel? _dragItem;
     private Point _startPoint;
     private LayerBaseViewModel? _previousDropItem;
@@ -21,8 +23,8 @@ public partial class ImageEditorView : Window
     public ImageEditorView()
     {
         InitializeComponent();
-        CloseWindowButton.Click += CloseButtonOnClick;
-        
+        CloseWindowButton.Click += (sender, e) => { Close(); };
+
         var scale = Screens.Primary.Scaling;
         var currentScreen = Screens.Primary;
         Width = currentScreen.Bounds.Width / 2 / scale;
@@ -32,23 +34,25 @@ public partial class ImageEditorView : Window
         LayerListBox.AddHandler(PointerReleasedEvent, LayerListBox_OnPointerRelease);
         LayerListBox.AddHandler(PointerMovedEvent, LayerListBox_OnPointerMove);
     }
-    
+
     private void ToolBar_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (!Equals(e.Source, ToolBar)) return;
         BeginMoveDrag(e);
     }
-    
+
     private bool IsPointerOutsideLayerListBox(PointerEventArgs e)
     {
         var position = e.GetPosition(LayerListBox);
-        return position.X < 0 || position.Y < 0 || position.X > LayerListBox.Bounds.Width || position.Y > LayerListBox.Bounds.Height;
+        return position.X < 0 || position.Y < 0 || position.X > LayerListBox.Bounds.Width ||
+               position.Y > LayerListBox.Bounds.Height;
     }
-    
+
     private LayerBaseViewModel? GetMouseOverItem(object? sender, PointerEventArgs e)
     {
         var point = e.GetPosition((Visual)sender);
         var visual = ((Visual)sender).GetVisualsAt(point).FirstOrDefault();
+        if (visual is Border) return null; // ignore border of checkbox
         var listBoxItem = visual?.GetLogicalAncestors().OfType<ListBoxItem>().FirstOrDefault();
         return listBoxItem?.DataContext as LayerBaseViewModel;
     }
@@ -61,6 +65,7 @@ public partial class ImageEditorView : Window
             GhostDragItem.IsVisible = false;
             return;
         }
+
         _startPoint = e.GetPosition(this);
         var viewModel = DataContext as ImageEditorViewModel;
         viewModel.DragItemText = _dragItem.Name;
@@ -78,6 +83,7 @@ public partial class ImageEditorView : Window
             {
                 _previousDropItem.IsDropTarget = false;
             }
+
             dropItem.IsDropTarget = true;
             _previousDropItem = dropItem;
         }
@@ -90,16 +96,21 @@ public partial class ImageEditorView : Window
             }
         }
 
-        if (IsPointerOutsideLayerListBox(e))
+        if (IsPointerOutsideLayerListBox(e) || _dragItem == null)
         {
-            ResetDragState();
+            Cursor = new Cursor(StandardCursorType.No);
+            GhostDragItem.IsVisible = false;
             return;
         }
 
         var currentPosition = e.GetPosition(this);
         if (!IsDragThresholdExceeded(currentPosition)) return;
-        GhostDragItem.IsVisible = true;
-        Cursor = new Cursor(StandardCursorType.DragMove);
+        if (!GhostDragItem.IsVisible) GhostDragItem.IsVisible = true;
+        if (GhostDragItem.IsVisible)
+        {
+            Cursor = new Cursor(StandardCursorType.DragMove);
+        }
+
         UpdateGhostDragItemPosition(currentPosition);
     }
 
@@ -120,10 +131,11 @@ public partial class ImageEditorView : Window
         {
             viewModel.LayerManager.MoveLayer(_dragItem, targetIndex.Value);
         }
+
         ResetDragState();
     }
 
-    private void AddLayerMenuButton_Click(object? sender, RoutedEventArgs e)
+    private void PopupLayerMenuButton_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is not Button button) return;
         LayerTypeMenu.PlacementTarget = button;
@@ -131,10 +143,7 @@ public partial class ImageEditorView : Window
     }
 
     private void CloseButtonOnClick(object? sender, RoutedEventArgs e)
-    {
-        var viewModel = (ImageEditorViewModel)DataContext;
-        Close(viewModel.SaveImageToGalleryDirectory(true));
-    }
+    { }
 
     private void UpdateGhostDragItemPosition(Point position)
     {
@@ -144,7 +153,8 @@ public partial class ImageEditorView : Window
 
     private bool IsDragThresholdExceeded(Point currentPosition)
     {
-        var distance = Math.Sqrt(Math.Pow(currentPosition.X - _startPoint.X, 2) + Math.Pow(currentPosition.Y - _startPoint.Y, 2));
+        var distance = Math.Sqrt(Math.Pow(currentPosition.X - _startPoint.X, 2) +
+                                 Math.Pow(currentPosition.Y - _startPoint.Y, 2));
         return distance >= 10;
     }
 
@@ -156,5 +166,42 @@ public partial class ImageEditorView : Window
         if (_previousDropItem == null) return;
         _previousDropItem.IsDropTarget = false;
         _previousDropItem = null;
+    }
+
+    private void ensureNotificationManager()
+    {
+        _notificationManager ??= new WindowNotificationManager(this)
+        {
+            Position = NotificationPosition.BottomRight,
+            MaxItems = 3
+        };
+        var viewModel = (ImageEditorViewModel)DataContext;
+        viewModel.NotificationManager = _notificationManager;
+    }
+
+    public void SaveImageOverwrite(object? sender, RoutedEventArgs routedEventArgs)
+    {
+        ensureNotificationManager();
+        var viewModel = (ImageEditorViewModel)DataContext;
+        viewModel.SaveImageToGalleryDirectory(false);
+    }
+
+    public void SaveImageCopy(object? sender, RoutedEventArgs routedEventArgs)
+    {
+        ensureNotificationManager();
+        var viewModel = (ImageEditorViewModel)DataContext;
+        viewModel.SaveImageToGalleryDirectory(true);
+    }
+
+    private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem menuItem) return;
+        var viewModel = (ImageEditorViewModel)DataContext;
+        Console.WriteLine(menuItem.Header.ToString());
+        // get real name instead of data passing localized string
+        var dataContext = menuItem.GetLogicalAncestors().OfType<Control>()
+            .FirstOrDefault(c => c.DataContext is LayerTypeItem)
+            ?.DataContext as LayerTypeItem;
+        viewModel.AddLayer(dataContext?.LayerName);
     }
 }

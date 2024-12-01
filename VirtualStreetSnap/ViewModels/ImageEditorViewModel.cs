@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -22,6 +24,8 @@ public partial class ImageEditorViewModel : ViewModelBase
 {
     private const string DefaultImagePath = "avares://VirtualStreetSnap/Assets/avalonia-logo.ico";
 
+    public WindowNotificationManager NotificationManager;
+
     [ObservableProperty]
     private ImageViewerViewModel _editImageViewer = new();
 
@@ -34,8 +38,16 @@ public partial class ImageEditorViewModel : ViewModelBase
     [ObservableProperty]
     private string _dragItemText;
 
+    public ObservableCollection<LayerTypeItem> LayerTypes { get; set; }
+
     public ImageEditorViewModel(ImageBase? image)
     {
+        LayerTypes = new ObservableCollection<LayerTypeItem>(
+            _layerConstructors.Keys.Select(key => new LayerTypeItem
+            {
+                LayerName = key,
+            })
+        );
         SetupImage(Design.IsDesignMode ? null : image);
     }
 
@@ -62,7 +74,7 @@ public partial class ImageEditorViewModel : ViewModelBase
         // Add initial layers
         if (LayerManager.Layers.Count == 0)
         {
-            LayerManager.AddLayer(new TemperatureLayerViewModel());
+            LayerManager.AddLayer(new WhiteBalanceLayerViewModel());
             LayerManager.AddLayer(new BrightnessContrastLayerViewModel());
             LayerManager.AddLayer(new HslLayerViewModel());
         }
@@ -81,69 +93,44 @@ public partial class ImageEditorViewModel : ViewModelBase
         SelectedLayer = LayerManager.Layers.ElementAtOrDefault(index);
     }
 
-    [RelayCommand]
-    public void MoveLayerUp()
-    {
-        var index = LayerManager.Layers.IndexOf(SelectedLayer);
-        LayerManager.MoveLayer(SelectedLayer, index + 1);
-    }
 
-    [RelayCommand]
-    public void MoveLayerDown(LayerBaseViewModel layer)
+    private readonly Dictionary<string, Func<LayerBaseViewModel>> _layerConstructors = new()
     {
-        var index = LayerManager.Layers.IndexOf(SelectedLayer);
-        LayerManager.MoveLayer(SelectedLayer, index - 1);
-    }
+        { "BrightnessContrast", () => new BrightnessContrastLayerViewModel() },
+        { "Sharpness", () => new SharpnessLayerViewModel() },
+        { "GaussianBlur", () => new GaussianBlurLayerViewModel() },
+        { "HSL", () => new HslLayerViewModel() },
+        { "WhiteBalance", () => new WhiteBalanceLayerViewModel() },
+        { "Vignette", () => new VignetteLayerViewModel() },
+        { "Grayscale", () => new GrayscaleLayerViewModel() },
+        { "Pixelate", () => new PixelateLayerViewModel() }
+    };
 
     public void AddLayer(string? layerType)
     {
         if (string.IsNullOrEmpty(layerType)) return;
-        switch (layerType)
-        {
-            case "BrightnessContrast":
-                LayerManager.AddLayer(new BrightnessContrastLayerViewModel());
-                break;
-            case "Sharpness":
-                LayerManager.AddLayer(new SharpnessLayerViewModel());
-                break;
-            case "HSL":
-                LayerManager.AddLayer(new HslLayerViewModel());
-                break;
-            case "Temperature":
-                LayerManager.AddLayer(new TemperatureLayerViewModel());
-                break;
-            case "Tint":
-                LayerManager.AddLayer(new TintLayerViewModel());
-                break;
-            default:
-                return;
-        }
+        if (!_layerConstructors.TryGetValue(layerType, out var value)) return;
 
-        // move the layer to the top of selected layer, if no layer is selected, move to the top
-        var index = SelectedLayer == null ? 0 : LayerManager.Layers.IndexOf(SelectedLayer);
-        LayerManager.MoveLayer(LayerManager.Layers.Last(), index);
+        var layer = value();
+        LayerManager.AddLayer(layer);
+        // Move the layer to above the selected layer, if no layer is selected, move to the top
+        var index = LayerManager.Layers.IndexOf(layer);
+        if (SelectedLayer != null)
+        {
+            index = LayerManager.Layers.IndexOf(SelectedLayer) + 1;
+            if (index == LayerManager.Layers.Count) index--;
+            LayerManager.MoveLayer(LayerManager.Layers.Last(), index);
+            SelectedLayer = LayerManager.Layers.ElementAtOrDefault(index);
+        }
     }
 
     public event EventHandler? ImageSaved;
 
-    protected virtual void OnImageSaved()
+    internal void OnImageSaved()
     {
         ImageSaved?.Invoke(this, EventArgs.Empty);
     }
 
-    [RelayCommand]
-    public void SaveImage()
-    {
-        SaveImageToGalleryDirectory(saveAsNew: false);
-        OnImageSaved();
-    }
-
-    [RelayCommand]
-    public void SaveCopy()
-    {
-        SaveImageToGalleryDirectory(saveAsNew: true);
-        OnImageSaved();
-    }
 
     public ImageBase SaveImageToGalleryDirectory(bool saveAsNew = true)
     {
@@ -158,8 +145,11 @@ public partial class ImageEditorViewModel : ViewModelBase
                 newName += "_edited";
             }
         }
+
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
         imageBase.Image.Save(newFilePath);
+        NotificationManager.Show(new Notification(Localizer.Localizer.Instance["SaveSuccess"], $"{newFilePath}"));
+        OnImageSaved();
         return imageBase;
     }
 }
@@ -204,7 +194,7 @@ public class LayerManagerViewModel : ViewModelBase
         {
             if (args.PropertyName == nameof(LayerBaseViewModel.IsVisible)) RefreshFinalImage(layer);
         };
-        GenerateFinalImage();
+        RefreshFinalImage();
     }
 
     public void RemoveLayer(LayerBaseViewModel layer)
@@ -265,7 +255,12 @@ public class LayerManagerViewModel : ViewModelBase
                 layer.InitialImage = finalImage.Clone();
                 if (!layer.IsVisible) continue;
                 layer.ApplyModifiers();
-                finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
+                finalImage.Mutate(
+                    x => x.DrawImage(
+                        layer.ModifiedImage,
+                        layer.SelectedBlendMode.Value,
+                        layer.Opacity)
+                );
             }
 
             return finalImage;

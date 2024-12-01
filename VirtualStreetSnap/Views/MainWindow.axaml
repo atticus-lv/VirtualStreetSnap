@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:VirtualStreetSnap.Views"
         xmlns:services="clr-namespace:VirtualStreetSnap.Services"
         xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
-        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="VirtualStreetSnap.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         services:DialogManager.Register="{Binding}"

@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
         xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
+        xmlns:imageEditorLayer="clr-namespace:VirtualStreetSnap.ViewModels.ImageEditorLayer"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="VirtualStreetSnap.Views.ImageEditorView"
         Title="{i18n:Localize ImageEditor}"
@@ -16,7 +17,7 @@
     <Design.DataContext>
         <viewModels:DesignImageEditorViewModel />
     </Design.DataContext>
-    
+
     <Window.Styles>
         <!-- close button -->
         <Style Selector="Button#CloseWindowButton">
@@ -26,7 +27,7 @@
         <Style Selector="Button#CloseWindowButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Firebrick" />
         </Style>
-
+        <!-- ToolBar -->
         <Style Selector="Panel#ToolBarArea> Border#ToolBar">
             <Setter Property="IsHitTestVisible" Value="False" />
             <Setter Property="Opacity" Value="0" />
@@ -40,27 +41,67 @@
             <Setter Property="Opacity" Value="1" />
             <Setter Property="IsHitTestVisible" Value="True" />
         </Style>
+        <!-- Slider -->
+        <Style Selector="Slider:horizontal">
+            <Setter Property="MinWidth" Value="40" />
+            <Setter Property="MinHeight" Value="20" />
+
+            <Style Selector="^ Track">
+                <Style Selector="^ RepeatButton Border">
+                    <Setter Property="CornerRadius" Value="0" />
+                    <Setter Property="Height" Value="6" />
+                </Style>
+
+                <Style Selector="^ Thumb">
+                    <Setter Property="Height" Value="14" />
+                    <Setter Property="Width" Value="14" />
+                    <Setter Property="BorderThickness" Value="3" />
+                </Style>
+            </Style>
+
+        </Style>
 
     </Window.Styles>
-    
+
     <Panel>
-        <Grid ColumnDefinitions="*,10,250" Background="#111111">
+        <Grid ColumnDefinitions="3*,10,*" Background="#111111">
             <Panel>
                 <ContentControl Content="{Binding EditImageViewer}" />
-                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal" >
-                    <Button Content="{i18n:Localize Save}"  FontSize="16"
-                            Command="{Binding SaveImage}" />
+                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal">
+                    <Button Content="{i18n:Localize Save}" FontSize="16"
+                            Click="SaveImageOverwrite" />
                     <Button Content="{i18n:Localize SaveCopy}" FontSize="16"
-                            Command="{Binding SaveCopy}" />
+                            Click="SaveImageCopy" />
                 </StackPanel>
             </Panel>
 
             <GridSplitter Grid.Column="1" Background="Black" />
-            <Grid RowDefinitions="*,10,*" Grid.Column="2">
+            <Grid RowDefinitions="3*,10,2*" Grid.Column="2">
                 <Grid RowDefinitions="Auto,*,Auto">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{i18n:Localize Layers}" Margin="10 10 0 0" FontSize="16"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="{i18n:Localize Layers}" Margin="10 10 0 0" FontSize="18"
+                                   HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <StackPanel Orientation="Horizontal" Margin="10 0 10 0" Spacing="5">
+                            <TextBlock Text="{i18n:Localize Opacity}" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                            <DropDownButton Width="80">
+                                <TextBlock Text="{Binding SelectedLayer.Opacity, StringFormat={}{0:P0}}" />
+                                <DropDownButton.Flyout>
+                                    <Flyout Placement="Bottom">
+                                        <Slider Width="100" Height="25" Value="{Binding SelectedLayer.Opacity}"
+                                                Minimum="0" Maximum="1" TickFrequency="0.01" VerticalAlignment="Center">
+                                        </Slider>
+                                    </Flyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
+                            <ComboBox ItemsSource="{Binding SelectedLayer.LayerBlendModeItems}"
+                                      SelectedItem="{Binding SelectedLayer.SelectedBlendMode}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type imageEditorLayer:LayerBlendModeItem}">
+                                        <TextBlock Text="{Binding Name,Converter={StaticResource LocalizeConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
                     </StackPanel>
                     <!-- layers -->
 
@@ -70,15 +111,18 @@
                                      Background="#111111" Margin="0 10 0 0"
                                      ItemsSource="{Binding LayerManager.Layers, Converter={StaticResource ReverseCollectionConverter}}"
                                      SelectedItem="{Binding SelectedLayer}">
-                                
-                                <ListBox.Styles> 
-                                    <Style Selector="ListBoxItem"> <Setter Property="Padding" Value="2" /> </Style> 
+
+                                <ListBox.Styles>
+                                    <Style Selector="ListBoxItem">
+                                        <Setter Property="Padding" Value="2" />
+                                    </Style>
                                 </ListBox.Styles>
-                                
-                                <ListBox.ItemTemplate >
+
+                                <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Panel >
-                                            <Rectangle Fill="{DynamicResource SystemAccentColor}" IsVisible="{Binding IsDropTarget}" Opacity="0.5"/>
+                                        <Panel>
+                                            <Rectangle Fill="{DynamicResource SystemAccentColor}"
+                                                       IsVisible="{Binding IsDropTarget}" Opacity="0.5" />
                                             <Grid ColumnDefinitions="Auto,*" Margin="10 0 10 0">
                                                 <CheckBox IsChecked="{Binding IsVisible}" />
                                                 <TextBlock Grid.Column="1"
@@ -96,21 +140,19 @@
 
 
                     <Grid Grid.Row="2" Margin="5" ColumnDefinitions="*,Auto">
-                        <Button Name="AddLayerMenuButton" Click="AddLayerMenuButton_Click"
+                        <Button Name="AddLayerMenuButton" Click="PopupLayerMenuButton_Click"
                                 HorizontalAlignment="Left" Background="Transparent" ToolTip.Tip="{i18n:Localize Add}">
                             <PathIcon Data="{StaticResource Add}" Width="14" />
                             <Button.ContextMenu>
-                                <ContextMenu Name="LayerTypeMenu" PlacementMode="TopEdgeAlignedLeft">
-                                    <MenuItem Header="{i18n:Localize BrightnessContrast}"
-                                              Command="{Binding AddLayer}" CommandParameter="BrightnessContrast" />
-                                    <MenuItem Header="{i18n:Localize Sharpness}"
-                                              Command="{Binding AddLayer}" CommandParameter="Sharpness" />
-                                    <MenuItem Header="{i18n:Localize HSL}"
-                                              Command="{Binding AddLayer}" CommandParameter="HSL" />
-                                    <MenuItem Header="{i18n:Localize Temperature}"
-                                              Command="{Binding AddLayer}" CommandParameter="Temperature" />
-                                    <MenuItem Header="{i18n:Localize Tint}"
-                                              Command="{Binding AddLayer}" CommandParameter="Tint" />
+                                <ContextMenu Name="LayerTypeMenu"
+                                             ItemsSource="{Binding LayerTypes}" Placement="TopEdgeAlignedLeft">
+                                    <ContextMenu.ItemTemplate>
+                                        <DataTemplate>
+                                            <MenuItem  Padding="2"
+                                                Header="{Binding LayerName,Converter={StaticResource LocalizeConverter}}"
+                                                Click="MenuItem_OnClick" />
+                                        </DataTemplate>
+                                    </ContextMenu.ItemTemplate>
                                 </ContextMenu>
                             </Button.ContextMenu>
                         </Button>
@@ -152,8 +194,12 @@
             </Grid>
         </Grid>
         <Canvas>
-            <Border Name="GhostDragItem" Background="Transparent" Margin="10" IsHitTestVisible="False" IsVisible="False"
+            <Border Name="GhostDragItem" Background="Transparent" Margin="10" IsHitTestVisible="False"
+                    IsVisible="False"
                     Height="30" Opacity="0.8" CornerRadius="4">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="2" Color="Black" OffsetX="0" OffsetY="0" />
+                </Border.Effect>
                 <TextBlock Text="{Binding DragItemText,Converter={StaticResource LocalizeConverter}}"
                            VerticalAlignment="Center" HorizontalAlignment="Center">
                 </TextBlock>
@@ -173,7 +219,7 @@
                                     HorizontalAlignment="Right" Margin="0 0 10 0">
 
                             <Button Name="CloseWindowButton" HorizontalContentAlignment="Center"
-                                    Background="Transparent" Width="35">
+                                    Background="Transparent" Width="35" Click="CloseButtonOnClick">
                                 <TextBlock Text="X" FontSize="16" />
                             </Button>
                         </StackPanel>

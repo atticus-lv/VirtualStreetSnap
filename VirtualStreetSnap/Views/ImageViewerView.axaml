@@ -12,6 +12,16 @@
         <viewModels:ImageViewerViewModel />
     </UserControl.DataContext>
     
+    <UserControl.Styles>
+        <Style Selector="StackPanel#ImageInfoPanel">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+    
     <Panel Background="#111111">
         <Viewbox x:Name="ImageViewbox" Stretch="Uniform"
                  PointerPressed="ImageViewbox_PointerPressed"
@@ -57,21 +67,11 @@
                             </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>
-                    <Separator></Separator>
-                    <MenuItem Command="{Binding CopySelectedImage}">
-                        <MenuItem.Header>
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource ImageCopyRegular}" />
-                                <TextBlock VerticalAlignment="Center"
-                                           Text="{i18n:Localize  CopyImage}" />
-                            </StackPanel>
-                        </MenuItem.Header>
-                    </MenuItem>
                 </ContextMenu>
             </Viewbox.ContextMenu>
         </Viewbox>
         <!-- image info -->
-        <StackPanel Margin="10" Spacing="2" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+        <StackPanel Name="ImageInfoPanel" Margin="10" Spacing="2" VerticalAlignment="Bottom" HorizontalAlignment="Left">
             <StackPanel.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="3" Opacity="1" OffsetX="0" OffsetY="0" />
             </StackPanel.Effect>
