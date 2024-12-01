@@ -74,7 +74,7 @@ public partial class ImageEditorViewModel : ViewModelBase
         // Add initial layers
         if (LayerManager.Layers.Count == 0)
         {
-            LayerManager.AddLayer(new TemperatureLayerViewModel());
+            LayerManager.AddLayer(new WhiteBalanceLayerViewModel());
             LayerManager.AddLayer(new BrightnessContrastLayerViewModel());
             LayerManager.AddLayer(new HslLayerViewModel());
         }
@@ -100,8 +100,7 @@ public partial class ImageEditorViewModel : ViewModelBase
         { "Sharpness", () => new SharpnessLayerViewModel() },
         { "GaussianBlur", () => new GaussianBlurLayerViewModel() },
         { "HSL", () => new HslLayerViewModel() },
-        { "Temperature", () => new TemperatureLayerViewModel() },
-        { "Tint", () => new TintLayerViewModel() },
+        { "WhiteBalance", () => new WhiteBalanceLayerViewModel() },
         { "Vignette", () => new VignetteLayerViewModel() },
         { "Grayscale", () => new GrayscaleLayerViewModel() }
     };

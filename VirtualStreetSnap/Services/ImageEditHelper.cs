@@ -67,9 +67,17 @@ public static class ImageEditHelper
         image.Mutate(x => x.Hue(hue).Saturate(saturation).Lightness(lightness));
     }
 
-    public static void ApplyTemperature<TPixel>(Image<TPixel> image, float temperature)
+    public static void ApplyWhiteBalance<TPixel>(Image<TPixel> image, float temperature,float tint)
         where TPixel : unmanaged, IPixel<TPixel>
     {
+        ApplyTemperature(image, temperature);
+        ApplyTint(image, tint);
+    }
+    
+    public static void ApplyTemperature<TPixel>(Image<TPixel> image, float temperature)
+        where TPixel : unmanaged, IPixel<TPixel>
+    {   
+        if (temperature == 0) return;
         image.Mutate(ctx => ctx.ProcessPixelRowsAsVector4(row =>
         {
             for (int x = 0; x < row.Length; x++)
@@ -85,7 +93,8 @@ public static class ImageEditHelper
 
     public static void ApplyTint<TPixel>(Image<TPixel> image, float tint)
         where TPixel : unmanaged, IPixel<TPixel>
-    {
+    {   
+        if (tint == 0) return;
         image.Mutate(ctx => ctx.ProcessPixelRowsAsVector4(row =>
         {
             for (int x = 0; x < row.Length; x++)

@@ -2,12 +2,13 @@
 
 namespace VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
-public class TemperatureLayerViewModel: LayerBaseViewModel
-{   
-    public override string Name { get; set; } = "Temperature";
+public class WhiteBalanceLayerViewModel: LayerBaseViewModel
+{
+    public override string Name { get; set; } = "WhiteBalance";
     public float Temperature { get; set; }
+    public float Tint { get; set; }
 
-    public TemperatureLayerViewModel()
+    public WhiteBalanceLayerViewModel()
     {
         Sliders.Add(new SliderViewModel(Temperature)
         {
@@ -20,6 +21,18 @@ public class TemperatureLayerViewModel: LayerBaseViewModel
                 OnLayerModified();
             }
         });
+        
+        Sliders.Add(new SliderViewModel(Tint)
+        {
+            Name = "Tint",
+            MinValue = -1f,
+            MaxValue = 1f,
+            OnChange = value =>
+            {
+                Tint = value;
+                OnLayerModified();
+            }
+        });
     }
 
     public override void ApplyModifiers()
@@ -27,7 +40,7 @@ public class TemperatureLayerViewModel: LayerBaseViewModel
         if (IsVisible && InitialImage != null)
         {
             ModifiedImage = InitialImage.Clone();
-            ImageEditHelper.ApplyTemperature(ModifiedImage, Temperature);
+            ImageEditHelper.ApplyWhiteBalance(ModifiedImage, Temperature, Tint);
         }
     }
 }
