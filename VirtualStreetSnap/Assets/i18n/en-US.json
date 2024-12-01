@@ -42,5 +42,16 @@
   "SendToEditor": "Send To Editor",
   "Save": "Save",
   "SaveCopy": "Save Copy",
-  "SaveSuccess": "Save Success"
+  "SaveSuccess": "Save Success",
+  "GaussianBlur": "Gaussian Blur",
+  "Vignette": "Vignette",
+  "Grayscale": "Grayscale",
+  "Normal": "Normal",
+  "Multiply": "Multiply",
+  "Subtract": "Subtract",
+  "Screen": "Screen",
+  "Overlay": "Overlay",
+  "Darken": "Darken",
+  "Lighten": "Lighten",
+  "HardLight": "Hard Light"
 }

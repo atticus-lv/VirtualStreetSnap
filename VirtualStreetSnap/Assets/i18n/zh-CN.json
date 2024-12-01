@@ -42,5 +42,16 @@
   "SendToEditor": "发送到编辑器",
   "Save": "保存",
   "SaveCopy": "保存副本",
-  "SaveSuccess": "保存成功"
+  "SaveSuccess": "保存成功",
+  "GaussianBlur": "高斯模糊",
+  "Vignette": "晕影",
+  "Grayscale": "灰度",
+  "Normal": "正常",
+  "Multiply": "相乘",
+  "Subtract": "减去",
+  "Screen": "屏幕",
+  "Overlay": "叠加",
+  "Darken": "暗化",
+  "Lighten": "淡化",
+  "HardLight": "硬光"
 }

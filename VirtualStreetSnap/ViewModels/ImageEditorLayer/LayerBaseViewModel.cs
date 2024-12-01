@@ -8,9 +8,65 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
+public class LayerTypeItem
+{
+    public string LayerName { get; set; }
+}
+
+public class LayerBlendModeItem(
+    string name = "Normal",
+    PixelColorBlendingMode pixelColorBlendingMode = PixelColorBlendingMode.Normal)
+{
+    public string Name { get; set; } = name;
+    public PixelColorBlendingMode Value { get; set; } = pixelColorBlendingMode;
+}
+
 public abstract class LayerBaseViewModel : ViewModelBase
 {
     public abstract string Name { get; set; }
+
+    private LayerBlendModeItem _selectedBlendMode;
+
+    public LayerBlendModeItem SelectedBlendMode
+    {
+        get
+        {
+            _selectedBlendMode ??= LayerBlendModeItems[0];
+            return _selectedBlendMode;
+        }
+        set
+        {
+            SetProperty(ref _selectedBlendMode, value);
+            OnLayerModified();
+        }
+    }
+
+    public ObservableCollection<LayerBlendModeItem> LayerBlendModeItems { get; } = new()
+    {
+        new("Normal", PixelColorBlendingMode.Normal),
+        new("Multiply", PixelColorBlendingMode.Multiply),
+        new("Add", PixelColorBlendingMode.Add),
+        new("Subtract", PixelColorBlendingMode.Subtract),
+        new("Screen", PixelColorBlendingMode.Screen),
+        new("Overlay", PixelColorBlendingMode.Overlay),
+        new("Darken", PixelColorBlendingMode.Darken),
+        new("Lighten", PixelColorBlendingMode.Lighten),
+        new("HardLight", PixelColorBlendingMode.HardLight),
+    };
+
+    private float _opacity = 1;
+
+    public float Opacity
+    {
+        get => _opacity;
+        set
+        {
+            // limit the opacity value to 0-1
+            var opacity = Math.Clamp(value, 0, 1);
+            SetProperty(ref _opacity, opacity);
+            OnLayerModified();
+        }
+    }
 
     private bool _isVisible = true;
 
@@ -23,13 +79,15 @@ public abstract class LayerBaseViewModel : ViewModelBase
             OnLayerModified();
         }
     }
+
     private bool _isDropTarget;
+
     public bool IsDropTarget
     {
         get => _isDropTarget;
         set => SetProperty(ref _isDropTarget, value);
     }
-    
+
     public Image<Rgba32> InitialImage { get; set; }
     public Image<Rgba32> ModifiedImage { get; set; }
     public ObservableCollection<SliderViewModel> Sliders { get; set; } = new();

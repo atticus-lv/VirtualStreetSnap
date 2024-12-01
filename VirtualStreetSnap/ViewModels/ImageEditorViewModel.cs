@@ -154,11 +154,6 @@ public partial class ImageEditorViewModel : ViewModelBase
     }
 }
 
-public class LayerTypeItem
-{
-    public string LayerName { get; set; }
-}
-
 public partial class DesignImageEditorViewModel : ImageEditorViewModel
 {
     public DesignImageEditorViewModel() : base(null)
@@ -260,7 +255,12 @@ public class LayerManagerViewModel : ViewModelBase
                 layer.InitialImage = finalImage.Clone();
                 if (!layer.IsVisible) continue;
                 layer.ApplyModifiers();
-                finalImage.Mutate(x => x.DrawImage(layer.ModifiedImage, 1));
+                finalImage.Mutate(
+                    x => x.DrawImage(
+                        layer.ModifiedImage,
+                        layer.SelectedBlendMode.Value,
+                        layer.Opacity)
+                );
             }
 
             return finalImage;
