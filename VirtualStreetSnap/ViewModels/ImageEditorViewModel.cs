@@ -102,8 +102,8 @@ public partial class ImageEditorViewModel : ViewModelBase
         { "HSL", () => new HslLayerViewModel() },
         { "Temperature", () => new TemperatureLayerViewModel() },
         { "Tint", () => new TintLayerViewModel() },
-        // { "Vignette", () => new VignetteLayerViewModel() },
-        // { "Grayscale", () => new GrayscaleLayerViewModel() }
+        { "Vignette", () => new VignetteLayerViewModel() },
+        { "Grayscale", () => new GrayscaleLayerViewModel() }
     };
 
     public void AddLayer(string? layerType)
@@ -199,7 +199,7 @@ public class LayerManagerViewModel : ViewModelBase
         {
             if (args.PropertyName == nameof(LayerBaseViewModel.IsVisible)) RefreshFinalImage(layer);
         };
-        GenerateFinalImage();
+        RefreshFinalImage();
     }
 
     public void RemoveLayer(LayerBaseViewModel layer)
