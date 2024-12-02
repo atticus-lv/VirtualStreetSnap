@@ -28,13 +28,6 @@
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="TextBox.UserInput">
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-        </Style>
     </UserControl.Styles>
 
     <Panel Background="Transparent" Name="Overlay">
@@ -108,16 +101,14 @@
         </ComboBox>
 
 
-        <StackPanel Orientation="Horizontal" Spacing="2" Opacity="1" VerticalAlignment="Bottom" Margin="20">
+        <StackPanel Orientation="Horizontal" Spacing="5" Opacity="1" VerticalAlignment="Bottom" Margin="20">
             <StackPanel.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
             </StackPanel.Effect>
-            <TextBox Classes="UserInput"
-                     Watermark="{Binding RealCaptureAreaWidth}" FontSize="24" />
+            <TextBlock Text="{Binding RealCaptureAreaWidth}" FontSize="24" />
             <TextBlock VerticalAlignment="Center">X</TextBlock>
-            <TextBox Classes="UserInput"
-                     Watermark="{Binding RealCaptureAreaHeight}" FontSize="24" />
-            <TextBlock Text="px" VerticalAlignment="Top" />
+            <TextBlock Text="{Binding RealCaptureAreaHeight}" FontSize="24" />
+            <TextBlock Text="px" />
         </StackPanel>
 
 
