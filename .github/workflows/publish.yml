@@ -18,15 +18,15 @@ jobs:
         run: mkdir upload
 
       - name: Publish win-x64
-        run: dotnet publish VirtualStreetSnap -c Release
-
+        run: dotnet publish VirtualStreetSnap -c Release -r win-x64 --self-contained -p:PublishAot=true
+      
       - name: Zip win-x64
         run: |
           $files = Get-ChildItem -Path ./VirtualStreetSnap/bin/Release/net8.0/win-x64/publish/* -Recurse -Exclude *.pdb
-          Compress-Archive -Path $files.FullName -DestinationPath ./upload/VirtualStreetSnap.win-x64.zip
+          Compress-Archive -Path $files.FullName -DestinationPath ./upload/VirtualStreetSnap.win-x64.aot.zip
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
           name: VirtualStreetSnap
-          path: ./upload/VirtualStreetSnap.win-x64.zip
+          path: ./upload/VirtualStreetSnap.win-x64.aot.zip
