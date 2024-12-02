@@ -13,29 +13,48 @@
         <viewModels:CompositionGuidesViewModel />
     </UserControl.DataContext>
 
+    <UserControl.Styles>
+        <Style Selector="Grid.Guides">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.Guides">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+
     <Panel Background="Transparent" Name="Overlay">
-        <Grid Name="GuidesGridThird" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
-              Opacity="{Binding GuideLinesOpacity}"
-              IsVisible="{Binding ShowGuideLinesGrid}" />
-        <Grid Name="GuideGridCenter" ShowGridLines="True" RowDefinitions="*,*" ColumnDefinitions="*,*"
-              Opacity="{Binding GuideLinesOpacity}"
-              IsVisible="{Binding ShowGuideLinesCenter}" />
-        <Grid Name="GuideGridRatio" ShowGridLines="True" RowDefinitions="1*,0.618*,1*"
-              ColumnDefinitions="1*,0.618*,1*" Opacity="{Binding GuideLinesOpacity}"
-              IsVisible="{Binding ShowGuideLinesRatio}" />
-        <Border Name="FocusBorder" BorderBrush="Brown" BorderThickness="10" Opacity="0.5"
-                IsVisible="{Binding ShowFocusBorder}">
+        <Panel Opacity="{Binding GuideLinesOpacity}">
+            <Grid Classes="Guides" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
+                  Opacity="{Binding ShowGuideLinesGrid}" />
+            <Grid Classes="Guides" ShowGridLines="True" RowDefinitions="*,*" ColumnDefinitions="*,*"
+                  Opacity="{Binding ShowGuideLinesCenter}" />
+            <Grid Classes="Guides" ShowGridLines="True" RowDefinitions="1*,0.618*,1*"
+                  ColumnDefinitions="1*,0.618*,1*"
+                  Opacity="{Binding ShowGuideLinesRatio}" />
+        </Panel>
+
+        <Border Classes="Guides" Name="FocusBorder" BorderBrush="#4B1212" BorderThickness="10"
+                Opacity="{Binding ShowFocusBorder}">
             <Rectangle Name="CaptureArea"></Rectangle>
         </Border>
 
-        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20" Spacing="10" Orientation="Horizontal">
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20" Spacing="10"
+                    Orientation="Horizontal">
             <StackPanel.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
             </StackPanel.Effect>
             <Button Background="Transparent" Opacity="0.5">
                 <PathIcon Data="{StaticResource Overlay}" ToolTip.Tip="{i18n:Localize  Guides}" Width="30" Height="30" />
                 <Button.Flyout>
-                    <Flyout Placement="TopEdgeAlignedRight">
+                    <Flyout Placement="TopEdgeAlignedRight" ShowMode="TransientWithDismissOnPointerMoveAway">
                         <StackPanel Width="150">
                             <CheckBox Content="{i18n:Localize  FocusBorder}"
                                       IsChecked="{Binding ShowFocusBorder, Mode=TwoWay}" />
@@ -66,7 +85,7 @@
                 <PathIcon Data="{StaticResource CameraRegular}" Width="30" Height="30" />
             </Button>
         </StackPanel>
-        
+
         <ComboBox Name="SizeRadioComboBox" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="20"
                   ItemsSource="{Binding RatioItems}"
                   SelectedItem="{Binding SelectedSizeRatio}"
@@ -79,10 +98,9 @@
                     <TextBlock Text="{Binding Label}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
-        </ComboBox> 
+        </ComboBox>
 
 
-            
         <StackPanel Orientation="Horizontal" Spacing="5" Opacity="1" VerticalAlignment="Bottom" Margin="20">
             <StackPanel.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
@@ -92,7 +110,6 @@
             <TextBlock Text="{Binding RealCaptureAreaHeight}" FontSize="24" />
             <TextBlock Text="px" />
         </StackPanel>
-            
 
 
     </Panel>
