@@ -7,10 +7,10 @@
              xmlns:models="clr-namespace:VirtualStreetSnap.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="VirtualStreetSnap.Views.SnapShotView"
-             x:DataType="viewModels:CompositionGuidesViewModel">
+             x:DataType="viewModels:SnapShotViewModel">
 
     <UserControl.DataContext>
-        <viewModels:CompositionGuidesViewModel />
+        <viewModels:SnapShotViewModel />
     </UserControl.DataContext>
 
     <UserControl.Styles>

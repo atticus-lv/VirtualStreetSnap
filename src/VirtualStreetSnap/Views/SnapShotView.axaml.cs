@@ -54,7 +54,7 @@ public partial class SnapShotView : UserControl
         var captureShot = ScreenshotHelper.CropImage(screenshot, captureArea);
         // save screenshot
 
-        var _viewModel = DataContext as CompositionGuidesViewModel;
+        var _viewModel = DataContext as SnapShotViewModel;
         var saveDir = _viewModel.Config.Settings.SaveDirectory;
         if (!Path.Exists(saveDir)) Directory.CreateDirectory(saveDir);
         var filePrefix = _viewModel.Config.Settings.FilePrefix;
@@ -92,7 +92,7 @@ public partial class SnapShotView : UserControl
 
     private void UpdateRealSize(object sender, RoutedEventArgs e)
     {
-        var viewModel = DataContext as CompositionGuidesViewModel;
+        var viewModel = DataContext as SnapShotViewModel;
         if (_currentScreen == null)
         {
             GetCurrentScreenInfo();
@@ -131,7 +131,7 @@ public partial class SnapShotView : UserControl
 
     private void EditTextBox_LostFocus(object sender, RoutedEventArgs e)
     {
-        var viewModel = DataContext as CompositionGuidesViewModel;
+        var viewModel = DataContext as SnapShotViewModel;
         if (viewModel == null) return;
         viewModel.IsEditingSize = false;
     }
@@ -139,7 +139,7 @@ public partial class SnapShotView : UserControl
     private void EditTextBox_KeyDown(object sender, KeyEventArgs e)
     {
         GetCurrentScreenInfo();
-        var viewModel = DataContext as CompositionGuidesViewModel;
+        var viewModel = DataContext as SnapShotViewModel;
         if (viewModel == null || e.Key != Key.Enter) return;
         if (int.TryParse(viewModel.EditWidth, out var newWidth) &&
             int.TryParse(viewModel.EditHeight, out var newHeight))
@@ -160,7 +160,7 @@ public partial class SnapShotView : UserControl
 
     private void DisplayTextBlock_PointerPressed(object sender, PointerPressedEventArgs e)
     {
-        var viewModel = DataContext as CompositionGuidesViewModel;
+        var viewModel = DataContext as SnapShotViewModel;
         if (viewModel == null) return;
         viewModel.EditWidth = viewModel.RealCaptureAreaWidth.ToString();
         viewModel.EditHeight = viewModel.RealCaptureAreaHeight.ToString();

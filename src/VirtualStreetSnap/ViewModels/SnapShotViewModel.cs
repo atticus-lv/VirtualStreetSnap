@@ -7,7 +7,7 @@ using VirtualStreetSnap.Services;
 
 namespace VirtualStreetSnap.ViewModels;
 
-public partial class CompositionGuidesViewModel : ViewModelBase
+public partial class SnapShotViewModel : ViewModelBase
 {
     [ObservableProperty]
     private bool _showFocusBorder = true;
@@ -58,7 +58,7 @@ public partial class CompositionGuidesViewModel : ViewModelBase
     [ObservableProperty]
     private string _editHeight;
 
-    public CompositionGuidesViewModel()
+    public SnapShotViewModel()
     {
         SelectedSizeRatio = RatioItems.First();
         ShowGuideLinesGrid = Config.Overlays.Guides.Grid;
