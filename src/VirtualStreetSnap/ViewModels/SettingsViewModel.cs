@@ -49,10 +49,10 @@ public partial class SettingsViewModel : ViewModelBase
     }
 
     public async Task ChangeDir(string parmName)
-    {
+    {   
         var task = parmName switch
         {
-            "SaveDirectory" => this.ChangeDirectory(value => SaveDirectory = value, "Select Directory"),
+            "SaveDirectory" => this.ChangeDirectory(value => SaveDirectory = value, Localizer.Localizer.Instance["SelectDirectory"]),
             _ => Task.CompletedTask
         };
         await task;
