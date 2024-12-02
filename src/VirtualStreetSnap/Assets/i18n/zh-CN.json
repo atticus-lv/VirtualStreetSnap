@@ -53,5 +53,6 @@
   "Overlay": "叠加",
   "Darken": "暗化",
   "Lighten": "淡化",
-  "HardLight": "硬光"
+  "HardLight": "硬光",
+  "SelectDirectory": "选择目录"
 }

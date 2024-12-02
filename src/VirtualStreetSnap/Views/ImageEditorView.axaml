@@ -53,9 +53,10 @@
                 </Style>
 
                 <Style Selector="^ Thumb">
-                    <Setter Property="Height" Value="14" />
-                    <Setter Property="Width" Value="14" />
-                    <Setter Property="BorderThickness" Value="3" />
+                    <Setter Property="Height" Value="18" />
+                    <Setter Property="Width" Value="18" />
+                    <Setter Property="BorderThickness" Value="2" />
+                    <Setter Property="BorderBrush" Value="WhiteSmoke"></Setter>
                 </Style>
             </Style>
 
@@ -87,7 +88,7 @@
                                 <TextBlock Text="{Binding SelectedLayer.Opacity, StringFormat={}{0:P0}}" />
                                 <DropDownButton.Flyout>
                                     <Flyout Placement="Bottom">
-                                        <Slider Width="100" Height="25" Value="{Binding SelectedLayer.Opacity}"
+                                        <Slider Width="100" Height="40" Value="{Binding SelectedLayer.Opacity}"
                                                 Minimum="0" Maximum="1" TickFrequency="0.01" VerticalAlignment="Center">
                                         </Slider>
                                     </Flyout>

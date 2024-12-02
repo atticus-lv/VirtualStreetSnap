@@ -53,5 +53,6 @@
   "Overlay": "Overlay",
   "Darken": "Darken",
   "Lighten": "Lighten",
-  "HardLight": "Hard Light"
+  "HardLight": "Hard Light",
+  "SelectDirectory": "Select Directory",
 }

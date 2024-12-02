@@ -5,7 +5,9 @@
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
              xmlns:models="clr-namespace:VirtualStreetSnap.Models"
              xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
+             xmlns:services="clr-namespace:VirtualStreetSnap.Services"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+             services:DialogManager.Register="{Binding}"
              x:Class="VirtualStreetSnap.Views.SettingsView"
              x:DataType="viewModels:SettingsViewModel"
              Background="#111111">
