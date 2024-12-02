@@ -40,7 +40,6 @@ public partial class CompositionGuidesViewModel : ViewModelBase
         new("9:16")
     ];
 
-
     [ObservableProperty]
     private int _realCaptureAreaWidth;
 
@@ -49,6 +48,15 @@ public partial class CompositionGuidesViewModel : ViewModelBase
 
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
+
+    [ObservableProperty]
+    private bool _isEditingSize;
+
+    [ObservableProperty]
+    private string _editWidth;
+
+    [ObservableProperty]
+    private string _editHeight;
 
     public CompositionGuidesViewModel()
     {
