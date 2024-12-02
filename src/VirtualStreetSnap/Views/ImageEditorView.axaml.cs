@@ -15,7 +15,6 @@ namespace VirtualStreetSnap.Views;
 
 public partial class ImageEditorView : Window
 {
-    private WindowNotificationManager? _notificationManager;
     private LayerBaseViewModel? _dragItem;
     private Point _startPoint;
     private LayerBaseViewModel? _previousDropItem;
@@ -168,27 +167,15 @@ public partial class ImageEditorView : Window
         _previousDropItem = null;
     }
 
-    private void ensureNotificationManager()
-    {
-        _notificationManager ??= new WindowNotificationManager(this)
-        {
-            Position = NotificationPosition.BottomRight,
-            MaxItems = 3
-        };
-        var viewModel = (ImageEditorViewModel)DataContext;
-        viewModel.NotificationManager = _notificationManager;
-    }
 
     public void SaveImageOverwrite(object? sender, RoutedEventArgs routedEventArgs)
     {
-        ensureNotificationManager();
         var viewModel = (ImageEditorViewModel)DataContext;
         viewModel.SaveImageToGalleryDirectory(false);
     }
 
     public void SaveImageCopy(object? sender, RoutedEventArgs routedEventArgs)
     {
-        ensureNotificationManager();
         var viewModel = (ImageEditorViewModel)DataContext;
         viewModel.SaveImageToGalleryDirectory(true);
     }

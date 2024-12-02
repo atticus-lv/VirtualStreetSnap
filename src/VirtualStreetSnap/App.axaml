@@ -16,6 +16,7 @@
         <ResourceDictionary>
             <converters:WidthToVisibilityConverter x:Key="WidthToVisibilityConverter" />
             <converters:ReverseCollectionConverter x:Key="ReverseCollectionConverter" />
+            <converters:BooleanNotConverter x:Key="BooleanNotConverter" />
             <localizer:LocalizeConverter x:Key="LocalizeConverter" />
         </ResourceDictionary>
     </Application.Resources>

@@ -24,8 +24,6 @@ public partial class ImageEditorViewModel : ViewModelBase
 {
     private const string DefaultImagePath = "avares://VirtualStreetSnap/Assets/avalonia-logo.ico";
 
-    public WindowNotificationManager NotificationManager;
-
     [ObservableProperty]
     private ImageViewerViewModel _editImageViewer = new();
 
@@ -148,7 +146,7 @@ public partial class ImageEditorViewModel : ViewModelBase
 
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
         imageBase.Image.Save(newFilePath);
-        NotificationManager.Show(new Notification(Localizer.Localizer.Instance["SaveSuccess"], $"{newFilePath}"));
+        NotifyHelper.Notify(this, Localizer.Localizer.Instance["SaveSuccess"], $"{newFilePath}");
         OnImageSaved();
         return imageBase;
     }

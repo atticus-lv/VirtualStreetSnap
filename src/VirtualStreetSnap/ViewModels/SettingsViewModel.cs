@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls.Notifications;
 using Avalonia.Markup.Xaml.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using VirtualStreetSnap.Models;
@@ -12,8 +13,10 @@ namespace VirtualStreetSnap.ViewModels;
 
 public partial class SettingsViewModel : ViewModelBase
 {
+
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
+
 
     [ObservableProperty]
     private string _filePrefix = "IMG";
@@ -49,14 +52,17 @@ public partial class SettingsViewModel : ViewModelBase
     }
 
     public async Task ChangeDir(string parmName)
-    {   
+    {
         var task = parmName switch
         {
-            "SaveDirectory" => this.ChangeDirectory(value => SaveDirectory = value, Localizer.Localizer.Instance["SelectDirectory"]),
+            "SaveDirectory" => this.ChangeDirectory(value => SaveDirectory = value,
+                Localizer.Localizer.Instance["SelectDirectory"]),
             _ => Task.CompletedTask
         };
         await task;
         // save the config
         Config.Settings.SaveDirectory = SaveDirectory;
+        NotifyHelper.Notify(this, Localizer.Localizer.Instance["ConfigChanged"],
+            SaveDirectory);
     }
 }
