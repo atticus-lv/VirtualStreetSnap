@@ -35,7 +35,10 @@ public abstract class LayerBaseViewModel : ViewModelBase
             return _selectedBlendMode;
         }
         set
-        {
+        {   
+            // if the selected blend mode is null or the value is null, return
+            // seems this binding is after the selected layer is set, so it should not be null
+            if (value == null) return;
             SetProperty(ref _selectedBlendMode, value);
             OnLayerModified();
         }
