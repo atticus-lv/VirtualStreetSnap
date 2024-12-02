@@ -55,4 +55,6 @@
   "Lighten": "Lighten",
   "HardLight": "Hard Light",
   "SelectDirectory": "Select Directory",
+  "Factor": "Factor",
+  "ConfigChanged": "Configuration Changed"
 }

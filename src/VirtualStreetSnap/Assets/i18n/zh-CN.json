@@ -54,5 +54,7 @@
   "Darken": "暗化",
   "Lighten": "淡化",
   "HardLight": "硬光",
-  "SelectDirectory": "选择目录"
+  "SelectDirectory": "选择目录",
+  "Factor": "系数",
+  "ConfigChanged": "配置已更改"
 }
