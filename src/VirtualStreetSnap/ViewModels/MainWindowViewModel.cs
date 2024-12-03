@@ -49,7 +49,7 @@ public partial class MainWindowViewModel : ViewModelBase
             case "Gallery":
             {
                 var viewModel = value.Page.DataContext as ImageGalleryViewModel;
-                viewModel?.UpdateThumbnails();
+                viewModel?.UpdateThumbnails(selectFirst:false);
                 Console.WriteLine($"Update thumbnails for {value.Name}");
                 break;
             }

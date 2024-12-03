@@ -14,7 +14,9 @@
     </UserControl.DataContext>
 
     <Grid RowDefinitions="*,10,0.2*" Background="#111111">
-        <Panel Grid.Row="0">
+        <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Text="{i18n:Localize SelectAnImage}" FontSize="24"
+                   IsVisible="{Binding SelectedThumbnail, Converter={x:Static ObjectConverters.IsNull}}"/>
+        <Panel Grid.Row="0" IsVisible="{Binding SelectedThumbnail, Converter={x:Static ObjectConverters.IsNotNull}}">
             <ContentControl Content="{Binding SelectedImageViewer}" />
             <Button Command="{Binding SelectPreviousThumbnail}"
                     Content="←" FontSize="24" Opacity="0.5" Margin="10" Height="50"

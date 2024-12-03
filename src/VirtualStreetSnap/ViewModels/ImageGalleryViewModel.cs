@@ -96,13 +96,14 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private AppConfig _config = ConfigService.Instance;
 
     [ObservableProperty]
-    private ImageViewerViewModel _selectedImageViewer = new ImageViewerViewModel();
+    private ImageViewerView _selectedImageViewer;
 
     public ObservableCollection<ImageBase> Thumbnails => _lazyLoadManager.Thumbnails;
 
     public ImageGalleryViewModel()
     {
-        UpdateThumbnails();
+        SelectedImageViewer = new ImageViewerView();
+        UpdateThumbnails(selectFirst:false);
         Config.Settings.PropertyChanged += OnSettingsPropertyChanged;
     }
 
@@ -114,11 +115,10 @@ public partial class ImageGalleryViewModel : ViewModelBase
     partial void OnSelectedThumbnailChanged(ImageBase value)
     {
         value.LoadImage();
-        SelectedImageViewer.ViewImage = value;
+        if (SelectedImageViewer.DataContext is ImageViewerViewModel viewModel) viewModel.ViewImage = value;
     }
 
-    [RelayCommand]
-    public void UpdateThumbnails(bool reload = false)
+    public void UpdateThumbnails(bool reload = false,bool selectFirst = true)
     {
         if (_lazyLoadManager.IsInitialized && !reload)
         {
@@ -129,7 +129,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
             _lazyLoadManager.Initialize(Config.Settings.SaveDirectory);
         }
 
-        if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails.First();
+        if (Thumbnails.Count > 0 && SelectedThumbnail == null && selectFirst) SelectedThumbnail = Thumbnails.First();
     }
 
 
