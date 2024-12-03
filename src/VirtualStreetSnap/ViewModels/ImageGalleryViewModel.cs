@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
@@ -39,7 +38,7 @@ public class LazyLoadManager
         _lastCheckedDirectory = saveDirectory;
 
         _allImagePaths = Directory.GetFiles(saveDirectory, "*.png")
-            .ToDictionary(file => file, file => File.GetLastWriteTime(file));
+            .ToDictionary(file => file, File.GetLastWriteTime);
         _allImagePaths = _allImagePaths.OrderByDescending(kv => kv.Value).ToDictionary(kv => kv.Key, kv => kv.Value);
         Thumbnails.Clear();
         _currentBatchIndex = 0;
@@ -57,7 +56,7 @@ public class LazyLoadManager
     public void LoadNecessary()
     {
         var currentImagePaths = Directory.GetFiles(_lastCheckedDirectory, "*.png")
-            .ToDictionary(file => file, file => File.GetLastWriteTime(file));
+            .ToDictionary(file => file, File.GetLastWriteTime);
 
         // Detect and remove missing files
         var missingFiles = _allImagePaths.Keys.Except(currentImagePaths.Keys).ToList();

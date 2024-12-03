@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Controls.Notifications;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -34,7 +33,7 @@ public partial class ImageEditorViewModel : ViewModelBase
     private LayerBaseViewModel? _selectedLayer;
 
     [ObservableProperty]
-    private string _dragItemText;
+    private string? _dragItemText;
 
     public ObservableCollection<LayerTypeItem> LayerTypes { get; set; }
 
@@ -84,6 +83,7 @@ public partial class ImageEditorViewModel : ViewModelBase
     [RelayCommand]
     public void RemoveLayer()
     {
+        if (SelectedLayer == null) return;
         var index = LayerManager.Layers.IndexOf(SelectedLayer);
         LayerManager.RemoveLayer(SelectedLayer);
         // If the removed layer was the selected layer, select the nearest layer
@@ -112,19 +112,16 @@ public partial class ImageEditorViewModel : ViewModelBase
         var layer = value();
         LayerManager.AddLayer(layer);
         // Move the layer to above the selected layer, if no layer is selected, move to the top
-        var index = LayerManager.Layers.IndexOf(layer);
-        if (SelectedLayer != null)
-        {
-            index = LayerManager.Layers.IndexOf(SelectedLayer) + 1;
-            if (index == LayerManager.Layers.Count) index--;
-            LayerManager.MoveLayer(LayerManager.Layers.Last(), index);
-            SelectedLayer = LayerManager.Layers.ElementAtOrDefault(index);
-        }
+        if (SelectedLayer == null) return;
+        var index = LayerManager.Layers.IndexOf(SelectedLayer) + 1;
+        if (index == LayerManager.Layers.Count) index--;
+        LayerManager.MoveLayer(LayerManager.Layers.Last(), index);
+        SelectedLayer = LayerManager.Layers.ElementAtOrDefault(index);
     }
 
     public event EventHandler? ImageSaved;
 
-    internal void OnImageSaved()
+    private void OnImageSaved()
     {
         ImageSaved?.Invoke(this, EventArgs.Empty);
     }

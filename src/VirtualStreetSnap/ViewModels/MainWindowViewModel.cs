@@ -81,7 +81,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void StartFixWindowSizeTimer()
     {
-        var maxTry = 20;
+        const int maxTry = 20;
         var tryCount = 0;
         var timer = new DispatcherTimer
         {
@@ -89,8 +89,7 @@ public partial class MainWindowViewModel : ViewModelBase
         };
         timer.Tick += (sender, args) =>
         {
-            var snapView = Pages[0].Page as SnapShotView;
-            if (snapView.FixWindowSize() || tryCount >= 10)
+            if (Pages[0].Page is SnapShotView snapView && (snapView.FixWindowSize() || tryCount >= maxTry))
             {
                 timer.Stop();
             }

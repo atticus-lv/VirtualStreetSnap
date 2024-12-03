@@ -16,7 +16,7 @@ public static class ImageResizer
         return await Task.Run(() => ResizeImage(inputPath, targetWidth, targetHeight));
     }
 
-    public static Bitmap ResizeImage(string inputPath, int targetWidth, int targetHeight)
+    private static Bitmap ResizeImage(string inputPath, int targetWidth, int targetHeight)
     {
         using var srcImage = Image.FromFile(inputPath);
         var srcWidth = srcImage.Width;

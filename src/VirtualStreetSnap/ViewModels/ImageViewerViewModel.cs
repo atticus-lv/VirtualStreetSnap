@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
-using VirtualStreetSnap.Services;
 
 namespace VirtualStreetSnap.ViewModels;
 
@@ -16,7 +13,7 @@ public partial class ImageViewerViewModel : ViewModelBase
     private ImageBase? _viewImage;
     
     [ObservableProperty]
-    private Bitmap? _image = null;
+    private Bitmap? _image;
     
     public ImageViewerViewModel()
     {
