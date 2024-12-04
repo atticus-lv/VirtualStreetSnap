@@ -72,11 +72,11 @@ public class ImageModelBase : INotifyPropertyChanged
         }
     }
 
-    public void LoadImage()
+    public async Task LoadImageAsync()
     {
         try
         {
-            Image = new Bitmap(ImgPath);
+            await Task.Run(() => Image = new Bitmap(ImgPath));
         }
         catch (Exception)
         {

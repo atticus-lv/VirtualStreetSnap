@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -53,5 +54,27 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
             DataContext = new ImageEditorViewModel(image)
         });
         CurrentPage = Pages.Last();
+    }
+
+    public void RemovePage(ImageEditorView page)
+    {
+        if (!Pages.Contains(page)) return;
+        Pages.Remove(page);
+        CurrentPage = Pages.LastOrDefault();
+    }
+
+    public event EventHandler? ImageSaved;
+
+    private void OnImageSaved()
+    {
+        ImageSaved?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void SaveCurrentPageImage(bool saveAsNew)
+    {
+        if (CurrentPage is null)return;
+        var viewModel = CurrentPage.DataContext as ImageEditorViewModel;
+        viewModel?.SaveImageToGalleryDirectory(saveAsNew);
+        OnImageSaved();
     }
 }

@@ -13,14 +13,15 @@ public partial class ImageEditorWindow : Window
 
         var scale = Screens.Primary.Scaling;
         var currentScreen = Screens.Primary;
-        Width = currentScreen.Bounds.Width / 2 ;
-        Height = currentScreen.Bounds.Height / 2;
+        Width = currentScreen.Bounds.Width / 2 / scale;
+        Height = currentScreen.Bounds.Height / 2 / scale;
     }
+
     private void ToolBar_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (!Equals(e.Source, ToolBar)) return;
         BeginMoveDrag(e);
     }
+
     private void CloseButtonOnClick(object? sender, RoutedEventArgs e)
     { }
 }

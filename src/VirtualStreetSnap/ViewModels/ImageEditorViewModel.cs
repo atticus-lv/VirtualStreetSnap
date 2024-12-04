@@ -119,13 +119,7 @@ public partial class ImageEditorViewModel : ViewModelBase
         SelectedLayer = LayerManager.Layers.ElementAtOrDefault(index);
     }
 
-    public event EventHandler? ImageSaved;
-
-    private void OnImageSaved()
-    {
-        ImageSaved?.Invoke(this, EventArgs.Empty);
-    }
-
+    
 
     public ImageModelBase SaveImageToGalleryDirectory(bool saveAsNew = true)
     {
@@ -144,7 +138,6 @@ public partial class ImageEditorViewModel : ViewModelBase
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
         ImageModelBase.Image.Save(newFilePath);
         NotifyHelper.Notify(this, Localizer.Localizer.Instance["SaveSuccess"], $"{newFilePath}");
-        OnImageSaved();
         return ImageModelBase;
     }
 }

@@ -65,12 +65,7 @@
         <Grid ColumnDefinitions="3*,10,*" Background="#111111">
             <Panel>
                 <ContentControl Content="{Binding EditImageViewer}" />
-                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal">
-                    <Button Content="{i18n:Localize Save}" FontSize="16"
-                            Click="SaveImageOverwrite" />
-                    <Button Content="{i18n:Localize SaveCopy}" FontSize="16"
-                            Click="SaveImageCopy" />
-                </StackPanel>
+
             </Panel>
 
             <GridSplitter Grid.Column="1" Background="Black" />

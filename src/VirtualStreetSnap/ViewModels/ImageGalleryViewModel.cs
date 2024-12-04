@@ -67,6 +67,7 @@ public class LazyLoadManager
             {
                 Thumbnails.Remove(imageToRemove);
             }
+
             _allImagePaths.Remove(missingFile);
         }
 
@@ -97,19 +98,19 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     [ObservableProperty]
     private ImageViewerView _selectedImageViewer;
-    
+
     [ObservableProperty]
     private int _thumbDisplaySize = 80;
 
     [ObservableProperty]
-    private ImageEditorWindow _editorWindow;
-    
+    private ImageEditorWindow? _editorWindow;
+
     public ObservableCollection<ImageModelBase> Thumbnails => _lazyLoadManager.Thumbnails;
-    
+
     public ImageGalleryViewModel()
     {
         SelectedImageViewer = new ImageViewerView();
-        UpdateThumbnails(selectFirst:false);
+        UpdateThumbnails(selectFirst: false);
         Config.Settings.PropertyChanged += OnSettingsPropertyChanged;
     }
 
@@ -120,11 +121,11 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     partial void OnSelectedThumbnailChanged(ImageModelBase value)
     {
-        value.LoadImage();
+        value.LoadImageAsync();
         if (SelectedImageViewer.DataContext is ImageViewerViewModel viewModel) viewModel.ViewImage = value;
     }
 
-    public void UpdateThumbnails(bool reload = false,bool selectFirst = true)
+    public void UpdateThumbnails(bool reload = false, bool selectFirst = true)
     {
         if (_lazyLoadManager.IsInitialized && !reload)
         {
@@ -201,9 +202,14 @@ public partial class ImageGalleryViewModel : ViewModelBase
         if (Design.IsDesignMode) return;
 
         var newImage = new ImageModelBase(SelectedThumbnail.ImgPath);
-        newImage.LoadImage();
+        newImage.LoadImageAsync();
 
-        if (EditorWindow is null)
+        if (EditorWindow is not null)
+        {
+            var viewModel = EditorWindow.DataContext as ImageEditorWindowViewModel;
+            viewModel?.AddPage(newImage);
+        }
+        else
         {
             EditorWindow = new ImageEditorWindow()
             {
@@ -211,30 +217,20 @@ public partial class ImageGalleryViewModel : ViewModelBase
             };
             var viewModel = EditorWindow.DataContext as ImageEditorWindowViewModel;
             viewModel?.AddPage(newImage);
-            
+            viewModel.ImageSaved += (sender, args) =>
+            {
+                EditorWindow = null;
+                UpdateThumbnails(true);
+                if (Thumbnails.Count > 0)
+                {
+                    SelectedThumbnail = Thumbnails.First();
+                }
+
+                GC.Collect();
+                EditorWindow = null;
+            };
         }
-        else
-        {
-            var viewModel = EditorWindow.DataContext as ImageEditorWindowViewModel;
-            viewModel?.AddPage(newImage);
-        }
-        
+
         EditorWindow.Show();
-        
-        // var editorWindow = new ImageEditorView
-        // {
-        //     DataContext = new ImageEditorViewModel(newImage)
-        // };
-        // var viewModel = editorWindow.DataContext as ImageEditorViewModel;
-        // viewModel.ImageSaved += (sender, args) =>
-        // {
-        //     UpdateThumbnails(true);
-        //     if (Thumbnails.Count > 0)
-        //     {   
-        //         SelectedThumbnail = Thumbnails.First();
-        //     }
-        //     GC.Collect();
-        // };
-        // editorWindow.Show();
     }
 }
