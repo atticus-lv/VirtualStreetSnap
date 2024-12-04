@@ -13,7 +13,6 @@ namespace VirtualStreetSnap.ViewModels;
 
 public partial class SettingsViewModel : ViewModelBase
 {
-
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
 
@@ -53,6 +52,7 @@ public partial class SettingsViewModel : ViewModelBase
 
     public async Task ChangeDir(string parmName)
     {
+        var oldValue = SaveDirectory;
         var task = parmName switch
         {
             "SaveDirectory" => this.ChangeDirectory(value => SaveDirectory = value,
@@ -61,8 +61,11 @@ public partial class SettingsViewModel : ViewModelBase
         };
         await task;
         // save the config
-        Config.Settings.SaveDirectory = SaveDirectory;
-        NotifyHelper.Notify(this, Localizer.Localizer.Instance["ConfigChanged"],
-            SaveDirectory);
+        if (oldValue != SaveDirectory)
+        {
+            Config.Settings.SaveDirectory = SaveDirectory;
+            NotifyHelper.Notify(this, Localizer.Localizer.Instance["ConfigChanged"],
+                SaveDirectory);
+        }
     }
 }
