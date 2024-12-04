@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 
 namespace VirtualStreetSnap.Views;
 
@@ -20,5 +21,10 @@ public partial class MainWindow : Window
     {
         if (!Equals(e.Source, ToolBar)) return;
         BeginMoveDrag(e);
+    }
+
+    private void ToggleTopMost_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Topmost = !Topmost;
     }
 }

@@ -30,6 +30,7 @@
         <Style Selector="Button#CloseWindowButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Firebrick" />
         </Style>
+        <!-- footer -->
         <Style Selector="StackPanel#Footer">
             <Setter Property="Transitions">
                 <Transitions>
@@ -53,7 +54,7 @@
                                 <ListBox Width="40"
                                          ItemsSource="{Binding Pages}"
                                          SelectedItem="{Binding CurrentPage}"
-                                         CornerRadius="4">
+                                         CornerRadius="10">
 
                                     <ListBox.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -62,7 +63,8 @@
                                     </ListBox.ItemsPanel>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate DataType="{x:Type vm:PagesModel}">
-                                            <StackPanel Spacing="5" ToolTip.Tip="{Binding Name,
+                                            <StackPanel Spacing="5"
+                                                        ToolTip.Tip="{Binding Name,
                                                                                    Converter={StaticResource LocalizeConverter}}">
                                                 <PathIcon Data="{Binding ItemIcon}">
                                                 </PathIcon>
@@ -92,26 +94,28 @@
             </SplitView.Pane>
 
             <SplitView.Content>
-                <Panel>
-                    <!-- <Rectangle Fill="Red" Width="25" HorizontalAlignment="Right"></Rectangle> -->
-                    <TransitioningContentControl Content="{Binding CurrentPage.Page}">
-                        <TransitioningContentControl.PageTransition>
-                            <PageSlide Orientation="Vertical" Duration="0:00:00.2" />
-                        </TransitioningContentControl.PageTransition>
-                    </TransitioningContentControl>
-                    <Button Name="TogglePaneButton" Content=">" HorizontalAlignment="Right" Height="120" Width="20"
-                            VerticalContentAlignment="Center" Margin="10" CornerRadius="10"
-                            Command="{Binding TogglePane}">
-                    </Button>
-                </Panel>
+                <!-- <Rectangle Fill="Red" Width="25" HorizontalAlignment="Right"></Rectangle> -->
+                <TransitioningContentControl Content="{Binding CurrentPage.Page}">
+                    <TransitioningContentControl.PageTransition>
+                        <PageSlide Orientation="Vertical" Duration="0:00:00.2" />
+                    </TransitioningContentControl.PageTransition>
+                </TransitioningContentControl>
             </SplitView.Content>
         </SplitView>
-        <Button Name="CloseWindowButton" VerticalAlignment="Top" HorizontalAlignment="Right"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                Background="Transparent" Width="40" Height="40" Margin="0 5 5 0 "
-                Command="{Binding OnCloseButtonClick}">
-            <TextBlock Text="X" FontSize="16" />
-        </Button>
+
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
+            <Button Name="CloseWindowButton"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                    Background="Transparent" Width="40" Height="40" Margin="0 5 5 0 "
+                    Command="{Binding OnCloseButtonClick}">
+                <TextBlock Text="X" FontSize="16" />
+            </Button>
+            <ToggleButton Name="ToggleTopMost" Width="40" Height="40" CornerRadius="10"
+                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ToggleTopMost_OnClick">
+                <PathIcon Data="{StaticResource PinRegular}"></PathIcon>
+            </ToggleButton>
+        </StackPanel>
+
 
     </Panel>
 </Window>

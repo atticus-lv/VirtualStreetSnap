@@ -2,9 +2,8 @@
 
 on:
   push:
-    branches: [ "master" ]
-    paths-ignore:
-      - 'README.md'
+    tags:
+      - 'v*.*.*'
 
 
 jobs:
