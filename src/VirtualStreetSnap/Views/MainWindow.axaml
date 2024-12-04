@@ -11,7 +11,8 @@
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         Width="1280" Height="720"
-        MinWidth="500"
+        MinWidth="480"
+        MinHeight="320"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaTitleBarHeightHint="0">
 
@@ -24,80 +25,90 @@
         <Style Selector="Button#CloseWindowButton">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Width" Value="100" />
+            <Setter Property="CornerRadius" Value="5"></Setter>
         </Style>
         <Style Selector="Button#CloseWindowButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Firebrick" />
         </Style>
-
-        <Style Selector="Panel#ToolBarArea> Border#ToolBar">
-            <Setter Property="IsHitTestVisible" Value="False" />
-            <Setter Property="Opacity" Value="0" />
+        <Style Selector="StackPanel#Footer">
             <Setter Property="Transitions">
                 <Transitions>
                     <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="Panel#ToolBarArea:pointerover > Border#ToolBar">
-            <Setter Property="Opacity" Value="1" />
-            <Setter Property="IsHitTestVisible" Value="True" />
-        </Style>
 
     </Window.Styles>
 
     <Panel>
-        <Panel>
-            <TransitioningContentControl Content="{Binding CurrentPage.Page}">
-                <TransitioningContentControl.PageTransition>
-                    <PageSlide Orientation="Vertical" Duration="0:00:00.2" />
-                </TransitioningContentControl.PageTransition>
-            </TransitioningContentControl>
-        </Panel>
 
-        <StackPanel>
-            <Panel Name="ToolBarArea">
-                <Rectangle Fill="Transparent" Height="50"></Rectangle>
-                <Border Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
-                        Background="#111111" HorizontalAlignment="Stretch">
-                    <Panel>
-                        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0 ">
-                            <TextBlock Text="VirtualStreetSnap" FontSize="18" />
-                            <TextBlock Text="Created by Atticus" Foreground="DimGray" Opacity="0.8" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="5"
-                                    HorizontalAlignment="Right" Margin="0 0 10 0">
-                            <ListBox ItemsSource="{Binding Pages}"
-                                     SelectedItem="{Binding CurrentPage}"
-                                     Height="40" CornerRadius="4">
+        <SplitView DisplayMode="CompactInline" PanePlacement="Right" IsPaneOpen="True" OpenPaneLength="50"
+                   CompactPaneLength="0">
+            <SplitView.Pane>
+                <Panel Name="ToolBarArea" PointerPressed="DragMoveWindow_PointerPressed">
+                    <Border Name="ToolBar"
+                            Background="#111111" HorizontalAlignment="Stretch">
+                        <Panel>
+                            <StackPanel Spacing="5" VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                <ListBox Width="40"
+                                         ItemsSource="{Binding Pages}"
+                                         SelectedItem="{Binding CurrentPage}"
+                                         CornerRadius="4">
 
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal"></StackPanel>
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type vm:PagesModel}">
-                                        <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <PathIcon Data="{Binding ItemIcon}"></PathIcon>
-                                            <TextBlock
-                                                Text="{Binding Name, 
-                                            Converter={StaticResource LocalizeConverter}}"
-                                                VerticalAlignment="Center" />
-                                        </StackPanel>
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel></StackPanel>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type vm:PagesModel}">
+                                            <StackPanel Spacing="5">
+                                                <PathIcon Data="{Binding ItemIcon}"
+                                                          ToolTip.Tip="{Binding Name,
+                                                                                   Converter={StaticResource LocalizeConverter}}">
+                                                </PathIcon>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
 
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
+                            </StackPanel>
 
-                            </ListBox>
-                            <Button Name="CloseWindowButton" HorizontalContentAlignment="Center"
-                                    Background="Transparent" Width="35"
-                                    Command="{Binding OnCloseButtonClick}">
-                                <TextBlock Text="X" FontSize="16" />
-                            </Button>
-                        </StackPanel>
-                    </Panel>
-                </Border>
-            </Panel>
-        </StackPanel>
+                            <LayoutTransformControl Width="250" VerticalAlignment="Bottom" Margin="20">
+                                <LayoutTransformControl.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="45"></RotateTransform>
+                                    </TransformGroup>
+                                </LayoutTransformControl.RenderTransform>
+                                <StackPanel Name="Footer" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                            IsHitTestVisible="False"
+                                            Opacity="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=440}">
+                                    <TextBlock Text="VirtualStreetSnap" FontSize="18" />
+                                    <TextBlock Text="Created by Atticus" Foreground="DimGray" Opacity="0.8" />
+                                </StackPanel>
+                            </LayoutTransformControl>
+                        </Panel>
+                    </Border>
+                </Panel>
+            </SplitView.Pane>
+
+            <SplitView.Content>
+                <Panel>
+                    <!-- <Rectangle Fill="Red" Width="25" HorizontalAlignment="Right"></Rectangle> -->
+                    <TransitioningContentControl Content="{Binding CurrentPage.Page}">
+                        <TransitioningContentControl.PageTransition>
+                            <PageSlide Orientation="Vertical" Duration="0:00:00.2" />
+                        </TransitioningContentControl.PageTransition>
+                    </TransitioningContentControl>
+                </Panel>
+            </SplitView.Content>
+        </SplitView>
+        <Button Name="CloseWindowButton" VerticalAlignment="Top" HorizontalAlignment="Right"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                Background="Transparent" Width="40" Height="40" Margin="0 5 5 0 "
+                Command="{Binding OnCloseButtonClick}">
+            <TextBlock Text="X" FontSize="16" />
+        </Button>
     </Panel>
 </Window>

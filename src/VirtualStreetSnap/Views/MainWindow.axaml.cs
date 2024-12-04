@@ -16,7 +16,7 @@ public partial class MainWindow : Window
         Height = currentScreen.Bounds.Height / 2 / scale;
     }
 
-    private void ToolBar_PointerPressed(object? sender, PointerPressedEventArgs e)
+    private void DragMoveWindow_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (!Equals(e.Source, ToolBar)) return;
         BeginMoveDrag(e);
