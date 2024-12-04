@@ -13,26 +13,16 @@ using VirtualStreetSnap.Views;
 
 namespace VirtualStreetSnap.ViewModels;
 
-public class PagesModel
-{
-    public PagesModel(string name, UserControl page, string? iconKey = null)
-    {
-        Name = name;
-        Page = page;
-        if (iconKey == null) return;
-        Application.Current!.TryFindResource(iconKey, out var res);
-        ItemIcon = (StreamGeometry)res!;
-    }
-
-    public string Name { get; set; }
-    public UserControl Page { get; set; }
-    public StreamGeometry? ItemIcon { get; }
-}
-
 public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty]
     private PagesModel? _currentPage;
+
+    [ObservableProperty]
+    private bool _isPaneOpen;
+
+    [RelayCommand]
+    public void TogglePane() => IsPaneOpen = !IsPaneOpen;
 
     public ObservableCollection<PagesModel> Pages { get; } =
     [
@@ -49,7 +39,7 @@ public partial class MainWindowViewModel : ViewModelBase
             case "Gallery":
             {
                 var viewModel = value.Page.DataContext as ImageGalleryViewModel;
-                viewModel?.UpdateThumbnails(selectFirst:false);
+                viewModel?.UpdateThumbnails(selectFirst: false);
                 Console.WriteLine($"Update thumbnails for {value.Name}");
                 break;
             }
@@ -93,8 +83,25 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 timer.Stop();
             }
+
             tryCount++;
         };
         timer.Start();
     }
+}
+
+public class PagesModel
+{
+    public PagesModel(string name, UserControl page, string? iconKey = null)
+    {
+        Name = name;
+        Page = page;
+        if (iconKey == null) return;
+        Application.Current!.TryFindResource(iconKey, out var res);
+        ItemIcon = (StreamGeometry)res!;
+    }
+
+    public string Name { get; set; }
+    public UserControl Page { get; set; }
+    public StreamGeometry? ItemIcon { get; }
 }

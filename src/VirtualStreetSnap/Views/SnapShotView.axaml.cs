@@ -169,4 +169,10 @@ public partial class SnapShotView : UserControl
         viewModel.EditHeight = viewModel.RealCaptureAreaHeight.ToString();
         viewModel.IsEditingSize = true;
     }
+
+    private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {   
+        var _window = TopLevel.GetTopLevel(this) as Window;
+        _window?.BeginMoveDrag(e);
+    }
 }

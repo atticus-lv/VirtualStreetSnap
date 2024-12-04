@@ -37,12 +37,11 @@
                 </Transitions>
             </Setter>
         </Style>
-
     </Window.Styles>
 
     <Panel>
-
-        <SplitView DisplayMode="CompactInline" PanePlacement="Right" IsPaneOpen="True" OpenPaneLength="50"
+        <SplitView DisplayMode="CompactInline" PanePlacement="Right" IsPaneOpen="{Binding IsPaneOpen}"
+                   OpenPaneLength="50"
                    CompactPaneLength="0">
             <SplitView.Pane>
                 <Panel Name="ToolBarArea" PointerPressed="DragMoveWindow_PointerPressed">
@@ -63,10 +62,9 @@
                                     </ListBox.ItemsPanel>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate DataType="{x:Type vm:PagesModel}">
-                                            <StackPanel Spacing="5">
-                                                <PathIcon Data="{Binding ItemIcon}"
-                                                          ToolTip.Tip="{Binding Name,
+                                            <StackPanel Spacing="5" ToolTip.Tip="{Binding Name,
                                                                                    Converter={StaticResource LocalizeConverter}}">
+                                                <PathIcon Data="{Binding ItemIcon}">
                                                 </PathIcon>
                                             </StackPanel>
                                         </DataTemplate>
@@ -101,6 +99,10 @@
                             <PageSlide Orientation="Vertical" Duration="0:00:00.2" />
                         </TransitioningContentControl.PageTransition>
                     </TransitioningContentControl>
+                    <Button Name="TogglePaneButton" Content=">" HorizontalAlignment="Right" Height="120" Width="20"
+                            VerticalContentAlignment="Center" Margin="10" CornerRadius="10"
+                            Command="{Binding TogglePane}">
+                    </Button>
                 </Panel>
             </SplitView.Content>
         </SplitView>
@@ -110,5 +112,6 @@
                 Command="{Binding OnCloseButtonClick}">
             <TextBlock Text="X" FontSize="16" />
         </Button>
+
     </Panel>
 </Window>

@@ -36,6 +36,10 @@
     </UserControl.Styles>
 
     <Panel Background="Transparent" Name="Overlay">
+        <Border Background="Gray" CornerRadius="50 0 0 0" Width="150" Height="80" VerticalAlignment="Bottom"
+                Opacity="0.2"
+                HorizontalAlignment="Right" PointerPressed="InputElement_OnPointerPressed" Cursor="SizeAll" />
+
         <Panel Opacity="{Binding GuideLinesOpacity}">
             <Grid Classes="Guides" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
                   Opacity="{Binding ShowGuideLinesGrid}" />
@@ -91,6 +95,7 @@
             </Button>
         </StackPanel>
 
+
         <ComboBox Name="SizeRadioComboBox" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="20"
                   ItemsSource="{Binding RatioItems}"
                   SelectedItem="{Binding SelectedSizeRatio}"
@@ -110,12 +115,14 @@
                 <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
             </StackPanel.Effect>
             <TextBlock Name="WidthTextBlock" Text="{Binding RealCaptureAreaWidth}" FontSize="24"
-                       IsVisible="{Binding IsEditingSize, Converter={StaticResource BooleanNotConverter}}" PointerPressed="DisplayTextBlock_PointerPressed" />
+                       IsVisible="{Binding IsEditingSize, Converter={StaticResource BooleanNotConverter}}"
+                       PointerPressed="DisplayTextBlock_PointerPressed" Cursor="Ibeam" />
             <TextBox Text="{Binding EditWidth}" FontSize="24" IsVisible="{Binding IsEditingSize}"
                      LostFocus="EditTextBox_LostFocus" KeyDown="EditTextBox_KeyDown" />
             <TextBlock VerticalAlignment="Center">X</TextBlock>
             <TextBlock Name="HeightTextBlock" Text="{Binding RealCaptureAreaHeight}" FontSize="24"
-                       IsVisible="{Binding IsEditingSize, Converter={StaticResource BooleanNotConverter}}" PointerPressed="DisplayTextBlock_PointerPressed" />
+                       IsVisible="{Binding IsEditingSize, Converter={StaticResource BooleanNotConverter}}"
+                       PointerPressed="DisplayTextBlock_PointerPressed" Cursor="Ibeam" />
             <TextBox Text="{Binding EditHeight}" FontSize="24" IsVisible="{Binding IsEditingSize}"
                      LostFocus="EditTextBox_LostFocus" KeyDown="EditTextBox_KeyDown" />
             <TextBlock Text="px" />
