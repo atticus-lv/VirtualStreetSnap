@@ -19,7 +19,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private PagesModel? _currentPage;
 
     [ObservableProperty]
-    private bool _isPaneOpen;
+    private bool _isPaneOpen = true;
 
     [RelayCommand]
     public void TogglePane() => IsPaneOpen = !IsPaneOpen;

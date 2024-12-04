@@ -38,25 +38,6 @@
                 </Transitions>
             </Setter>
         </Style>
-        <!-- toggle -->
-        <Style Selector="Button#ToggleButton">
-            <Setter Property="Background" Value="White" />
-        </Style>
-        <Style Selector="Button#ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="White" />
-        </Style>
-        
-        <Style Selector="Border#TogglePaneBorder">
-            <Setter Property="Opacity" Value="0"></Setter>
-            <Setter Property="Transitions">
-                <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="Border#TogglePaneBorder:pointerover">
-            <Setter Property="Opacity" Value="1"></Setter>
-        </Style>
     </Window.Styles>
 
     <Panel>
@@ -113,33 +94,28 @@
             </SplitView.Pane>
 
             <SplitView.Content>
-                <Panel>
-                    <!-- <Rectangle Fill="Red" Width="25" HorizontalAlignment="Right"></Rectangle> -->
-                    <TransitioningContentControl Content="{Binding CurrentPage.Page}">
-                        <TransitioningContentControl.PageTransition>
-                            <PageSlide Orientation="Vertical" Duration="0:00:00.2" />
-                        </TransitioningContentControl.PageTransition>
-                    </TransitioningContentControl>
-                    <Border Name="TogglePaneBorder" Width="40" HorizontalAlignment="Right">
-                        <Panel>
-                            <Rectangle Fill="Transparent" Height="120"></Rectangle>
-                            <Button Name="ToggleButton"
-                                    HorizontalAlignment="Right" Height="120" Width="20"
-                                    Opacity="0.8"
-                                    VerticalContentAlignment="Center" Margin="10" CornerRadius="10"
-                                    Command="{Binding TogglePane}">
-                            </Button>
-                        </Panel>
-                    </Border>
-                </Panel>
+                <!-- <Rectangle Fill="Red" Width="25" HorizontalAlignment="Right"></Rectangle> -->
+                <TransitioningContentControl Content="{Binding CurrentPage.Page}">
+                    <TransitioningContentControl.PageTransition>
+                        <PageSlide Orientation="Vertical" Duration="0:00:00.2" />
+                    </TransitioningContentControl.PageTransition>
+                </TransitioningContentControl>
             </SplitView.Content>
         </SplitView>
-        <Button Name="CloseWindowButton" VerticalAlignment="Top" HorizontalAlignment="Right"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                Background="Transparent" Width="40" Height="40" Margin="0 5 5 0 "
-                Command="{Binding OnCloseButtonClick}">
-            <TextBlock Text="X" FontSize="16" />
-        </Button>
+
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
+            <Button Name="CloseWindowButton"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                    Background="Transparent" Width="40" Height="40" Margin="0 5 5 0 "
+                    Command="{Binding OnCloseButtonClick}">
+                <TextBlock Text="X" FontSize="16" />
+            </Button>
+            <ToggleButton Name="ToggleTopMost" Width="40" Height="40" CornerRadius="10"
+                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ToggleTopMost_OnClick">
+                <PathIcon Data="{StaticResource PinRegular}"></PathIcon>
+            </ToggleButton>
+        </StackPanel>
+
 
     </Panel>
 </Window>
