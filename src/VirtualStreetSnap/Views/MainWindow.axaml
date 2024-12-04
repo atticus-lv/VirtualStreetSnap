@@ -30,12 +30,32 @@
         <Style Selector="Button#CloseWindowButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Firebrick" />
         </Style>
+        <!-- footer -->
         <Style Selector="StackPanel#Footer">
             <Setter Property="Transitions">
                 <Transitions>
                     <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
                 </Transitions>
             </Setter>
+        </Style>
+        <!-- toggle -->
+        <Style Selector="Button#ToggleButton">
+            <Setter Property="Background" Value="White" />
+        </Style>
+        <Style Selector="Button#ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="White" />
+        </Style>
+        
+        <Style Selector="Border#TogglePaneBorder">
+            <Setter Property="Opacity" Value="0"></Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border#TogglePaneBorder:pointerover">
+            <Setter Property="Opacity" Value="1"></Setter>
         </Style>
     </Window.Styles>
 
@@ -53,7 +73,7 @@
                                 <ListBox Width="40"
                                          ItemsSource="{Binding Pages}"
                                          SelectedItem="{Binding CurrentPage}"
-                                         CornerRadius="4">
+                                         CornerRadius="10">
 
                                     <ListBox.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -62,7 +82,8 @@
                                     </ListBox.ItemsPanel>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate DataType="{x:Type vm:PagesModel}">
-                                            <StackPanel Spacing="5" ToolTip.Tip="{Binding Name,
+                                            <StackPanel Spacing="5"
+                                                        ToolTip.Tip="{Binding Name,
                                                                                    Converter={StaticResource LocalizeConverter}}">
                                                 <PathIcon Data="{Binding ItemIcon}">
                                                 </PathIcon>
@@ -99,10 +120,17 @@
                             <PageSlide Orientation="Vertical" Duration="0:00:00.2" />
                         </TransitioningContentControl.PageTransition>
                     </TransitioningContentControl>
-                    <Button Name="TogglePaneButton" Content=">" HorizontalAlignment="Right" Height="120" Width="20"
-                            VerticalContentAlignment="Center" Margin="10" CornerRadius="10"
-                            Command="{Binding TogglePane}">
-                    </Button>
+                    <Border Name="TogglePaneBorder" Width="40" HorizontalAlignment="Right">
+                        <Panel>
+                            <Rectangle Fill="Transparent"></Rectangle>
+                            <Button Name="ToggleButton"
+                                    HorizontalAlignment="Right" Height="120" Width="20"
+                                    Opacity="0.8"
+                                    VerticalContentAlignment="Center" Margin="10" CornerRadius="10"
+                                    Command="{Binding TogglePane}">
+                            </Button>
+                        </Panel>
+                    </Border>
                 </Panel>
             </SplitView.Content>
         </SplitView>
