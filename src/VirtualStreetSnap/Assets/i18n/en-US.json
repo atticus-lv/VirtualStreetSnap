@@ -57,5 +57,6 @@
   "SelectDirectory": "Select Directory",
   "Factor": "Factor",
   "ConfigChanged": "Configuration Changed",
-  "SelectAnImage": "Select An Image"
+  "SelectAnImage": "Select An Image",
+  "ThumbSize": "Thumb Size"
 }

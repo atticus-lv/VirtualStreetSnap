@@ -12,11 +12,13 @@
     <UserControl.DataContext>
         <viewModels:ImageGalleryViewModel />
     </UserControl.DataContext>
-
-    <Grid RowDefinitions="*,10,0.2*" Background="#111111">
-        <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Text="{i18n:Localize SelectAnImage}" FontSize="24"
-                   IsVisible="{Binding SelectedThumbnail, Converter={x:Static ObjectConverters.IsNull}}"/>
-        <Panel Grid.Row="0" IsVisible="{Binding SelectedThumbnail, Converter={x:Static ObjectConverters.IsNotNull}}">
+    
+    <Grid ColumnDefinitions="3*,10,1*" Background="#111111">
+        <TextBlock Grid.Column="0" TextAlignment="Center" VerticalAlignment="Center"
+                   Text="{i18n:Localize SelectAnImage}"
+                   FontSize="24"
+                   IsVisible="{Binding SelectedThumbnail, Converter={x:Static ObjectConverters.IsNull}}" />
+        <Panel Grid.Column="0" IsVisible="{Binding SelectedThumbnail, Converter={x:Static ObjectConverters.IsNotNull}}">
             <ContentControl Content="{Binding SelectedImageViewer}" />
             <Button Command="{Binding SelectPreviousThumbnail}"
                     Content="←" FontSize="24" Opacity="0.5" Margin="10" Height="50"
@@ -33,42 +35,56 @@
                 <Button Content="{i18n:Localize SendToEditor}"
                         Command="{Binding EditSelectedImageCommand} " CommandParameter="{Binding $parent[Window]}" />
             </StackPanel>
-        
+
         </Panel>
-        <GridSplitter Grid.Row="1" Background="Black"></GridSplitter>
+        <GridSplitter Grid.Column="1" Background="Black"></GridSplitter>
         <!-- Thumbnails Display -->
-        <ScrollViewer x:Name="ThumbnailsScrollViewer" Grid.Row="2"
+        <ScrollViewer Grid.Column="2" 
+                      x:Name="ThumbnailsScrollViewer"
                       VerticalScrollBarVisibility="Auto"
                       ScrollChanged="ThumbnailsScrollViewer_ScrollChanged">
-            <ListBox ItemsSource="{Binding Thumbnails}"
-                     SelectedItem="{Binding SelectedThumbnail}"
-                     HorizontalAlignment="Left" Background="#111111"
-                     SelectionMode="Single">
-                <ListBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="{i18n:Localize  Delete}" Command="{Binding DeleteSelectedThumbnail}" />
-                        <MenuItem Header="{i18n:Localize  OpenInFolder}"
-                                  Command="{Binding OpenSelectedThumbnailFolder}" />
-                    </ContextMenu>
-                </ListBox.ContextMenu>
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type models:ImageBase}">
-                        <Panel>
-                            <Image Source="{Binding ImageThumb}" Stretch="UniformToFill" ToolTip.ShowDelay="500"
-                                   Width="100" Height="100">
-                                <ToolTip.Tip>
-                                    <TextBlock Text="{Binding ImgName}" />
-                                </ToolTip.Tip>
-                            </Image>
-                        </Panel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="5" HorizontalAlignment="Right" Margin="0 0 10 0">
+                    <TextBlock Text="{i18n:Localize ThumbSize}" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                    <Slider Value="{Binding ThumbDisplaySize}" Maximum="200" Minimum="20" Width="100" TickFrequency="10"></Slider>
+                </StackPanel>
+                <ListBox ItemsSource="{Binding Thumbnails}"
+                         SelectedItem="{Binding SelectedThumbnail}"
+                         HorizontalAlignment="Left" Background="#111111"
+                         SelectionMode="Single">
+                    <ListBox.Styles> 
+                        <Style Selector="ListBoxItem">
+                             <Setter Property="Padding" Value="4" />
+                             <Setter Property="CornerRadius" Value="4"></Setter>
+                        </Style> 
+                    </ListBox.Styles>
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="{i18n:Localize  Delete}" Command="{Binding DeleteSelectedThumbnail}" />
+                            <MenuItem Header="{i18n:Localize  OpenInFolder}"
+                                      Command="{Binding OpenSelectedThumbnailFolder}" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:ImageBase}">
+                            <Panel>
+                                <Image Source="{Binding ImageThumb}" Stretch="UniformToFill" ToolTip.ShowDelay="500"
+                                       Width="{Binding $parent[UserControl].((viewModels:ImageGalleryViewModel)DataContext).ThumbDisplaySize}"
+                                       Height="{Binding $parent[UserControl].((viewModels:ImageGalleryViewModel)DataContext).ThumbDisplaySize}">
+                                    <ToolTip.Tip>
+                                        <TextBlock Text="{Binding ImgName}" />
+                                    </ToolTip.Tip>
+                                </Image>
+                            </Panel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
         </ScrollViewer>
 
     </Grid>

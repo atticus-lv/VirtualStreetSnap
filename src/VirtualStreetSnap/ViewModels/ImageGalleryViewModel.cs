@@ -97,9 +97,12 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     [ObservableProperty]
     private ImageViewerView _selectedImageViewer;
-
+    
+    [ObservableProperty]
+    private int _thumbDisplaySize = 80;
+    
     public ObservableCollection<ImageBase> Thumbnails => _lazyLoadManager.Thumbnails;
-
+    
     public ImageGalleryViewModel()
     {
         SelectedImageViewer = new ImageViewerView();

@@ -57,5 +57,6 @@
   "SelectDirectory": "选择目录",
   "Factor": "系数",
   "ConfigChanged": "配置已更改",
-  "SelectAnImage": "选择一个图像"
+  "SelectAnImage": "选择一个图像",
+  "ThumbSize": "缩略图大小"
 }
