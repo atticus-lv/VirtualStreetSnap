@@ -36,9 +36,13 @@
     </UserControl.Styles>
 
     <Panel Background="Transparent" Name="Overlay">
-        <Border Background="Gray" CornerRadius="50 0 0 0" Width="150" Height="80" VerticalAlignment="Bottom"
-                Opacity="0.2"
-                HorizontalAlignment="Right" PointerPressed="InputElement_OnPointerPressed" Cursor="SizeAll" />
+        <Border Background="DimGray" CornerRadius="70 0 0 0" Width="180" Height="112" VerticalAlignment="Bottom"
+                Opacity="0.5"
+                HorizontalAlignment="Right" PointerPressed="InputElement_OnPointerPressed" Cursor="SizeAll">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
+            </Border.Effect>
+        </Border>
 
         <Panel Opacity="{Binding GuideLinesOpacity}">
             <Grid Classes="Guides" ShowGridLines="True" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*"
@@ -50,17 +54,15 @@
                   Opacity="{Binding ShowGuideLinesRatio}" />
         </Panel>
 
-        <Border Classes="Guides" Name="FocusBorder" BorderBrush="#4B1212" BorderThickness="10"
+        <Border Classes="Guides" Name="FocusBorder" BorderBrush="Brown" BorderThickness="10"
                 Opacity="{Binding ShowFocusBorder}">
             <Rectangle Name="CaptureArea"></Rectangle>
         </Border>
 
         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20" Spacing="10"
                     Orientation="Horizontal">
-            <StackPanel.Effect>
-                <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
-            </StackPanel.Effect>
-            <Button Background="Transparent" Opacity="0.5">
+            
+            <Button Background="Transparent">
                 <PathIcon Data="{StaticResource Overlay}" ToolTip.Tip="{i18n:Localize  Guides}" Width="30" Height="30" />
                 <Button.Flyout>
                     <Flyout Placement="TopEdgeAlignedRight" ShowMode="TransientWithDismissOnPointerMoveAway">
@@ -96,7 +98,8 @@
         </StackPanel>
 
 
-        <ComboBox Name="SizeRadioComboBox" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="20"
+        <ComboBox VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="20"
+                  CornerRadius="10"
                   ItemsSource="{Binding RatioItems}"
                   SelectedItem="{Binding SelectedSizeRatio}"
                   SelectionChanged="SelectingItemsControl_OnSelectionChanged">
@@ -110,17 +113,17 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <StackPanel Orientation="Horizontal" Spacing="5" Opacity="1" VerticalAlignment="Bottom" Margin="20">
+        <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Bottom" Margin="20">
             <StackPanel.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="2" Opacity="1" OffsetX="0" OffsetY="0" />
             </StackPanel.Effect>
-            <TextBlock Name="WidthTextBlock" Text="{Binding RealCaptureAreaWidth}" FontSize="24"
+            <TextBlock Text="{Binding RealCaptureAreaWidth}" FontSize="24"
                        IsVisible="{Binding IsEditingSize, Converter={StaticResource BooleanNotConverter}}"
                        PointerPressed="DisplayTextBlock_PointerPressed" Cursor="Ibeam" />
             <TextBox Text="{Binding EditWidth}" FontSize="24" IsVisible="{Binding IsEditingSize}"
                      LostFocus="EditTextBox_LostFocus" KeyDown="EditTextBox_KeyDown" />
             <TextBlock VerticalAlignment="Center">X</TextBlock>
-            <TextBlock Name="HeightTextBlock" Text="{Binding RealCaptureAreaHeight}" FontSize="24"
+            <TextBlock Text="{Binding RealCaptureAreaHeight}" FontSize="24"
                        IsVisible="{Binding IsEditingSize, Converter={StaticResource BooleanNotConverter}}"
                        PointerPressed="DisplayTextBlock_PointerPressed" Cursor="Ibeam" />
             <TextBox Text="{Binding EditHeight}" FontSize="24" IsVisible="{Binding IsEditingSize}"
