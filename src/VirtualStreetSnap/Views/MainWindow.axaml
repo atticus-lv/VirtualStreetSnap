@@ -122,7 +122,7 @@
                     </TransitioningContentControl>
                     <Border Name="TogglePaneBorder" Width="40" HorizontalAlignment="Right">
                         <Panel>
-                            <Rectangle Fill="Transparent"></Rectangle>
+                            <Rectangle Fill="Transparent" Height="120"></Rectangle>
                             <Button Name="ToggleButton"
                                     HorizontalAlignment="Right" Height="120" Width="20"
                                     Opacity="0.8"
