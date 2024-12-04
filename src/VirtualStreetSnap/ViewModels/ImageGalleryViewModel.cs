@@ -25,7 +25,7 @@ public class LazyLoadManager
 
     public bool IsInitialized;
 
-    public ObservableCollection<ImageBase> Thumbnails { get; } = new();
+    public ObservableCollection<ImageModelBase> Thumbnails { get; } = new();
 
     public void Initialize(string saveDirectory)
     {
@@ -49,7 +49,7 @@ public class LazyLoadManager
     public void LoadNextBatch()
     {
         var nextBatch = _allImagePaths.Skip(_currentBatchIndex * BatchSize).Take(BatchSize);
-        foreach (var kv in nextBatch) Thumbnails.Add(new ImageBase(kv.Key));
+        foreach (var kv in nextBatch) Thumbnails.Add(new ImageModelBase(kv.Key));
         _currentBatchIndex++;
     }
 
@@ -77,7 +77,7 @@ public class LazyLoadManager
         foreach (var file in newImagePaths)
         {
             _allImagePaths[file] = currentImagePaths[file];
-            Thumbnails.Insert(0, new ImageBase(file));
+            Thumbnails.Insert(0, new ImageModelBase(file));
         }
     }
 }
@@ -90,7 +90,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private bool _showColorPicker;
 
     [ObservableProperty]
-    private ImageBase? _selectedThumbnail;
+    private ImageModelBase? _selectedThumbnail;
 
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
@@ -100,8 +100,11 @@ public partial class ImageGalleryViewModel : ViewModelBase
     
     [ObservableProperty]
     private int _thumbDisplaySize = 80;
+
+    [ObservableProperty]
+    private ImageEditorWindow _editorWindow;
     
-    public ObservableCollection<ImageBase> Thumbnails => _lazyLoadManager.Thumbnails;
+    public ObservableCollection<ImageModelBase> Thumbnails => _lazyLoadManager.Thumbnails;
     
     public ImageGalleryViewModel()
     {
@@ -115,7 +118,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
         UpdateThumbnails(true);
     }
 
-    partial void OnSelectedThumbnailChanged(ImageBase value)
+    partial void OnSelectedThumbnailChanged(ImageModelBase value)
     {
         value.LoadImage();
         if (SelectedImageViewer.DataContext is ImageViewerViewModel viewModel) viewModel.ViewImage = value;
@@ -158,7 +161,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
     {
         if (SelectedThumbnail == null) return;
         var filePath = SelectedThumbnail.ImgPath;
-        var folderPath = Path.GetDirectoryName(filePath);
+        var folderPath = Path.GetDirectoryName(filePath as string);
         if (folderPath != null && Directory.Exists(folderPath))
             Process.Start(new ProcessStartInfo
             {
@@ -197,23 +200,41 @@ public partial class ImageGalleryViewModel : ViewModelBase
         if (SelectedThumbnail == null) return;
         if (Design.IsDesignMode) return;
 
-        var newImage = new ImageBase(SelectedThumbnail.ImgPath);
+        var newImage = new ImageModelBase(SelectedThumbnail.ImgPath);
         newImage.LoadImage();
+
+        if (EditorWindow is null)
+        {
+            EditorWindow = new ImageEditorWindow()
+            {
+                DataContext = new ImageEditorWindowViewModel()
+            };
+            var viewModel = EditorWindow.DataContext as ImageEditorWindowViewModel;
+            viewModel?.AddPage(newImage);
+            
+        }
+        else
+        {
+            var viewModel = EditorWindow.DataContext as ImageEditorWindowViewModel;
+            viewModel?.AddPage(newImage);
+        }
         
-        var editorWindow = new ImageEditorView
-        {
-            DataContext = new ImageEditorViewModel(newImage)
-        };
-        var viewModel = editorWindow.DataContext as ImageEditorViewModel;
-        viewModel.ImageSaved += (sender, args) =>
-        {
-            UpdateThumbnails(true);
-            if (Thumbnails.Count > 0)
-            {   
-                SelectedThumbnail = Thumbnails.First();
-            }
-            GC.Collect();
-        };
-        editorWindow.Show();
+        EditorWindow.Show();
+        
+        // var editorWindow = new ImageEditorView
+        // {
+        //     DataContext = new ImageEditorViewModel(newImage)
+        // };
+        // var viewModel = editorWindow.DataContext as ImageEditorViewModel;
+        // viewModel.ImageSaved += (sender, args) =>
+        // {
+        //     UpdateThumbnails(true);
+        //     if (Thumbnails.Count > 0)
+        //     {   
+        //         SelectedThumbnail = Thumbnails.First();
+        //     }
+        //     GC.Collect();
+        // };
+        // editorWindow.Show();
     }
 }

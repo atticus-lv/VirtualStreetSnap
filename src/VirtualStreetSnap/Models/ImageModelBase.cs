@@ -8,7 +8,7 @@ using VirtualStreetSnap.Services;
 
 namespace VirtualStreetSnap.Models;
 
-public class ImageBase : INotifyPropertyChanged
+public class ImageModelBase : INotifyPropertyChanged
 {
     private const string DefaultImagePath = "avares://VirtualStreetSnap/Assets/avalonia-logo.ico";
     private const string LoadingImagePath = "avares://VirtualStreetSnap/Assets/Images/LoadingImage.png";
@@ -50,7 +50,7 @@ public class ImageBase : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public ImageBase(string imgPath = "")
+    public ImageModelBase(string imgPath = "")
     {
         ImgPath = File.Exists(imgPath) ? imgPath : DefaultImagePath;
         ImgDir = (Path.GetDirectoryName(ImgPath) ?? "Assets/").Replace("\\", "/");

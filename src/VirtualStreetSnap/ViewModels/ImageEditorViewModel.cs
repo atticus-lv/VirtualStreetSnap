@@ -37,7 +37,7 @@ public partial class ImageEditorViewModel : ViewModelBase
 
     public ObservableCollection<LayerTypeItem> LayerTypes { get; set; }
 
-    public ImageEditorViewModel(ImageBase? image)
+    public ImageEditorViewModel(ImageModelBase? image)
     {
         LayerTypes = new ObservableCollection<LayerTypeItem>(
             _layerConstructors.Keys.Select(key => new LayerTypeItem
@@ -48,11 +48,11 @@ public partial class ImageEditorViewModel : ViewModelBase
         SetupImage(Design.IsDesignMode ? null : image);
     }
 
-    public void SetupImage(ImageBase? image)
+    public void SetupImage(ImageModelBase? image)
     {
         if (image == null)
         {
-            var initialImage = new ImageBase
+            var initialImage = new ImageModelBase
             {
                 Image = new Bitmap(AssetLoader.Open(new Uri(DefaultImagePath)))
             };
@@ -127,12 +127,12 @@ public partial class ImageEditorViewModel : ViewModelBase
     }
 
 
-    public ImageBase SaveImageToGalleryDirectory(bool saveAsNew = true)
+    public ImageModelBase SaveImageToGalleryDirectory(bool saveAsNew = true)
     {
         var config = ConfigService.Instance;
         var saveDirectory = config.Settings.SaveDirectory;
-        var imageBase = EditImageViewer.ViewImage;
-        var newName = Path.GetFileNameWithoutExtension(imageBase.ImgName);
+        var ImageModelBase = EditImageViewer.ViewImage as ImageModelBase;
+        var newName = Path.GetFileNameWithoutExtension(ImageModelBase.ImgName);
         if (saveAsNew)
         {
             while (Path.Exists(Path.Combine(saveDirectory, newName + ".png")))
@@ -142,10 +142,10 @@ public partial class ImageEditorViewModel : ViewModelBase
         }
 
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
-        imageBase.Image.Save(newFilePath);
+        ImageModelBase.Image.Save(newFilePath);
         NotifyHelper.Notify(this, Localizer.Localizer.Instance["SaveSuccess"], $"{newFilePath}");
         OnImageSaved();
-        return imageBase;
+        return ImageModelBase;
     }
 }
 

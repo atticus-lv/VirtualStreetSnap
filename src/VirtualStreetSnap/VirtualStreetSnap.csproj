@@ -50,4 +50,11 @@
         <UpToDateCheckInput Remove="Assets\Lang\en-US.axaml"/>
         <UpToDateCheckInput Remove="Assets\Lang\zh-CN.axaml"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\ImageEditorWindow.axaml.cs">
+        <DependentUpon>ImageEditorWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

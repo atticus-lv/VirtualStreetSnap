@@ -1,0 +1,91 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
+        xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
+        xmlns:imageEditorLayer="clr-namespace:VirtualStreetSnap.ViewModels.ImageEditorLayer"
+        xmlns:services="clr-namespace:VirtualStreetSnap.Services"
+        xmlns:views="clr-namespace:VirtualStreetSnap.Views"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+        x:Class="VirtualStreetSnap.Views.ImageEditorWindow"
+        services:ToplevelService.Register="{Binding}"
+        Title="{i18n:Localize ImageEditor}"
+        x:DataType="viewModels:ImageEditorWindowViewModel"
+        WindowStartupLocation="CenterScreen"
+        Width="1280" Height="720"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="0">
+
+    <Design.DataContext>
+        <viewModels:ImageEditorWindowViewModel />
+    </Design.DataContext>
+    <Panel>
+        <Grid RowDefinitions="Auto,Auto,*">
+            <StackPanel>
+                <Panel Name="ToolBarArea">
+                    <Rectangle Fill="Transparent" Height="50"></Rectangle>
+                    <Border Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
+                            Background="#111111" HorizontalAlignment="Stretch">
+                        <Panel>
+                            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0 ">
+                                <TextBlock Text="Image Editor" FontSize="18" />
+                                <TextBlock Text="Created by Atticus" Foreground="DimGray" Opacity="0.8" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="5"
+                                        HorizontalAlignment="Right" Margin="0 0 10 0">
+
+                                <Button Name="CloseWindowButton" HorizontalContentAlignment="Center"
+                                        Background="Transparent" Width="35" Click="CloseButtonOnClick">
+                                    <TextBlock Text="X" FontSize="16" />
+                                </Button>
+                            </StackPanel>
+                        </Panel>
+                    </Border>
+                </Panel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1">
+                <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                    <TextBlock Opacity="0.75" FontSize="16"
+                               Text="{Binding CurrentPage.((viewModels:ImageEditorViewModel)DataContext).EditImageViewer.ViewImage.ImgSize }" />
+                </StackPanel>
+
+                <ListBox ItemsSource="{Binding Pages}"
+                         SelectedItem="{Binding CurrentPage}"
+                         SelectionMode="Single">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Padding" Value=" 10 4 10 4" />
+                            <Setter Property="CornerRadius" Value="4 4 0 0"></Setter>
+                        </Style>
+                    </ListBox.Styles>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type views:ImageEditorView}">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <StackPanel>
+                                    <TextBlock
+                                        Text="{Binding ((viewModels:ImageEditorViewModel)DataContext).EditImageViewer.ViewImage.ImgName}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+
+
+            <Panel Grid.Row="2">
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Wait for an Image"
+                           IsVisible="{Binding CurrentPage,Converter={x:Static ObjectConverters.IsNull}}" />
+                <ContentControl Content="{Binding CurrentPage}" />
+            </Panel>
+        </Grid>
+    </Panel>
+
+
+</Window>
