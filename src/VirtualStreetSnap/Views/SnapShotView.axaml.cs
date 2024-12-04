@@ -84,8 +84,8 @@ public partial class SnapShotView : UserControl
 
         var endX = _window.Position.X + (_window.Width - width) / 2;
         var endY = _window.Position.Y + _window.Height - contentHeight;
-
-        _window.Width = width + borderSize;
+        var remainWidth = _window.Width - CaptureArea.Bounds.Width - borderSize;
+        _window.Width = width + borderSize + remainWidth;
         _window.Height = contentHeight + borderSize;
         _window.Position = new PixelPoint((int)endX, (int)(endY));
     }
@@ -115,7 +115,9 @@ public partial class SnapShotView : UserControl
         }
 
         var borderSize = FocusBorder.BorderThickness.Left + FocusBorder.BorderThickness.Right;
-        _window.Width += borderSize;
+        // the grab bar on the right/left side
+        var remainWidth = _window.Width - CaptureArea.Bounds.Width - borderSize;
+        _window.Width += borderSize + remainWidth;
         _window.Height += borderSize;
         return true;
     }
@@ -125,7 +127,8 @@ public partial class SnapShotView : UserControl
         var window = TopLevel.GetTopLevel(this) as Window;
         if (window == null) return;
         var borderSize = FocusBorder.BorderThickness.Left + FocusBorder.BorderThickness.Right;
-        window.Width = newWidth + borderSize;
+        var remainWidth = _window.Width - CaptureArea.Bounds.Width - borderSize;
+        window.Width = newWidth + borderSize + remainWidth;
         window.Height = newHeight + borderSize;
     }
 
@@ -150,7 +153,7 @@ public partial class SnapShotView : UserControl
             UpdateWindowSize(realWidth, realHeight);
         }
         else
-        {   
+        {
             viewModel.EditHeight = viewModel.RealCaptureAreaHeight.ToString();
             viewModel.EditWidth = viewModel.RealCaptureAreaWidth.ToString();
         }
@@ -165,5 +168,11 @@ public partial class SnapShotView : UserControl
         viewModel.EditWidth = viewModel.RealCaptureAreaWidth.ToString();
         viewModel.EditHeight = viewModel.RealCaptureAreaHeight.ToString();
         viewModel.IsEditingSize = true;
+    }
+
+    private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {   
+        var _window = TopLevel.GetTopLevel(this) as Window;
+        _window?.BeginMoveDrag(e);
     }
 }

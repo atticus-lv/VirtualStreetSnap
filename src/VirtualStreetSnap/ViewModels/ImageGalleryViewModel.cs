@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
@@ -39,7 +38,7 @@ public class LazyLoadManager
         _lastCheckedDirectory = saveDirectory;
 
         _allImagePaths = Directory.GetFiles(saveDirectory, "*.png")
-            .ToDictionary(file => file, file => File.GetLastWriteTime(file));
+            .ToDictionary(file => file, File.GetLastWriteTime);
         _allImagePaths = _allImagePaths.OrderByDescending(kv => kv.Value).ToDictionary(kv => kv.Key, kv => kv.Value);
         Thumbnails.Clear();
         _currentBatchIndex = 0;
@@ -57,7 +56,7 @@ public class LazyLoadManager
     public void LoadNecessary()
     {
         var currentImagePaths = Directory.GetFiles(_lastCheckedDirectory, "*.png")
-            .ToDictionary(file => file, file => File.GetLastWriteTime(file));
+            .ToDictionary(file => file, File.GetLastWriteTime);
 
         // Detect and remove missing files
         var missingFiles = _allImagePaths.Keys.Except(currentImagePaths.Keys).ToList();
@@ -97,13 +96,17 @@ public partial class ImageGalleryViewModel : ViewModelBase
     private AppConfig _config = ConfigService.Instance;
 
     [ObservableProperty]
-    private ImageViewerViewModel _selectedImageViewer = new ImageViewerViewModel();
-
+    private ImageViewerView _selectedImageViewer;
+    
+    [ObservableProperty]
+    private int _thumbDisplaySize = 80;
+    
     public ObservableCollection<ImageBase> Thumbnails => _lazyLoadManager.Thumbnails;
-
+    
     public ImageGalleryViewModel()
     {
-        UpdateThumbnails();
+        SelectedImageViewer = new ImageViewerView();
+        UpdateThumbnails(selectFirst:false);
         Config.Settings.PropertyChanged += OnSettingsPropertyChanged;
     }
 
@@ -115,11 +118,10 @@ public partial class ImageGalleryViewModel : ViewModelBase
     partial void OnSelectedThumbnailChanged(ImageBase value)
     {
         value.LoadImage();
-        SelectedImageViewer.ViewImage = value;
+        if (SelectedImageViewer.DataContext is ImageViewerViewModel viewModel) viewModel.ViewImage = value;
     }
 
-    [RelayCommand]
-    public void UpdateThumbnails(bool reload = false)
+    public void UpdateThumbnails(bool reload = false,bool selectFirst = true)
     {
         if (_lazyLoadManager.IsInitialized && !reload)
         {
@@ -130,7 +132,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
             _lazyLoadManager.Initialize(Config.Settings.SaveDirectory);
         }
 
-        if (Thumbnails.Count > 0 && SelectedThumbnail == null) SelectedThumbnail = Thumbnails.First();
+        if (Thumbnails.Count > 0 && SelectedThumbnail == null && selectFirst) SelectedThumbnail = Thumbnails.First();
     }
 
 

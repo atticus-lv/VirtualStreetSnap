@@ -121,7 +121,7 @@ public static class ImageEditHelper
         return new Bitmap(ms);
     }
 
-    // Convert a Avalonia Bitmap to ImageSharp Image
+    // Convert an Avalonia Bitmap to ImageSharp Image
     public static Image<Rgba32> ConvertToImageSharp(Bitmap bitmap)
     {
         using var ms = new MemoryStream();

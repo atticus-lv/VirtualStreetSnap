@@ -56,5 +56,7 @@
   "HardLight": "Hard Light",
   "SelectDirectory": "Select Directory",
   "Factor": "Factor",
-  "ConfigChanged": "Configuration Changed"
+  "ConfigChanged": "Configuration Changed",
+  "SelectAnImage": "Select An Image",
+  "ThumbSize": "Thumb Size"
 }
