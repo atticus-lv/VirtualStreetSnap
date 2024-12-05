@@ -195,6 +195,15 @@ public partial class ImageGalleryViewModel : ViewModelBase
         await PowerShellClipBoard.SetImage(SelectedThumbnail.ImgPath);
     }
 
+    public void CreateEditorWindow()
+    {
+        if (EditorWindow is not null) return;
+        EditorWindow = new ImageEditorWindow()
+        {
+            DataContext = new ImageEditorWindowViewModel()
+        };
+    }
+
     [RelayCommand]
     public void EditSelectedImage(Window window)
     {
@@ -211,10 +220,7 @@ public partial class ImageGalleryViewModel : ViewModelBase
         }
         else
         {
-            EditorWindow = new ImageEditorWindow()
-            {
-                DataContext = new ImageEditorWindowViewModel()
-            };
+            CreateEditorWindow();
             var viewModel = EditorWindow.DataContext as ImageEditorWindowViewModel;
             viewModel?.AddPage(newImage);
             viewModel.ImageSaved += (sender, args) =>
@@ -228,5 +234,6 @@ public partial class ImageGalleryViewModel : ViewModelBase
         }
 
         EditorWindow.Show();
+        EditorWindow.Activate();
     }
 }

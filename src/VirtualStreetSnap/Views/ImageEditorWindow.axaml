@@ -121,9 +121,13 @@
             <Panel Grid.Row="1">
 
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Waiting an Image"
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
+                               Text="{i18n:Localize SelectAnImage}"
                                IsVisible="{Binding CurrentPage,Converter={x:Static ObjectConverters.IsNull}}" />
                     <ProgressBar IsIndeterminate="True" Width="300" IsVisible="{Binding IsLoading}"></ProgressBar>
+                    <TextBlock Width="300" Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"
+                               IsVisible="{Binding IsLoading}">
+                    </TextBlock>
                 </StackPanel>
                 <ContentControl Content="{Binding CurrentPage}" IsVisible="{Binding !IsLoading}" />
             </Panel>

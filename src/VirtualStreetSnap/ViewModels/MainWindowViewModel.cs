@@ -59,6 +59,22 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    public void ShowEditorWindow()
+    {
+        if (Design.IsDesignMode) return;
+        var viewModel = Pages[1].Page.DataContext as ImageGalleryViewModel;
+        if (viewModel?.EditorWindow == null)
+        {
+            viewModel.CreateEditorWindow();
+        }
+
+        var window = viewModel.EditorWindow;
+        if (window == null) return;
+        window.Show();
+        window.Activate();
+    }
+
+    [RelayCommand]
     public void OnCloseButtonClick()
     {
         if (Design.IsDesignMode) return;

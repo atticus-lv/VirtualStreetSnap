@@ -77,8 +77,9 @@ public class ImageModelBase : INotifyPropertyChanged
     {
         try
         {
-            await Task.Run(() => Image = new Bitmap(ImgPath));
-            await LoadThumbAsync();
+            var loadImageTask = Task.Run(() => Image = new Bitmap(ImgPath));
+            var loadThumbTask = LoadThumbAsync();
+            await Task.WhenAll(loadImageTask, loadThumbTask);
         }
         catch (Exception)
         {
