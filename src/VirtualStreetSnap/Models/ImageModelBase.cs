@@ -19,6 +19,15 @@ public class ImageModelBase : INotifyPropertyChanged
     public string ImgSize { get; set; } = "0 x 0";
     public int ImgThumbSize { get; set; } = 100;
 
+    public ImageModelBase(string imgPath = "")
+    {
+        ImgPath = File.Exists(imgPath) ? imgPath : DefaultImagePath;
+        ImgDir = (Path.GetDirectoryName(ImgPath) ?? "Assets/").Replace("\\", "/");
+        ImgName = Path.GetFileName(ImgPath);
+        ImageThumb = new Bitmap(AssetLoader.Open(new Uri(LoadingImagePath))); // Set default image initially
+        LoadThumbAsync();
+    }
+
     private Bitmap? _image;
     private Bitmap? _imageThumb;
 
@@ -50,14 +59,6 @@ public class ImageModelBase : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public ImageModelBase(string imgPath = "")
-    {
-        ImgPath = File.Exists(imgPath) ? imgPath : DefaultImagePath;
-        ImgDir = (Path.GetDirectoryName(ImgPath) ?? "Assets/").Replace("\\", "/");
-        ImgName = Path.GetFileName(ImgPath);
-        ImageThumb = new Bitmap(AssetLoader.Open(new Uri(LoadingImagePath))); // Set default image initially
-        LoadThumbAsync();
-    }
 
     public async void LoadThumbAsync()
     {

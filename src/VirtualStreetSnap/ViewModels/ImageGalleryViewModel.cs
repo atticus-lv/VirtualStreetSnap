@@ -224,8 +224,6 @@ public partial class ImageGalleryViewModel : ViewModelBase
                 {
                     SelectedThumbnail = Thumbnails.First();
                 }
-
-                GC.Collect();
             };
         }
 

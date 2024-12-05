@@ -37,24 +37,39 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
         }
     }
 
-    public void AddPage(ImageModelBase? image)
+    public async void AddPage(ImageModelBase? image)
     {
         if (image == null) return;
+
+        // Reload the image to ensure the Bitmap is not null
+        await image.LoadImageAsync();
+
         // if image already exists, set it as current page
         if (Pages.Any(page =>
-                page.DataContext is ImageEditorViewModel viewModel && viewModel.EditImageViewer.ViewImage == image))
+                page.DataContext is ImageEditorViewModel viewModel &&
+                viewModel.EditImageViewer.ViewImage?.ImgPath == image.ImgPath))
         {
             CurrentPage = Pages.First(page =>
-                page.DataContext is ImageEditorViewModel viewModel && viewModel.EditImageViewer.ViewImage == image);
+                page.DataContext is ImageEditorViewModel viewModel &&
+                viewModel.EditImageViewer.ViewImage?.ImgPath == image.ImgPath);
             return;
         }
 
-        ;
-        Pages.Add(new ImageEditorView()
+        Console.WriteLine($"Add page for {image.ImgPath}");
+
+        try
         {
-            DataContext = new ImageEditorViewModel(image)
-        });
-        CurrentPage = Pages.Last();
+            Pages.Add(new ImageEditorView()
+            {
+                DataContext = new ImageEditorViewModel(image)
+            });
+
+            CurrentPage = Pages.Last();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
     public async void RemovePage(ImageEditorView page)

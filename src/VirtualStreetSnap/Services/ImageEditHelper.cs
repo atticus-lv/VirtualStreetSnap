@@ -124,6 +124,11 @@ public static class ImageEditHelper
     // Convert an Avalonia Bitmap to ImageSharp Image
     public static Image<Rgba32> ConvertToImageSharp(Bitmap bitmap)
     {
+        if (bitmap == null)
+        {
+            throw new ArgumentNullException(nameof(bitmap), "Bitmap cannot be null");
+        }
+
         using var ms = new MemoryStream();
         bitmap.Save(ms);
         ms.Seek(0, SeekOrigin.Begin);
