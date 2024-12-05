@@ -74,7 +74,8 @@
                     <StackPanel Spacing="10">
                         <TextBlock Text="{i18n:Localize Layers}" Margin="10 10 0 0" FontSize="18"
                                    HorizontalAlignment="Left" VerticalAlignment="Center" />
-                        <StackPanel Orientation="Horizontal" Margin="10 0 10 0" Spacing="5">
+                        <StackPanel Orientation="Horizontal" Margin="10 0 10 0" Spacing="5"
+                                    IsVisible="{Binding SelectedLayer,Converter={x:Static ObjectConverters.IsNotNull}}">
                             <TextBlock Text="{i18n:Localize Opacity}" VerticalAlignment="Center" FontSize="16"></TextBlock>
                             <DropDownButton Width="80">
                                 <TextBlock Text="{Binding SelectedLayer.Opacity, StringFormat={}{0:P0}}" />

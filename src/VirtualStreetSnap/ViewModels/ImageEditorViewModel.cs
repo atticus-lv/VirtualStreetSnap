@@ -69,12 +69,8 @@ public partial class ImageEditorViewModel : ViewModelBase
         }
 
         // Set the callback to update the image, set dirty flag
-        LayerManager.UpdateImageCallback = bitmap =>
-        {
-            EditImageViewer.ViewImage.Image = bitmap;
-            IsDirty = true;
-        };
-
+        LayerManager.UpdateImageCallback = bitmap => { EditImageViewer.ViewImage.Image = bitmap; };
+        LayerManager.DirtyCallback = () => { IsDirty = true; };
         // Add initial layers
         if (LayerManager.Layers.Count == 0)
         {
@@ -127,14 +123,13 @@ public partial class ImageEditorViewModel : ViewModelBase
         SelectedLayer = LayerManager.Layers.ElementAtOrDefault(index);
     }
 
-    
 
     public ImageModelBase SaveImageToGalleryDirectory(bool saveAsNew = true)
     {
         var config = ConfigService.Instance;
         var saveDirectory = config.Settings.SaveDirectory;
-        var ImageModelBase = EditImageViewer.ViewImage as ImageModelBase;
-        var newName = Path.GetFileNameWithoutExtension(ImageModelBase.ImgName);
+        var imageModelBase = EditImageViewer.ViewImage;
+        var newName = Path.GetFileNameWithoutExtension(imageModelBase.ImgName);
         if (saveAsNew)
         {
             while (Path.Exists(Path.Combine(saveDirectory, newName + ".png")))
@@ -144,10 +139,10 @@ public partial class ImageEditorViewModel : ViewModelBase
         }
 
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
-        ImageModelBase.Image.Save(newFilePath);
+        imageModelBase.Image.Save(newFilePath);
         IsDirty = false;
         NotifyHelper.Notify(this, Localizer.Localizer.Instance["SaveSuccess"], $"{newFilePath}");
-        return ImageModelBase;
+        return imageModelBase;
     }
 }
 
@@ -176,6 +171,10 @@ public class LayerManagerViewModel : ViewModelBase
 
     public Action<Bitmap> UpdateImageCallback { get; set; }
 
+
+    public Action DirtyCallback { get; set; }
+
+
     public LayerManagerViewModel(bool asyncDisplay = true)
     {
         _asyncDisplay = asyncDisplay;
@@ -186,6 +185,7 @@ public class LayerManagerViewModel : ViewModelBase
     {
         Layers.Add(layer);
         layer.LayerModified += RefreshFinalImage;
+        layer.LayerModified += SetDirty;
         layer.RequestRemoveLayer += RemoveLayer;
         layer.PropertyChanged += (sender, args) =>
         {
@@ -197,11 +197,9 @@ public class LayerManagerViewModel : ViewModelBase
     public void RemoveLayer(LayerBaseViewModel layer)
     {
         layer.LayerModified -= RefreshFinalImage;
+        layer.LayerModified -= SetDirty;
         layer.RequestRemoveLayer -= RemoveLayer;
         Layers.Remove(layer);
-        layer.InitialImage?.Dispose();
-        layer.ModifiedImage?.Dispose();
-        GC.Collect();
         RefreshFinalImage();
     }
 
@@ -214,9 +212,16 @@ public class LayerManagerViewModel : ViewModelBase
         RefreshFinalImage();
     }
 
+    public void SetDirty(LayerBaseViewModel layerBaseViewModel)
+    {
+        DirtyCallback.Invoke();
+    }
+
     internal async void RefreshFinalImage(LayerBaseViewModel? modifiedLayer = null)
     {
-        var finalImage = GenerateFinalImage();
+        Image<Rgba32> finalImage;
+        finalImage = Layers.Count == 0 ? InitialImage.Clone() : GenerateFinalImage();
+
         FinalImage = finalImage;
         DisplayImage = _asyncDisplay
             ? await Task.Run(() => ImageEditHelper.ConvertToBitmap(finalImage))

@@ -4,7 +4,7 @@ namespace VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
 public class GaussianBlurLayerViewModel : LayerBaseViewModel
 {
-    public override string Name { get; set; } = "Gaussian Blur";
+    public override string Name { get; set; } = "GaussianBlur";
     public float Radius { get; set; }
 
     public GaussianBlurLayerViewModel()
