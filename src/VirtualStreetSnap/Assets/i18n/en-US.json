@@ -61,5 +61,8 @@
   "ThumbSize": "Thumb Size",
   "Confirm": "Confirm",
   "Cancel": "Cancel",
-  "Yes": "Yes"
+  "Yes": "Yes",
+  "UnsavedChanges": "Unsaved Changes",
+  "AreYouSureToClose?": "Are you sure to close?",
+  "File": "File",
 }

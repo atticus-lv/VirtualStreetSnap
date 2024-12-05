@@ -61,5 +61,8 @@
   "ThumbSize": "缩略图大小",
   "Confirm": "确认",
   "Cancel": "取消",
-  "Yes": "是"
+  "Yes": "是",
+  "UnsavedChanges": "未保存的更改",
+  "AreYouSureToClose?": "确定要关闭吗？",
+  "File": "文件"
 }

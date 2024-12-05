@@ -101,11 +101,13 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
         }
 
         var dialog = new ConfirmDialog()
-        {
+        {   
             DataContext = new ConfirmDialogViewModel()
             {
-                Title = "Unsaved Changes",
-                Message = "Are you sure to close?",
+                Title = "UnsavedChanges",
+                Message = "AreYouSureToClose?",
+                Width = 300,
+                Height = 150,
             }
         };
         var topLevel = ToplevelService.GetTopLevelForContext(this) as Window;

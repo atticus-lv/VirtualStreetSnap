@@ -27,7 +27,7 @@ public static class NotifyHelper
     {
         var manager = new WindowNotificationManager(topLevel)
         {
-            Position = NotificationPosition.TopLeft,
+            Position = NotificationPosition.BottomCenter,
             MaxItems = 3,
         };
         NotificationManagers.Add(topLevel, manager);

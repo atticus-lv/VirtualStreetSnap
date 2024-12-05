@@ -60,7 +60,7 @@ public class ImageModelBase : INotifyPropertyChanged
     }
 
 
-    public async void LoadThumbAsync()
+    public async Task LoadThumbAsync()
     {
         try
         {
@@ -78,6 +78,7 @@ public class ImageModelBase : INotifyPropertyChanged
         try
         {
             await Task.Run(() => Image = new Bitmap(ImgPath));
+            await LoadThumbAsync();
         }
         catch (Exception)
         {
