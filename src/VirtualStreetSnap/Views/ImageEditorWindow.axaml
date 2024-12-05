@@ -32,6 +32,10 @@
                             <Button Content="{i18n:Localize File}" Background="Transparent">
                                 <Button.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                        <MenuItem Header="{i18n:Localize Open}" FontSize="16"
+                                                  Command="{Binding OpenImageAndAddPage}">
+                                        </MenuItem>
+                                        <Separator></Separator>
                                         <MenuItem Header="{i18n:Localize Save}" FontSize="16"
                                                   Command="{Binding SaveCurrentPageImage}"
                                                   CommandParameter="False" />

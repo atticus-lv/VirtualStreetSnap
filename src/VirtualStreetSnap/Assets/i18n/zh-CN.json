@@ -41,7 +41,7 @@
   "Pixelate": "像素化",
   "SendToEditor": "发送到编辑器",
   "Save": "保存",
-  "SaveCopy": "保存副本",
+  "SaveCopy": "保存为副本",
   "SaveSuccess": "保存成功",
   "GaussianBlur": "高斯模糊",
   "Vignette": "晕影",
@@ -64,5 +64,10 @@
   "Yes": "是",
   "UnsavedChanges": "未保存的更改",
   "AreYouSureToClose?": "确定要关闭吗？",
-  "File": "文件"
+  "File": "文件",
+  "Warning": "警告",
+  "ThePictureIsAboutToBeOverwritten": "图片即将被覆盖,仍然要保存吗?",
+  "Overwrite": "覆盖",
+  "Open": "打开",
+  "InvalidFileFormat": "无效的文件格式"
 }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
@@ -47,7 +49,7 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
         IsLoading = true;
         await image.LoadImageAsync();
         IsLoading = false;
-        
+
         // if image already exists, set it as current page
         if (Pages.Any(page =>
                 page.DataContext is ImageEditorViewModel viewModel &&
@@ -101,7 +103,7 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
         }
 
         var dialog = new ConfirmDialog()
-        {   
+        {
             DataContext = new ConfirmDialogViewModel()
             {
                 Title = "UnsavedChanges",
@@ -125,12 +127,54 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
         ImageSaved?.Invoke(this, EventArgs.Empty);
     }
 
-    public void SaveCurrentPageImage(bool saveAsNew)
+    public async void OpenImageAndAddPage()
+    {
+        if (Design.IsDesignMode) return;
+        var selectedFile = await this.SelectFile("Select");
+        if (string.IsNullOrEmpty(selectedFile)) return;
+        // check it ends with a valid image extension
+        var ext = System.IO.Path.GetExtension(selectedFile).ToLower();
+        List<string> filterList = [".jpg", ".jpeg", ".png", ".bmp"];
+        if (!filterList.Contains(ext))
+        {
+            NotifyHelper.Notify(this,
+                Localizer.Localizer.Instance["Warning"],
+                Localizer.Localizer.Instance["InvalidFileFormat"],
+                3, NotificationType.Error);
+            return;
+        }
+        ;
+        var image = new ImageModelBase(selectedFile);
+        AddPage(image);
+    }
+
+    public async void SaveCurrentPageImage(bool saveAsNew)
     {
         if (CurrentPage is null) return;
         var viewModel = CurrentPage.DataContext as ImageEditorViewModel;
-        Console.WriteLine($"Save image for {viewModel?.EditImageViewer.ViewImage?.ImgPath}");
-        viewModel?.SaveImageToGalleryDirectory(saveAsNew);
-        OnImageSaved();
+        if (saveAsNew)
+        {
+            viewModel?.SaveImageToGalleryDirectory(saveAsNew);
+            OnImageSaved();
+        }
+        else
+        {
+            var dialog = new ConfirmDialog()
+            {
+                DataContext = new ConfirmDialogViewModel()
+                {
+                    Title = "Warning",
+                    Message = "ThePictureIsAboutToBeOverwritten",
+                    Width = 300,
+                    Height = 150,
+                    ConfirmButtonText = "Overwrite",
+                }
+            };
+            var topLevel = ToplevelService.GetTopLevelForContext(this) as Window;
+            var result = await dialog.ShowDialog<bool>(topLevel);
+            if (!result) return;
+            viewModel?.SaveImageToGalleryDirectory(saveAsNew);
+            OnImageSaved();
+        }
     }
 }

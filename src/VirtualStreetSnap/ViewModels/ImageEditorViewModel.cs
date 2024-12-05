@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -141,7 +142,8 @@ public partial class ImageEditorViewModel : ViewModelBase
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
         imageModelBase.Image.Save(newFilePath);
         IsDirty = false;
-        NotifyHelper.Notify(this, Localizer.Localizer.Instance["SaveSuccess"], $"{newFilePath}");
+        NotifyHelper.Notify(this, Localizer.Localizer.Instance["SaveSuccess"], $"{newFilePath}",
+            type: NotificationType.Success);
         return imageModelBase;
     }
 }
