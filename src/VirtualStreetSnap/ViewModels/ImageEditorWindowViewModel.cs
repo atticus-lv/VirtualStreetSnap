@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using VirtualStreetSnap.Models;
+using VirtualStreetSnap.Services;
 using VirtualStreetSnap.Views;
 
 namespace VirtualStreetSnap.ViewModels;
@@ -56,11 +57,42 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
         CurrentPage = Pages.Last();
     }
 
-    public void RemovePage(ImageEditorView page)
+    public async void RemovePage(ImageEditorView page)
     {
         if (!Pages.Contains(page)) return;
-        Pages.Remove(page);
-        CurrentPage = Pages.LastOrDefault();
+
+        void RemoveAction()
+        {
+            Pages.Remove(page);
+            CurrentPage = Pages.LastOrDefault();
+        }
+
+        if (Design.IsDesignMode)
+        {
+            RemoveAction();
+            return;
+        }
+
+        if (page.DataContext is ImageEditorViewModel { IsDirty: false })
+        {
+            RemoveAction();
+            return;
+        }
+
+        var dialog = new ConfirmDialog()
+        {
+            DataContext = new ConfirmDialogViewModel()
+            {
+                Title = "Unsaved Changes",
+                Message = "Are you sure to close?",
+            }
+        };
+        var topLevel = ToplevelService.GetTopLevelForContext(this) as Window;
+        var result = await dialog.ShowDialog<bool>(topLevel);
+        if (result)
+        {
+            RemoveAction();
+        }
     }
 
     public event EventHandler? ImageSaved;
@@ -72,8 +104,9 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
 
     public void SaveCurrentPageImage(bool saveAsNew)
     {
-        if (CurrentPage is null)return;
+        if (CurrentPage is null) return;
         var viewModel = CurrentPage.DataContext as ImageEditorViewModel;
+        Console.WriteLine($"Save image for {viewModel?.EditImageViewer.ViewImage?.ImgPath}");
         viewModel?.SaveImageToGalleryDirectory(saveAsNew);
         OnImageSaved();
     }

@@ -29,18 +29,18 @@
 
                     <Grid ColumnDefinitions="Auto,*,Auto" Margin="5 5 0 5">
                         <StackPanel Orientation="Horizontal">
-                            <Menu>
-                                <MenuItem Header="File">
-                                    <!-- <MenuItem Header="{i18n:Localize Open}" FontSize="16" /> -->
-                                    <MenuItem Header="{i18n:Localize Save}" FontSize="16"
-                                              Command="{Binding SaveCurrentPageImage}"
-                                              CommandParameter="False" />
-                                    <MenuItem Header="{i18n:Localize SaveCopy}" FontSize="16"
-                                              Command="{Binding SaveCurrentPageImage}"
-                                              CommandParameter="True" />
-                                </MenuItem>
-                            </Menu>
-
+                            <Button Content="File" Background="Transparent">
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                        <MenuItem Header="{i18n:Localize Save}" FontSize="16"
+                                                  Command="{Binding SaveCurrentPageImage}"
+                                                  CommandParameter="False" />
+                                        <MenuItem Header="{i18n:Localize SaveCopy}" FontSize="16"
+                                                  Command="{Binding SaveCurrentPageImage}"
+                                                  CommandParameter="True" />
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
                         </StackPanel>
                         <ScrollViewer Grid.Column="1">
                             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -75,9 +75,13 @@
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock VerticalAlignment="Center"
                                                                HorizontalAlignment="Center"
-                                                               Margin="5 0 5 0 " Width="200" TextAlignment="Center"
+                                                               Margin="10 0 0 0 " TextAlignment="Center"
                                                                Text="{Binding ((viewModels:ImageEditorViewModel)DataContext).EditImageViewer.ViewImage.ImgName}" />
+                                                    <TextBlock Text="*" HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               IsVisible="{Binding ((viewModels:ImageEditorViewModel)DataContext).IsDirty}" />
                                                     <Button Content="x" Width="20" Height="20" Padding="0"
+                                                            Margin="5 0 0 0"
                                                             HorizontalContentAlignment="Center"
                                                             VerticalContentAlignment="Center"
                                                             Background="Transparent"

@@ -9,7 +9,7 @@ public partial class ImageEditorWindow : Window
     public ImageEditorWindow()
     {
         InitializeComponent();
-        CloseWindowButton.Click += (sender, e) => { Close(); };
+        CloseWindowButton.Click += (sender, e) => { Hide(); };
 
         var scale = Screens.Primary.Scaling;
         var currentScreen = Screens.Primary;

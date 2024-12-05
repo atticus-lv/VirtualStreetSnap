@@ -35,6 +35,9 @@ public partial class ImageEditorViewModel : ViewModelBase
     [ObservableProperty]
     private string? _dragItemText;
 
+    [ObservableProperty]
+    private bool _isDirty;
+
     public ObservableCollection<LayerTypeItem> LayerTypes { get; set; }
 
     public ImageEditorViewModel(ImageModelBase? image)
@@ -65,8 +68,12 @@ public partial class ImageEditorViewModel : ViewModelBase
             LayerManager.InitialImage = ImageEditHelper.ConvertToImageSharp(image.Image);
         }
 
-        // Set the callback to update the image
-        LayerManager.UpdateImageCallback = bitmap => EditImageViewer.ViewImage.Image = bitmap;
+        // Set the callback to update the image, set dirty flag
+        LayerManager.UpdateImageCallback = bitmap =>
+        {
+            EditImageViewer.ViewImage.Image = bitmap;
+            IsDirty = true;
+        };
 
         // Add initial layers
         if (LayerManager.Layers.Count == 0)
@@ -137,6 +144,7 @@ public partial class ImageEditorViewModel : ViewModelBase
 
         var newFilePath = Path.Combine(saveDirectory, newName + ".png");
         ImageModelBase.Image.Save(newFilePath);
+        IsDirty = false;
         NotifyHelper.Notify(this, Localizer.Localizer.Instance["SaveSuccess"], $"{newFilePath}");
         return ImageModelBase;
     }

@@ -58,5 +58,8 @@
   "Factor": "Factor",
   "ConfigChanged": "Configuration Changed",
   "SelectAnImage": "Select An Image",
-  "ThumbSize": "Thumb Size"
+  "ThumbSize": "Thumb Size",
+  "Confirm": "Confirm",
+  "Cancel": "Cancel",
+  "Yes": "Yes"
 }

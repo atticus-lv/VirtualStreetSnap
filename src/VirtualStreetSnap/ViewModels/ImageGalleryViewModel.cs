@@ -219,7 +219,6 @@ public partial class ImageGalleryViewModel : ViewModelBase
             viewModel?.AddPage(newImage);
             viewModel.ImageSaved += (sender, args) =>
             {
-                EditorWindow = null;
                 UpdateThumbnails(true);
                 if (Thumbnails.Count > 0)
                 {
@@ -227,7 +226,6 @@ public partial class ImageGalleryViewModel : ViewModelBase
                 }
 
                 GC.Collect();
-                EditorWindow = null;
             };
         }
 
