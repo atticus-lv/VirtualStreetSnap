@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 
@@ -9,7 +10,7 @@ public static class NotifyHelper
 {
     private static Dictionary<Window, WindowNotificationManager> NotificationManagers { get;set; } = new();
     
-    public static void Notify(object? context, string? title, string? message)
+    public static void Notify(object? context, string? title, string? message, int timeout = 2)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -18,14 +19,16 @@ public static class NotifyHelper
         // check if the TopLevel is registered
         if (topLevel == null) return;
         if (!NotificationManagers.ContainsKey(topLevel))InitializeNotificationManager(topLevel);
-        NotificationManagers[topLevel].Show(new Notification(title, message));
+        // set timeout for the notification
+        var span = TimeSpan.FromSeconds(timeout);
+        NotificationManagers[topLevel].Show(new Notification(title, message,expiration:span));
     }
     private static void InitializeNotificationManager(Window topLevel)
     {
         var manager = new WindowNotificationManager(topLevel)
         {
-            Position = NotificationPosition.BottomRight,
-            MaxItems = 3
+            Position = NotificationPosition.TopLeft,
+            MaxItems = 3,
         };
         NotificationManagers.Add(topLevel, manager);
     }

@@ -16,6 +16,8 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
     [ObservableProperty]
     private ImageEditorView? _currentPage;
 
+    [ObservableProperty]
+    private bool _isLoading;
 
     public ImageEditorWindowViewModel()
     {
@@ -42,8 +44,10 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
         if (image == null) return;
 
         // Reload the image to ensure the Bitmap is not null
+        IsLoading = true;
         await image.LoadImageAsync();
-
+        IsLoading = false;
+        
         // if image already exists, set it as current page
         if (Pages.Any(page =>
                 page.DataContext is ImageEditorViewModel viewModel &&
@@ -65,6 +69,8 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
             });
 
             CurrentPage = Pages.Last();
+            var viewModel = CurrentPage.DataContext as ImageEditorViewModel;
+            viewModel.IsDirty = false;
         }
         catch (Exception e)
         {

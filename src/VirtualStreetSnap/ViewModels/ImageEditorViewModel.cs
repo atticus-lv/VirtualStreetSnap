@@ -84,7 +84,8 @@ public partial class ImageEditorViewModel : ViewModelBase
         }
 
         SelectedLayer = LayerManager.Layers.LastOrDefault();
-        if (SelectedLayer != null) LayerManager.RefreshFinalImage(SelectedLayer);
+        if (SelectedLayer == null) return;
+        LayerManager.RefreshFinalImage(SelectedLayer);
     }
 
     [RelayCommand]
