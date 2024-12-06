@@ -5,7 +5,6 @@ namespace VirtualStreetSnap.ViewModels.ImageEditorLayer;
 public class VignetteLayerViewModel : LayerBaseViewModel
 {
     public override string Name { get; set; } = "Vignette";
-    public bool UpdateWhenAdded { get; set; } = true;
     public float Factor { get; set; }
 
     public VignetteLayerViewModel()
