@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
+using Avalonia.Threading;
 using VirtualStreetSnap.Services;
 using VirtualStreetSnap.ViewModels;
 using VirtualStreetSnap.Models;
@@ -37,11 +39,10 @@ public partial class SnapShotView : UserControl
     {
         GetCurrentScreenInfo();
         if (_currentScreen == null) return;
-        Overlay.IsVisible = false;
+        await Dispatcher.UIThread.InvokeAsync(() => Overlay.IsVisible = false);
         var currentScreen = _currentScreen;
-        Console.WriteLine(_window);
-        var screenshot = await ScreenshotHelper.CaptureFullScreenAsync(currentScreen.Bounds);
-        Overlay.IsVisible = true;
+        var screenshot = await Task.Run(() => ScreenshotHelper.CaptureFullScreenAsync(currentScreen.Bounds));
+        await Dispatcher.UIThread.InvokeAsync(() => Overlay.IsVisible = true);
 
         // calculate capture area
         var appScale = currentScreen.Scaling;
@@ -171,7 +172,7 @@ public partial class SnapShotView : UserControl
     }
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
-    {   
+    {
         var _window = TopLevel.GetTopLevel(this) as Window;
         _window?.BeginMoveDrag(e);
     }
