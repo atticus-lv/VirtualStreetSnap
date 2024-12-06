@@ -27,5 +27,5 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: VirtualStreetSnap ${{ github.ref }}
+          name: "VirtualStreetSnap ${{ github.ref }}"
           path: "./upload/VirtualStreetSnap-Windows.zip"
