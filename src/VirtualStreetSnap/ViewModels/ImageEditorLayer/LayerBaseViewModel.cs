@@ -24,6 +24,7 @@ public class LayerBlendModeItem(
 public abstract class LayerBaseViewModel : ViewModelBase
 {
     public abstract string Name { get; set; }
+    public bool InitialUpdate { get; set; }
 
     private LayerBlendModeItem _selectedBlendMode;
 
@@ -35,7 +36,7 @@ public abstract class LayerBaseViewModel : ViewModelBase
             return _selectedBlendMode;
         }
         set
-        {   
+        {
             // if the selected blend mode is null or the value is null, return
             // seems this binding is after the selected layer is set, so it should not be null
             if (value == null) return;

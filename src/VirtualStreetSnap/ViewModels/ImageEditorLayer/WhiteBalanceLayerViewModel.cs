@@ -2,7 +2,7 @@
 
 namespace VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
-public class WhiteBalanceLayerViewModel: LayerBaseViewModel
+public class WhiteBalanceLayerViewModel : LayerBaseViewModel
 {
     public override string Name { get; set; } = "WhiteBalance";
     public float Temperature { get; set; }
@@ -21,7 +21,7 @@ public class WhiteBalanceLayerViewModel: LayerBaseViewModel
                 OnLayerModified();
             }
         });
-        
+
         Sliders.Add(new SliderViewModel(Tint)
         {
             Name = "Tint",

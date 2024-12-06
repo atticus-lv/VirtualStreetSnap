@@ -115,8 +115,14 @@ public static class ImageEditHelper
     // Convert a ImageSharp Image to Avalonia Bitmap
     public static Bitmap ConvertToBitmap<TPixel>(Image<TPixel> image) where TPixel : unmanaged, IPixel<TPixel>
     {
+        if (image == null)
+        {   
+            Console.WriteLine("ConvertToBitmap, Image is null");
+            return null;
+        }
+        
         using var ms = new MemoryStream();
-        image.SaveAsPng(ms);
+        image.SaveAsBmp(ms);
         ms.Seek(0, SeekOrigin.Begin);
         return new Bitmap(ms);
     }

@@ -193,7 +193,7 @@ public class LayerManagerViewModel : ViewModelBase
         {
             if (args.PropertyName == nameof(LayerBaseViewModel.IsVisible)) RefreshFinalImage(layer);
         };
-        RefreshFinalImage();
+        if (layer.InitialUpdate) RefreshFinalImage();
     }
 
     public void RemoveLayer(LayerBaseViewModel layer)

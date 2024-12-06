@@ -6,6 +6,7 @@ public class GrayscaleLayerViewModel : LayerBaseViewModel
 
 {
     public override string Name { get; set; } = "Grayscale";
+    public bool UpdateWhenAdded { get; set; } = true;
 
     public GrayscaleLayerViewModel()
 
