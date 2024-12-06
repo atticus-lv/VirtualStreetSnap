@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualStreetSnap", "src\Vi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1D131139-A796-41E7-AB85-C4E74BA55F13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveChartCurveControl", "src\LiveChartCurveControl\LiveChartCurveControl.csproj", "{39999813-212B-469D-9BE7-50F2879481E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,8 +16,13 @@ Global
 		{96B3126D-0984-47CB-A232-29B8B513745A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96B3126D-0984-47CB-A232-29B8B513745A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96B3126D-0984-47CB-A232-29B8B513745A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39999813-212B-469D-9BE7-50F2879481E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39999813-212B-469D-9BE7-50F2879481E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39999813-212B-469D-9BE7-50F2879481E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39999813-212B-469D-9BE7-50F2879481E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{96B3126D-0984-47CB-A232-29B8B513745A} = {1D131139-A796-41E7-AB85-C4E74BA55F13}
+		{39999813-212B-469D-9BE7-50F2879481E3} = {1D131139-A796-41E7-AB85-C4E74BA55F13}
 	EndGlobalSection
 EndGlobal
