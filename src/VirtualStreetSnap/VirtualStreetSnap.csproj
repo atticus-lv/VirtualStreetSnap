@@ -15,7 +15,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>0.1.3</Version>
+        <Version>0.1.5</Version>
         <Authors>Atticus</Authors>
         <Description>A simple screen shot tool design for VirtualStreetSnap</Description>
     </PropertyGroup>
@@ -34,8 +34,10 @@
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.2"/>
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.2"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.4"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.2"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
+        <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6"/>
         <PackageReference Include="System.Drawing.Common" Version="8.0.10"/>
@@ -49,5 +51,12 @@
     <ItemGroup>
         <UpToDateCheckInput Remove="Assets\Lang\en-US.axaml"/>
         <UpToDateCheckInput Remove="Assets\Lang\zh-CN.axaml"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\ImageEditorWindow.axaml.cs">
+        <DependentUpon>ImageEditorWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

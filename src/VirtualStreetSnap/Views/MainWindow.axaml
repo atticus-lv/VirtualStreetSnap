@@ -111,9 +111,15 @@
                 <TextBlock Text="X" FontSize="16" />
             </Button>
             <ToggleButton Name="ToggleTopMost" Width="40" Height="40" CornerRadius="10"
-                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ToggleTopMost_OnClick">
+                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                          Click="ToggleTopMost_OnClick">
                 <PathIcon Data="{StaticResource PinRegular}"></PathIcon>
             </ToggleButton>
+            <Separator HorizontalAlignment="Center"></Separator>
+            <Button Width="40" Height="40" CornerRadius="10"
+                    Command="{Binding ShowEditorWindow}">
+                <PathIcon Data="{StaticResource Slider}"></PathIcon>
+            </Button>
         </StackPanel>
 
 

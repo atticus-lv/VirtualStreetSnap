@@ -12,7 +12,7 @@
     <UserControl.DataContext>
         <viewModels:ImageGalleryViewModel />
     </UserControl.DataContext>
-    
+
     <Grid ColumnDefinitions="3*,10,1*" Background="#111111">
         <TextBlock Grid.Column="0" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"
                    Text="{i18n:Localize SelectAnImage}"
@@ -30,40 +30,44 @@
                     VerticalContentAlignment="Center"
                     VerticalAlignment="Center" HorizontalAlignment="Right"
                     IsVisible="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Panel}, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}" />
-            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal">
-                <Button Content="{i18n:Localize CopyImage}" Command="{Binding CopySelectedImage}"></Button>
-                <Button Content="{i18n:Localize SendToEditor}"
-                        Command="{Binding EditSelectedImageCommand} " CommandParameter="{Binding $parent[Window]}" />
-            </StackPanel>
 
         </Panel>
         <GridSplitter Grid.Column="1" Background="Black"></GridSplitter>
         <!-- Thumbnails Display -->
-        <ScrollViewer Grid.Column="2" 
+        <ScrollViewer Grid.Column="2"
                       x:Name="ThumbnailsScrollViewer"
                       VerticalScrollBarVisibility="Auto"
                       Margin="0 0 10 0 "
                       ScrollChanged="ThumbnailsScrollViewer_ScrollChanged">
             <StackPanel>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="5" HorizontalAlignment="Center" Margin="10 0 10 0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="5"
+                            HorizontalAlignment="Center" Margin="10 0 10 0">
                     <TextBlock Text="{i18n:Localize ThumbSize}" VerticalAlignment="Center" FontSize="16"></TextBlock>
-                    <Slider Value="{Binding ThumbDisplaySize}" Maximum="200" Minimum="20" Width="100" TickFrequency="10"></Slider>
+                    <Slider Value="{Binding ThumbDisplaySize}" Maximum="200" Minimum="20" Width="100"
+                            TickFrequency="10">
+                    </Slider>
                 </StackPanel>
                 <ListBox ItemsSource="{Binding Thumbnails}"
                          SelectedItem="{Binding SelectedThumbnail}"
                          HorizontalAlignment="Left" Background="#111111"
                          SelectionMode="Single">
-                    <ListBox.Styles> 
+                    <ListBox.Styles>
                         <Style Selector="ListBoxItem">
-                             <Setter Property="Padding" Value="4" />
-                             <Setter Property="CornerRadius" Value="4"></Setter>
-                        </Style> 
+                            <Setter Property="Padding" Value="4" />
+                            <Setter Property="CornerRadius" Value="4"></Setter>
+                        </Style>
                     </ListBox.Styles>
                     <ListBox.ContextMenu>
                         <ContextMenu>
+                            <MenuItem Header="{i18n:Localize CopyImage}" Command="{Binding CopySelectedImage}"></MenuItem>
+                            <MenuItem Header="{i18n:Localize SendToEditor}"
+                                      Command="{Binding EditSelectedImageCommand} "
+                                      CommandParameter="{Binding $parent[Window]}" />
+                            <Separator></Separator>
                             <MenuItem Header="{i18n:Localize  Delete}" Command="{Binding DeleteSelectedThumbnail}" />
                             <MenuItem Header="{i18n:Localize  OpenInFolder}"
                                       Command="{Binding OpenSelectedThumbnailFolder}" />
+                            
                         </ContextMenu>
                     </ListBox.ContextMenu>
                     <ListBox.ItemsPanel>
@@ -72,7 +76,7 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:ImageBase}">
+                        <DataTemplate DataType="{x:Type models:ImageModelBase}">
                             <Panel>
                                 <Image Source="{Binding ImageThumb}" Stretch="UniformToFill" ToolTip.ShowDelay="500"
                                        Width="{Binding $parent[UserControl].((viewModels:ImageGalleryViewModel)DataContext).ThumbDisplaySize}"

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Avalonia.Media.Imaging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using VirtualStreetSnap.ViewModels;
 
 namespace VirtualStreetSnap.Services;
 
@@ -111,22 +113,62 @@ public static class ImageEditHelper
         }));
     }
 
+    public static void ApplyBezierCurve<TPixel>(Image<TPixel> image, BezierCurve bezierCurve)
+        where TPixel : unmanaged, IPixel<TPixel>
+    {
+        image.Mutate(ctx => ctx.ProcessPixelRowsAsVector4(row =>
+        {
+            for (int x = 0; x < row.Length; x++)
+            {
+                var pixel = row[x];
+                var brightness = (pixel.X + pixel.Y + pixel.Z) / 3.0f;
+                var adjustedBrightness = (float)bezierCurve.CalcValue(brightness);
+                var adjustmentFactor = adjustedBrightness / brightness;
+
+                pixel.X *= adjustmentFactor;
+                pixel.Y *= adjustmentFactor;
+                pixel.Z *= adjustmentFactor;
+
+                row[x] = pixel;
+            }
+        }));
+    }
 
     // Convert a ImageSharp Image to Avalonia Bitmap
     public static Bitmap ConvertToBitmap<TPixel>(Image<TPixel> image) where TPixel : unmanaged, IPixel<TPixel>
     {
+        if (image == null)
+        {
+            Console.WriteLine("ConvertToBitmap, Image is null");
+            return null;
+        }
+#if DEBUG
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+#endif
         using var ms = new MemoryStream();
-        image.SaveAsPng(ms);
+        image.SaveAsBmp(ms);
         ms.Seek(0, SeekOrigin.Begin);
-        return new Bitmap(ms);
+        var bitmap = new Bitmap(ms);
+#if DEBUG
+        stopwatch.Stop();
+        Console.WriteLine($"Convert Display Bitmap took {stopwatch.ElapsedMilliseconds} ms");
+#endif
+        return bitmap;
     }
 
-    // Convert an Avalonia Bitmap to ImageSharp Image
-    public static Image<Rgba32> ConvertToImageSharp(Bitmap bitmap)
+    public static Image<Rgba32> LoadImageSharp(string path)
     {
-        using var ms = new MemoryStream();
-        bitmap.Save(ms);
-        ms.Seek(0, SeekOrigin.Begin);
-        return Image.Load<Rgba32>(ms);
+#if DEBUG
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+#endif
+        var image = Image.Load<Rgba32>(path);
+#if DEBUG
+
+        stopwatch.Stop();
+        Console.WriteLine($"Load {path} to ImageSharp took {stopwatch.ElapsedMilliseconds} ms");
+#endif
+        return image;
     }
 }

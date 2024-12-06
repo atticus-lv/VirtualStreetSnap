@@ -9,7 +9,9 @@ public class GrayscaleLayerViewModel : LayerBaseViewModel
 
     public GrayscaleLayerViewModel()
 
-    { }
+    {
+        InitialUpdate = true;
+    }
 
     public override void ApplyModifiers()
 

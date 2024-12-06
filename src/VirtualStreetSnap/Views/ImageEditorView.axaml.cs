@@ -13,7 +13,7 @@ using VirtualStreetSnap.ViewModels.ImageEditorLayer;
 
 namespace VirtualStreetSnap.Views;
 
-public partial class ImageEditorView : Window
+public partial class ImageEditorView : UserControl
 {
     private LayerBaseViewModel? _dragItem;
     private Point _startPoint;
@@ -22,23 +22,13 @@ public partial class ImageEditorView : Window
     public ImageEditorView()
     {
         InitializeComponent();
-        CloseWindowButton.Click += (sender, e) => { Close(); };
-
-        var scale = Screens.Primary.Scaling;
-        var currentScreen = Screens.Primary;
-        Width = currentScreen.Bounds.Width / 2 / scale;
-        Height = currentScreen.Bounds.Height / 2 / scale;
 
         LayerListBox.AddHandler(PointerPressedEvent, LayerListBox_OnPointerPressed, RoutingStrategies.Tunnel);
         LayerListBox.AddHandler(PointerReleasedEvent, LayerListBox_OnPointerRelease);
         LayerListBox.AddHandler(PointerMovedEvent, LayerListBox_OnPointerMove);
     }
 
-    private void ToolBar_PointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        if (!Equals(e.Source, ToolBar)) return;
-        BeginMoveDrag(e);
-    }
+    
 
     private bool IsPointerOutsideLayerListBox(PointerEventArgs e)
     {
@@ -141,8 +131,7 @@ public partial class ImageEditorView : Window
         LayerTypeMenu.Open(button);
     }
 
-    private void CloseButtonOnClick(object? sender, RoutedEventArgs e)
-    { }
+
 
     private void UpdateGhostDragItemPosition(Point position)
     {

@@ -28,7 +28,7 @@ public static class DialogHelper
         var topLevel = ToplevelService.GetTopLevelForContext(context);
 
         if (topLevel == null) return null;
-        
+
         if (!selectFolder)
         {
             var storageFiles = await topLevel.StorageProvider.OpenFilePickerAsync(
@@ -37,7 +37,9 @@ public static class DialogHelper
                     AllowMultiple = selectMany,
                     Title = title ?? "Select any file(s)"
                 });
-            return storageFiles.Count == 0 ? null :
+            return storageFiles.Count == 0
+                ? null
+                :
                 // convert the StorageFile to a string without file:/// prefix
                 storageFiles.Select(s => s.Path.ToString().Remove(0, 8));
         }
@@ -52,16 +54,21 @@ public static class DialogHelper
             if (storageFiles.Count == 0) return null;
             return storageFiles.Select(s => s.Path.ToString().Remove(0, 8));
         }
-
     }
 
     public delegate void SetSelectedPath(string path);
 
     public static async Task ChangeDirectory(this object? context, SetSelectedPath setDirectory,
         string title = "Select")
-    {   
+    {
         var selectedFiles = await context.OpenFileDialogAsync(title, false, true);
-        if (selectedFiles is null)return;
+        if (selectedFiles is null) return;
         setDirectory(selectedFiles.ElementAt(0));
+    }
+
+    public static async Task<string> SelectFile(this object? context, string title = "Select")
+    {
+        var selectedFiles = await context.OpenFileDialogAsync(title, false, false);
+        return selectedFiles is null ? string.Empty : selectedFiles.ElementAt(0);
     }
 }
