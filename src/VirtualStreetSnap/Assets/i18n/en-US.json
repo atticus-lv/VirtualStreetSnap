@@ -69,5 +69,7 @@
   "ThePictureIsAboutToBeOverwritten": "The picture is about to be overwritten,still want to save?",
   "Overwrite": "Overwrite",
   "Open": "Open",
-  "InvalidFileFormat": "Invalid File Format"
+  "InvalidFileFormat": "Invalid File Format",
+  "LoadingImage": "Loading Image...",
+  "LoadingView": "Loading View..."
 }
