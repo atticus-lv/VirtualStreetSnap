@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls.Notifications;
-using Avalonia.Markup.Xaml.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
@@ -15,6 +14,9 @@ public partial class SettingsViewModel : ViewModelBase
 {
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
+    
+    [ObservableProperty]
+    private string _appVersion = "Unknown";
 
 
     [ObservableProperty]
@@ -41,8 +43,20 @@ public partial class SettingsViewModel : ViewModelBase
                            LanguageModels.First();
         // Set the default values if the config is not existing
         ConfigService.SaveConfig();
+        GetFileVersion();
     }
-
+    
+    public void GetFileVersion()
+    {
+        var exeDir = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
+        // get all the exe files in the directory
+        var exePath = exeDir != null ? Directory.GetFiles(exeDir, "*.exe").FirstOrDefault() : null;
+        if (exePath == null) return;
+        var version = FileVersionInfo.GetVersionInfo(exePath).FileVersion;
+        if (version == null) return;
+        AppVersion = version;
+    }
+    
     partial void OnSelectedLanguageChanged(LanguageModel value)
     {
         var language = value.Identifier;
