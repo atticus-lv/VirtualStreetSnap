@@ -8,51 +8,61 @@ Compare to other screenshot tool, VirtualStreetSnap provide a more camera-like e
 
 ![ImageGallery](docs/images/gallery.png)
 
-![ImageEditor](docs/images/ImageEditor.png)
+![ImageGallery](docs/images/setting.png)
 
+![ImageEditor](docs/images/editor.png)
+
+![ImageEditor](docs/images/picker.png)
 
 ### Features
+English/[中文](README.zh.md)
+> v0.1.5
 
-> v0.0.8
++ SnapShot view
+    + Radio button: select different size of screenshot.
+        + 4:3 16:9 3:2 9:16 3:4 1:1
+    + Enter size (corner display)
+    + Overlays
+        + red focus border for indicate the screenshot area.
+        + guidelines for help align the screenshot area.
+            + grid
+            + center
+            + ratio
 
-+ Radio button: select different size of screenshot.
-    + 4:3 16:9 3:2 9:16 3:4 1:1
+    + on top: always on top.
 
-+ Overlays
-    + red focus border for indicate the screenshot area.
-    + guidelines for help align the screenshot area.
-        + grid
-        + center
-        + ratio
 
 + Settings
-    + on top: always on top.
+    + translation\[en/zh\]: change the language
     + file prefix: custom file prefix for saving screenshot.
     + save directory: custom save directory for saving screenshots.
-    + translation\[en/zh\]: change the language
 
 + Image gallery: review the screenshot.
     + Image viewer: view the screenshot.
         + flip the image.
         + scroll to zoom the image.
         + middle/left click to drag the image.
-        + copy the image to clipboard.
         + pick the color from the image, and copy the color to clipboard.
     + Thumbnail viewer: view the thumbnail.
-        + right click thumbnail to delete/open in explorer.
-        + scroll to view more thumbnails.
-        + async load thumbnail.
-        + grab to fill the window.
-  
+        + right click menu
+            + delete/open in explorer.
+            + copy the image to clipboard.
+            + scroll to view more thumbnails.
+            + Send Image to Editor.
+        + grab to ajust the window.
+
 + Image Editor
-  + simple adjust layer system
-    + add / move / delete layer; save and load with the gallery.
-    + layer type
-      + hsl
-      + brightness/contrast
-      + temperature
-      + tint
-      + sharpen
+    + simple adjust layer system
+        + add / delete layer; save and load with the gallery.
+        + drag and drop to adjust the layer order.
+        + layer (Realtime preview)
+            + hsl
+            + brightness/contrast
+            + white balance(temperature/tint)
+            + sharpen/blur
+            + vignette
+            + pixelate
+            + curve
 
 ### Download
 
@@ -66,6 +76,7 @@ Environment
 + win10 x64
 
 Build (aot by default)
+
 ```
 dotnet publish
 ```
