@@ -1,5 +1,7 @@
 ﻿## VirtualStreetSnap
 
+[English](README.md)/中文
+
 VirtualStreetSnap 是一个基于 avaloniaui 上保存虚拟街景基础的屏幕截图工具。
 
 与其他屏幕截图工具相比，VirtualStreetSnap 提供了更像相机的体验。
@@ -15,7 +17,7 @@ VirtualStreetSnap 是一个基于 avaloniaui 上保存虚拟街景基础的屏�
 ![ImageEditor](docs/images/picker.png)
 
 ### 功能
-[English](README.md)/中文
+
 > v0.1.5
 
 + SnapShot 视图
