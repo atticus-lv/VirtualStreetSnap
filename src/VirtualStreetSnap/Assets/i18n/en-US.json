@@ -41,7 +41,7 @@
   "Pixelate": "Pixelate",
   "SendToEditor": "Send To Editor",
   "Save": "Save",
-  "SaveCopy": "Save Copy",
+  "SaveCopy": "Save as Copy",
   "SaveSuccess": "Save Success",
   "GaussianBlur": "Gaussian Blur",
   "Vignette": "Vignette",
@@ -58,5 +58,16 @@
   "Factor": "Factor",
   "ConfigChanged": "Configuration Changed",
   "SelectAnImage": "Select An Image",
-  "ThumbSize": "Thumb Size"
+  "ThumbSize": "Thumb Size",
+  "Confirm": "Confirm",
+  "Cancel": "Cancel",
+  "Yes": "Yes",
+  "UnsavedChanges": "Unsaved Changes",
+  "AreYouSureToClose?": "Are you sure to close?",
+  "File": "File",
+  "Warning": "Warning",
+  "ThePictureIsAboutToBeOverwritten": "The picture is about to be overwritten,still want to save?",
+  "Overwrite": "Overwrite",
+  "Open": "Open",
+  "InvalidFileFormat": "Invalid File Format"
 }

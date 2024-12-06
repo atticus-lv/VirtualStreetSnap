@@ -8,7 +8,7 @@ using VirtualStreetSnap.Services;
 
 namespace VirtualStreetSnap.Models;
 
-public class ImageBase : INotifyPropertyChanged
+public class ImageModelBase : INotifyPropertyChanged
 {
     private const string DefaultImagePath = "avares://VirtualStreetSnap/Assets/avalonia-logo.ico";
     private const string LoadingImagePath = "avares://VirtualStreetSnap/Assets/Images/LoadingImage.png";
@@ -18,6 +18,15 @@ public class ImageBase : INotifyPropertyChanged
     public string ImgName { get; set; }
     public string ImgSize { get; set; } = "0 x 0";
     public int ImgThumbSize { get; set; } = 100;
+
+    public ImageModelBase(string imgPath = "")
+    {
+        ImgPath = File.Exists(imgPath) ? imgPath : DefaultImagePath;
+        ImgDir = (Path.GetDirectoryName(ImgPath) ?? "Assets/").Replace("\\", "/");
+        ImgName = Path.GetFileName(ImgPath);
+        ImageThumb = new Bitmap(AssetLoader.Open(new Uri(LoadingImagePath))); // Set default image initially
+        LoadThumbAsync();
+    }
 
     private Bitmap? _image;
     private Bitmap? _imageThumb;
@@ -50,16 +59,8 @@ public class ImageBase : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public ImageBase(string imgPath = "")
-    {
-        ImgPath = File.Exists(imgPath) ? imgPath : DefaultImagePath;
-        ImgDir = (Path.GetDirectoryName(ImgPath) ?? "Assets/").Replace("\\", "/");
-        ImgName = Path.GetFileName(ImgPath);
-        ImageThumb = new Bitmap(AssetLoader.Open(new Uri(LoadingImagePath))); // Set default image initially
-        LoadThumbAsync();
-    }
 
-    public async void LoadThumbAsync()
+    public async Task LoadThumbAsync()
     {
         try
         {
@@ -72,11 +73,13 @@ public class ImageBase : INotifyPropertyChanged
         }
     }
 
-    public void LoadImage()
+    public async Task LoadImageAsync()
     {
         try
         {
-            Image = new Bitmap(ImgPath);
+            var loadImageTask = Task.Run(() => Image = new Bitmap(ImgPath));
+            var loadThumbTask = LoadThumbAsync();
+            await Task.WhenAll(loadImageTask, loadThumbTask);
         }
         catch (Exception)
         {

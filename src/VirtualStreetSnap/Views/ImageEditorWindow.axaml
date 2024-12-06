@@ -1,0 +1,138 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
+        xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
+        xmlns:imageEditorLayer="clr-namespace:VirtualStreetSnap.ViewModels.ImageEditorLayer"
+        xmlns:services="clr-namespace:VirtualStreetSnap.Services"
+        xmlns:views="clr-namespace:VirtualStreetSnap.Views"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+        x:Class="VirtualStreetSnap.Views.ImageEditorWindow"
+        services:ToplevelService.Register="{Binding}"
+        Title="{i18n:Localize ImageEditor}"
+        x:DataType="viewModels:ImageEditorWindowViewModel"
+        WindowStartupLocation="CenterScreen"
+        Width="1280" Height="720"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="0">
+
+    <Design.DataContext>
+        <viewModels:ImageEditorWindowViewModel />
+    </Design.DataContext>
+
+
+    <Panel>
+        <Grid RowDefinitions="Auto,*">
+            <StackPanel>
+                <Panel Name="ToolBarArea" PointerPressed="ToolBar_PointerPressed">
+
+                    <Grid ColumnDefinitions="Auto,*,Auto" Margin="5 5 0 5">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="{i18n:Localize File}" Background="Transparent">
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                        <MenuItem Header="{i18n:Localize Open}" FontSize="16"
+                                                  Command="{Binding OpenImageAndAddPage}">
+                                        </MenuItem>
+                                        <Separator></Separator>
+                                        <MenuItem Header="{i18n:Localize Save}" FontSize="16"
+                                                  Command="{Binding SaveCurrentPageImage}"
+                                                  CommandParameter="False" />
+                                        <MenuItem Header="{i18n:Localize SaveCopy}" FontSize="16"
+                                                  Command="{Binding SaveCurrentPageImage}"
+                                                  CommandParameter="True" />
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
+                        <ScrollViewer Grid.Column="1">
+                            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <ListBox ItemsSource="{Binding Pages}"
+                                         SelectedItem="{Binding CurrentPage}"
+                                         Background="#111111" Margin="10 0 0 0"
+                                         SelectionMode="Single">
+                                    <ListBox.Styles>
+                                        <Style Selector="ListBoxItem">
+                                            <Setter Property="Padding" Value="0 0 0 4" />
+                                            <Setter Property="CornerRadius" Value="5 5 0 0" />
+                                            <Style Selector="^:selected">
+                                                <Style Selector="^ /template/ ContentPresenter">
+                                                    <Setter Property="Background"
+                                                            Value="{DynamicResource SystemAccentColor}" />
+                                                </Style>
+
+                                            </Style>
+                                        </Style>
+                                    </ListBox.Styles>
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <!-- <UniformGrid Columns="{Binding Pages.Count}" /> -->
+                                            <StackPanel Orientation="Horizontal"></StackPanel>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type views:ImageEditorView}">
+                                            <Border Background="#111111" Height="30" CornerRadius="4 4 0 0"
+                                                    ToolTip.Tip="{Binding ((viewModels:ImageEditorViewModel)DataContext).EditImageViewer.ViewImage.ImgName}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock VerticalAlignment="Center"
+                                                               HorizontalAlignment="Center"
+                                                               Margin="10 0 0 0 " TextAlignment="Center"
+                                                               Text="{Binding ((viewModels:ImageEditorViewModel)DataContext).EditImageViewer.ViewImage.ImgName}" />
+                                                    <TextBlock Text="*" HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               IsVisible="{Binding ((viewModels:ImageEditorViewModel)DataContext).IsDirty}" />
+                                                    <Button Content="x" Width="20" Height="20" Padding="0"
+                                                            Margin="5 0 0 0"
+                                                            HorizontalContentAlignment="Center"
+                                                            VerticalContentAlignment="Center"
+                                                            Background="Transparent"
+                                                            Command="{Binding $parent[Window].((viewModels:ImageEditorWindowViewModel)DataContext).RemovePage }"
+                                                            CommandParameter="{Binding}">
+                                                    </Button>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5"
+                                    HorizontalAlignment="Right" Margin="0 0 10 0">
+
+                            <StackPanel VerticalAlignment="Center" Margin="20 0 0 0 ">
+                                <TextBlock Text="Image Editor" FontSize="18" TextAlignment="Right" />
+                                <TextBlock Text="VirtualStreetSnap" Foreground="DimGray" Opacity="0.8" />
+                            </StackPanel>
+
+                            <Button Name="CloseWindowButton" HorizontalContentAlignment="Center"
+                                    Background="Transparent" Width="35" Click="CloseButtonOnClick">
+                                <TextBlock Text="X" FontSize="16" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                </Panel>
+            </StackPanel>
+
+
+            <Panel Grid.Row="1">
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
+                               Text="{i18n:Localize SelectAnImage}"
+                               IsVisible="{Binding CurrentPage,Converter={x:Static ObjectConverters.IsNull}}" />
+                    <ProgressBar IsIndeterminate="True" Width="300" IsVisible="{Binding IsLoading}"></ProgressBar>
+                    <TextBlock Width="300" Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"
+                               IsVisible="{Binding IsLoading}">
+                    </TextBlock>
+                </StackPanel>
+                <ContentControl Content="{Binding CurrentPage}" IsVisible="{Binding !IsLoading}" />
+            </Panel>
+        </Grid>
+    </Panel>
+
+
+</Window>

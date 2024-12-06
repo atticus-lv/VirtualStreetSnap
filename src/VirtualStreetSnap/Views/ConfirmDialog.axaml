@@ -1,0 +1,43 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="100"
+        x:Class="VirtualStreetSnap.Views.ConfirmDialog"
+        Title="ConfirmDialog"
+        x:DataType="viewModels:ConfirmDialogViewModel"
+        Width="{Binding Width}"
+        Height="{Binding Height}"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="0"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <viewModels:ConfirmDialogViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Button#ConfirmButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight1}"></Setter>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="10">
+        <TextBlock Text="{Binding Title,Converter={StaticResource LocalizeConverter}}" FontSize="22" HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" 
+                   Text="{Binding Message,Converter={StaticResource LocalizeConverter}}" TextWrapping="Wrap">
+        </TextBlock>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+            <Button Name="ConfirmButton"
+                    Content="{Binding ConfirmButtonText,Converter={StaticResource LocalizeConverter}}"
+                    Click="Confirm_OnClick"
+                    Background="{DynamicResource SystemAccentColor}">
+            </Button>
+            <Button Content="{Binding CancelButtonText,Converter={StaticResource LocalizeConverter}}"
+                    Click="Cancel_OnClick">
+            </Button>
+        </StackPanel>
+    </Grid>
+
+</Window>

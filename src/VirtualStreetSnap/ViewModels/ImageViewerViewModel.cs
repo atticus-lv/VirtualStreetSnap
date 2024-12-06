@@ -10,13 +10,13 @@ public partial class ImageViewerViewModel : ViewModelBase
     private bool _showColorPicker;
 
     [ObservableProperty]
-    private ImageBase? _viewImage;
+    private ImageModelBase? _viewImage;
     
     [ObservableProperty]
     private Bitmap? _image;
     
     public ImageViewerViewModel()
     {
-        ViewImage = new ImageBase();
+        ViewImage = new ImageModelBase();
     }
 }

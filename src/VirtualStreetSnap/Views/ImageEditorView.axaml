@@ -1,26 +1,21 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
-        xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
-        xmlns:imageEditorLayer="clr-namespace:VirtualStreetSnap.ViewModels.ImageEditorLayer"
-        xmlns:services="clr-namespace:VirtualStreetSnap.Services"
-        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
-        x:Class="VirtualStreetSnap.Views.ImageEditorView"
-        services:ToplevelService.Register="{Binding}"
-        Title="{i18n:Localize ImageEditor}"
-        x:DataType="viewModels:ImageEditorViewModel"
-        WindowStartupLocation="CenterScreen"
-        Width="1280" Height="720"
-        ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaTitleBarHeightHint="0">
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
+             xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
+             xmlns:imageEditorLayer="clr-namespace:VirtualStreetSnap.ViewModels.ImageEditorLayer"
+             xmlns:services="clr-namespace:VirtualStreetSnap.Services"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+             x:Class="VirtualStreetSnap.Views.ImageEditorView"
+             services:ToplevelService.Register="{Binding}"
+             x:DataType="viewModels:ImageEditorViewModel">
 
     <Design.DataContext>
         <viewModels:DesignImageEditorViewModel />
     </Design.DataContext>
 
-    <Window.Styles>
+    <UserControl.Styles>
         <!-- close button -->
         <Style Selector="Button#CloseWindowButton">
             <Setter Property="Background" Value="Transparent" />
@@ -64,18 +59,13 @@
 
         </Style>
 
-    </Window.Styles>
+    </UserControl.Styles>
 
     <Panel>
         <Grid ColumnDefinitions="3*,10,*" Background="#111111">
             <Panel>
                 <ContentControl Content="{Binding EditImageViewer}" />
-                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Orientation="Horizontal">
-                    <Button Content="{i18n:Localize Save}" FontSize="16"
-                            Click="SaveImageOverwrite" />
-                    <Button Content="{i18n:Localize SaveCopy}" FontSize="16"
-                            Click="SaveImageCopy" />
-                </StackPanel>
+
             </Panel>
 
             <GridSplitter Grid.Column="1" Background="Black" />
@@ -84,7 +74,8 @@
                     <StackPanel Spacing="10">
                         <TextBlock Text="{i18n:Localize Layers}" Margin="10 10 0 0" FontSize="18"
                                    HorizontalAlignment="Left" VerticalAlignment="Center" />
-                        <StackPanel Orientation="Horizontal" Margin="10 0 10 0" Spacing="5">
+                        <StackPanel Orientation="Horizontal" Margin="10 0 10 0" Spacing="5"
+                                    IsVisible="{Binding SelectedLayer,Converter={x:Static ObjectConverters.IsNotNull}}">
                             <TextBlock Text="{i18n:Localize Opacity}" VerticalAlignment="Center" FontSize="16"></TextBlock>
                             <DropDownButton Width="80">
                                 <TextBlock Text="{Binding SelectedLayer.Opacity, StringFormat={}{0:P0}}" />
@@ -151,9 +142,9 @@
                                              ItemsSource="{Binding LayerTypes}" Placement="TopEdgeAlignedLeft">
                                     <ContextMenu.ItemTemplate>
                                         <DataTemplate>
-                                            <MenuItem  Padding="2"
-                                                Header="{Binding LayerName,Converter={StaticResource LocalizeConverter}}"
-                                                Click="MenuItem_OnClick" />
+                                            <MenuItem Padding="2"
+                                                      Header="{Binding LayerName,Converter={StaticResource LocalizeConverter}}"
+                                                      Click="MenuItem_OnClick" />
                                         </DataTemplate>
                                     </ContextMenu.ItemTemplate>
                                 </ContextMenu>
@@ -208,28 +199,7 @@
                 </TextBlock>
             </Border>
         </Canvas>
-        <StackPanel>
-            <Panel Name="ToolBarArea">
-                <Rectangle Fill="Transparent" Height="50"></Rectangle>
-                <Border Name="ToolBar" PointerPressed="ToolBar_PointerPressed"
-                        Background="#111111" HorizontalAlignment="Stretch">
-                    <Panel>
-                        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0 ">
-                            <TextBlock Text="Image Editor" FontSize="18" />
-                            <TextBlock Text="Created by Atticus" Foreground="DimGray" Opacity="0.8" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="5"
-                                    HorizontalAlignment="Right" Margin="0 0 10 0">
 
-                            <Button Name="CloseWindowButton" HorizontalContentAlignment="Center"
-                                    Background="Transparent" Width="35" Click="CloseButtonOnClick">
-                                <TextBlock Text="X" FontSize="16" />
-                            </Button>
-                        </StackPanel>
-                    </Panel>
-                </Border>
-            </Panel>
-        </StackPanel>
     </Panel>
 
-</Window>
+</UserControl>
