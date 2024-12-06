@@ -61,12 +61,12 @@ public partial class ImageEditorViewModel : ViewModelBase
                 Image = new Bitmap(AssetLoader.Open(new Uri(DefaultImagePath)))
             };
             EditImageViewer.ViewImage = initialImage;
-            LayerManager.InitialImage = ImageEditHelper.ConvertToImageSharp(initialImage.Image);
+            LayerManager.InitialImage = ImageEditHelper.LoadImageSharp(initialImage.ImgPath);
         }
         else
         {
             EditImageViewer.ViewImage = image;
-            LayerManager.InitialImage = ImageEditHelper.ConvertToImageSharp(image.Image);
+            LayerManager.InitialImage = ImageEditHelper.LoadImageSharp(image.ImgPath);
         }
 
         // Set the callback to update the image, set dirty flag
