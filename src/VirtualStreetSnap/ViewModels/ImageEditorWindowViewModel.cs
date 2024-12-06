@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -20,6 +21,9 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isLoading;
+    
+    [ObservableProperty]
+    private string _loadingMessage = "Loading";
 
     public ImageEditorWindowViewModel()
     {
@@ -47,6 +51,7 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
 
         // Reload the image to ensure the Bitmap is not null
         IsLoading = true;
+        LoadingMessage = "LoadingImage";
         await image.LoadImageAsync();
         IsLoading = false;
 
@@ -64,12 +69,16 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
         Console.WriteLine($"Add page for {image.ImgPath}");
 
         try
-        {
+        {   
+            IsLoading = true;
+            LoadingMessage = "LoadingView";
+            var viewmodel = await Task.Run(() => new ImageEditorViewModel(image));
+            IsLoading = false;
+
             Pages.Add(new ImageEditorView()
             {
-                DataContext = new ImageEditorViewModel(image)
+                DataContext = viewmodel
             });
-
             CurrentPage = Pages.Last();
             var viewModel = CurrentPage.DataContext as ImageEditorViewModel;
             viewModel.IsDirty = false;
@@ -143,6 +152,7 @@ public partial class ImageEditorWindowViewModel : ViewModelBase
                 3, NotificationType.Error);
             return;
         }
+
         ;
         var image = new ImageModelBase(selectedFile);
         AddPage(image);

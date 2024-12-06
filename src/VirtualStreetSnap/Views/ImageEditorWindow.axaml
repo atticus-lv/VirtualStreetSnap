@@ -122,10 +122,21 @@
 
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
-                               Text="{i18n:Localize SelectAnImage}"
-                               IsVisible="{Binding CurrentPage,Converter={x:Static ObjectConverters.IsNull}}" />
-                    <ProgressBar IsIndeterminate="True" Width="300" IsVisible="{Binding IsLoading}"></ProgressBar>
-                    <TextBlock Width="300" Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"
+                               Text="{i18n:Localize SelectAnImage}">
+                        <TextBlock.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding
+                                    Path="CurrentPage"
+                                    Converter="{x:Static ObjectConverters.IsNull}" />
+                                <Binding
+                                    Path="!IsLoading"
+                                    Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
+                            </MultiBinding>
+                        </TextBlock.IsVisible>
+                    </TextBlock>
+                    <ProgressBar IsIndeterminate="True" Width="300" IsVisible="{Binding IsLoading}" />
+                    <TextBlock Width="300" Text="{Binding LoadingMessage,Converter={StaticResource LocalizeConverter}}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"
                                IsVisible="{Binding IsLoading}">
                     </TextBlock>
                 </StackPanel>

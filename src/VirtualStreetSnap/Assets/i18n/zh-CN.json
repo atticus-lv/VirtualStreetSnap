@@ -69,5 +69,7 @@
   "ThePictureIsAboutToBeOverwritten": "图片即将被覆盖,仍然要保存吗?",
   "Overwrite": "覆盖",
   "Open": "打开",
-  "InvalidFileFormat": "无效的文件格式"
+  "InvalidFileFormat": "无效的文件格式",
+  "LoadingImage": "加载图像...",
+  "LoadingView": "加载视图..."
 }

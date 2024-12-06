@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Avalonia.Media.Imaging;
 using SixLabors.ImageSharp;
@@ -116,28 +117,37 @@ public static class ImageEditHelper
     public static Bitmap ConvertToBitmap<TPixel>(Image<TPixel> image) where TPixel : unmanaged, IPixel<TPixel>
     {
         if (image == null)
-        {   
+        {
             Console.WriteLine("ConvertToBitmap, Image is null");
             return null;
         }
-        
+#if DEBUG
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+#endif
         using var ms = new MemoryStream();
         image.SaveAsBmp(ms);
         ms.Seek(0, SeekOrigin.Begin);
-        return new Bitmap(ms);
+        var bitmap = new Bitmap(ms);
+#if DEBUG
+        stopwatch.Stop();
+        Console.WriteLine($"ConvertToBitmap took {stopwatch.ElapsedMilliseconds} ms");
+#endif
+        return bitmap;
     }
 
-    // Convert an Avalonia Bitmap to ImageSharp Image
-    public static Image<Rgba32> ConvertToImageSharp(Bitmap bitmap)
+    public static Image<Rgba32> LoadImageSharp(string path)
     {
-        if (bitmap == null)
-        {
-            throw new ArgumentNullException(nameof(bitmap), "Bitmap cannot be null");
-        }
+#if DEBUG
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+#endif
+        var image = Image.Load<Rgba32>(path);
+#if DEBUG
 
-        using var ms = new MemoryStream();
-        bitmap.Save(ms);
-        ms.Seek(0, SeekOrigin.Begin);
-        return Image.Load<Rgba32>(ms);
+        stopwatch.Stop();
+        Console.WriteLine($"Load {path} to ImageSharp took {stopwatch.ElapsedMilliseconds} ms");
+#endif
+        return image;
     }
 }
