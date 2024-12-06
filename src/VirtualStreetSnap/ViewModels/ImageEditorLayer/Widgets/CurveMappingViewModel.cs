@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using MathNet.Numerics.Interpolation;
 
-namespace LiveChartCurveControl.ViewModels;
+namespace VirtualStreetSnap.ViewModels;
 
 public class BezierCurve
 {
@@ -61,7 +61,7 @@ public partial class CurveMappingViewModel : ViewModelBase
     private ObservablePoint? _selectedPoint;
     private const double SelectionRadius = 0.1;
     public BezierCurve MapCurve;
-    public Action<BezierCurve> OnChange { get; set; }
+    public Action OnChange { get; set; }
 
 
     public CurveMappingViewModel()
@@ -195,7 +195,7 @@ public partial class CurveMappingViewModel : ViewModelBase
     {
         MapCurve.UpdateSpline(Points.Select(p => Tuple.Create((double)p.X!, (double)p.Y!)).ToList());
         SeriesCollection[0].Values = GenerateBezierCurve();
-        OnChange?.Invoke(MapCurve);
+        OnChange?.Invoke();
     }
 
     private List<ObservablePoint> GenerateBezierCurve() => MapCurve.GenerateCurvePoints()

@@ -6,6 +6,7 @@
              xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
              xmlns:imageEditorLayer="clr-namespace:VirtualStreetSnap.ViewModels.ImageEditorLayer"
              xmlns:services="clr-namespace:VirtualStreetSnap.Services"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              x:Class="VirtualStreetSnap.Views.ImageEditorView"
              services:ToplevelService.Register="{Binding}"
@@ -157,13 +158,14 @@
                 </Grid>
 
                 <GridSplitter Grid.Row="1" Background="Black" />
-                <!-- selected layer slider -->
+                <!-- selected layer widgets -->
                 <ScrollViewer Grid.Row="2">
                     <StackPanel>
                         <TextBlock Text="{Binding SelectedLayer.Name,Converter={StaticResource LocalizeConverter}}"
                                    HorizontalAlignment="Center" Margin="10" FontSize="16" />
                         <ItemsControl Background="#111111"
                                       ItemsSource="{Binding SelectedLayer.Sliders}">
+                            <!-- slider -->
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="10 0 10 0">
@@ -182,6 +184,25 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <!-- curve -->
+                        <ItemsControl Background="#111111"
+                                      ItemsSource="{Binding SelectedLayer.Curves}">
+                            <ItemsControl.DataTemplates>
+                                <DataTemplate DataType="{x:Type viewModels:CurveMappingViewModel}">
+                                    <lvc:CartesianChart x:Name="chart"
+                                                        MinHeight="250"
+                                                        MinWidth="250"
+                                                        Series="{Binding SeriesCollection}"
+                                                        PointerPressedCommand="{Binding PointerDownCommand}"
+                                                        PointerMoveCommand="{Binding PointerMoveCommand}"
+                                                        PointerReleasedCommand="{Binding PointerUpCommand}"
+                                                        XAxes="{Binding XAxes}"
+                                                        YAxes="{Binding YAxes}"
+                                                        TooltipPosition="Hidden">
+                                    </lvc:CartesianChart>
+                                </DataTemplate>
+                            </ItemsControl.DataTemplates>
                         </ItemsControl>
                     </StackPanel>
                 </ScrollViewer>

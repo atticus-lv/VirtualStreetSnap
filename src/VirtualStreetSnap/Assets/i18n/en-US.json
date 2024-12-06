@@ -71,5 +71,6 @@
   "Open": "Open",
   "InvalidFileFormat": "Invalid File Format",
   "LoadingImage": "Loading Image...",
-  "LoadingView": "Loading View..."
+  "LoadingView": "Loading View...",
+  "Curve": "Curve"
 }

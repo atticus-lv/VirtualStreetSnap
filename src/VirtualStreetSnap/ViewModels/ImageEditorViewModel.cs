@@ -76,8 +76,8 @@ public partial class ImageEditorViewModel : ViewModelBase
         if (LayerManager.Layers.Count == 0)
         {
             LayerManager.AddLayer(new WhiteBalanceLayerViewModel());
-            LayerManager.AddLayer(new BrightnessContrastLayerViewModel());
             LayerManager.AddLayer(new HslLayerViewModel());
+            LayerManager.AddLayer(new CurveLayerViewModel());
         }
 
         SelectedLayer = LayerManager.Layers.LastOrDefault();
@@ -103,6 +103,7 @@ public partial class ImageEditorViewModel : ViewModelBase
         { "Sharpness", () => new SharpnessLayerViewModel() },
         { "GaussianBlur", () => new GaussianBlurLayerViewModel() },
         { "HSL", () => new HslLayerViewModel() },
+        { "Curve", () => new CurveLayerViewModel() },
         { "WhiteBalance", () => new WhiteBalanceLayerViewModel() },
         { "Vignette", () => new VignetteLayerViewModel() },
         { "Grayscale", () => new GrayscaleLayerViewModel() },

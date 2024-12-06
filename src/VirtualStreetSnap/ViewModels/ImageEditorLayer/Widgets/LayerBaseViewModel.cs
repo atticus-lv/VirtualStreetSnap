@@ -94,7 +94,8 @@ public abstract class LayerBaseViewModel : ViewModelBase
 
     public Image<Rgba32> InitialImage { get; set; }
     public Image<Rgba32> ModifiedImage { get; set; }
-    public ObservableCollection<SliderViewModel> Sliders { get; set; } = new();
+    public ObservableCollection<SliderViewModel> Sliders { get; set; } = [];
+    public ObservableCollection<CurveMappingViewModel> Curves { get; set; } = [];
 
     public event Action<LayerBaseViewModel> LayerModified;
     public event Action<LayerBaseViewModel> RequestRemoveLayer;

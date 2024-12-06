@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LiveChartCurveControl")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+62f0e7067ed6ab8c0caa03f44349e611c8fa70f5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+803d5eb607feb32e4bb26dffe9a75a4ac7b4fa29")]
 [assembly: System.Reflection.AssemblyProductAttribute("LiveChartCurveControl")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LiveChartCurveControl")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

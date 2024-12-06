@@ -5,6 +5,7 @@ using Avalonia.Media.Imaging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using VirtualStreetSnap.ViewModels;
 
 namespace VirtualStreetSnap.Services;
 
@@ -112,6 +113,26 @@ public static class ImageEditHelper
         }));
     }
 
+    public static void ApplyBezierCurve<TPixel>(Image<TPixel> image, BezierCurve bezierCurve)
+        where TPixel : unmanaged, IPixel<TPixel>
+    {
+        image.Mutate(ctx => ctx.ProcessPixelRowsAsVector4(row =>
+        {
+            for (int x = 0; x < row.Length; x++)
+            {
+                var pixel = row[x];
+                var brightness = (pixel.X + pixel.Y + pixel.Z) / 3.0f;
+                var adjustedBrightness = (float)bezierCurve.CalcValue(brightness);
+                var adjustmentFactor = adjustedBrightness / brightness;
+
+                pixel.X *= adjustmentFactor;
+                pixel.Y *= adjustmentFactor;
+                pixel.Z *= adjustmentFactor;
+
+                row[x] = pixel;
+            }
+        }));
+    }
 
     // Convert a ImageSharp Image to Avalonia Bitmap
     public static Bitmap ConvertToBitmap<TPixel>(Image<TPixel> image) where TPixel : unmanaged, IPixel<TPixel>
