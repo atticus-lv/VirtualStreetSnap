@@ -1,8 +1,8 @@
 ﻿## VirtualStreetSnap
 
-VirtualStreetSnap is a screenshot tool for save virtual street view basic on avaloniaui.
+VirtualStreetSnap 是一个基于 avaloniaui 上保存虚拟街景基础的屏幕截图工具。
 
-Compare to other screenshot tool, VirtualStreetSnap provide a more camera-like experience.
+与其他屏幕截图工具相比，VirtualStreetSnap 提供了更像相机的体验。
 
 ![VirtualStreetSnap](docs/images/shot.png)
 
