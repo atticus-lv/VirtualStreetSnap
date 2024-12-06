@@ -152,7 +152,7 @@ public static class ImageEditHelper
         var bitmap = new Bitmap(ms);
 #if DEBUG
         stopwatch.Stop();
-        Console.WriteLine($"ConvertToBitmap took {stopwatch.ElapsedMilliseconds} ms");
+        Console.WriteLine($"Convert Display Bitmap took {stopwatch.ElapsedMilliseconds} ms");
 #endif
         return bitmap;
     }

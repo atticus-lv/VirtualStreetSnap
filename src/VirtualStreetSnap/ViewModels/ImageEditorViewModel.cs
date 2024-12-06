@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -259,7 +260,15 @@ public class LayerManagerViewModel : ViewModelBase
 
                 layer.InitialImage = finalImage.Clone();
                 if (!layer.IsVisible) continue;
+#if DEBUG
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+#endif
                 layer.ApplyModifiers();
+#if DEBUG
+                stopwatch.Stop();
+                Console.WriteLine($"{layer.Name} took {stopwatch.ElapsedMilliseconds} ms");
+#endif
                 finalImage.Mutate(
                     x => x.DrawImage(
                         layer.ModifiedImage,
