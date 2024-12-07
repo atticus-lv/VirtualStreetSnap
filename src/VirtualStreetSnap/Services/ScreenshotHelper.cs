@@ -22,9 +22,9 @@ public static class ScreenshotHelper
     /// </summary>
     /// <param name="screenBounds">The bounds of the screen to capture.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the captured screen as a Bitmap.</returns>
-    public static async Task<Bitmap> CaptureFullScreenAsync(PixelRect screenBounds)
+    public static async Task<Bitmap> CaptureFullScreenAsync(PixelRect screenBounds,int msDelay = 10)
     {
-        await Task.Delay(5); // This is a workaround to prevent the app from freezing when capturing the screen.
+        await Task.Delay(msDelay); // This is a workaround to prevent the app from freezing when capturing the screen.
         using var bitmap = new System.Drawing.Bitmap(screenBounds.Width, screenBounds.Height);
         using var g = Graphics.FromImage(bitmap);
         g.CopyFromScreen(screenBounds.X, screenBounds.Y, 0, 0,
