@@ -54,14 +54,16 @@
                   Opacity="{Binding ShowGuideLinesRatio}" />
         </Panel>
 
-        <Border Classes="Guides" Name="FocusBorder" BorderBrush="Brown" BorderThickness="10"
+        <Border Classes="Guides" Name="FocusBorder"
+                BorderBrush="{Binding FocusBorderBrush}"
+                BorderThickness="{Binding FocusBorderThickness}"
                 Opacity="{Binding ShowFocusBorder}">
             <Rectangle Name="CaptureArea"></Rectangle>
         </Border>
 
         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 20 20" Spacing="10"
                     Orientation="Horizontal">
-            
+
             <Button Background="Transparent">
                 <PathIcon Data="{StaticResource Overlay}" ToolTip.Tip="{i18n:Localize  Guides}" Width="30" Height="30" />
                 <Button.Flyout>

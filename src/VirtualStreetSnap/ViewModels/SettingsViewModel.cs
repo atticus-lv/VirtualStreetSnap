@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
@@ -14,13 +15,19 @@ public partial class SettingsViewModel : ViewModelBase
 {
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
-    
+
     [ObservableProperty]
     private string _appVersion = "Unknown";
 
 
     [ObservableProperty]
     private string _filePrefix = "IMG";
+
+    [ObservableProperty]
+    private Color _focusBorderColor = Colors.Brown;
+
+    [ObservableProperty]
+    private int _focusBorderThickness = 10;
 
     [ObservableProperty]
     private LanguageModel _selectedLanguage;
@@ -41,11 +48,14 @@ public partial class SettingsViewModel : ViewModelBase
         FilePrefix = Config.Settings.FilePrefix;
         SelectedLanguage = LanguageModels.FirstOrDefault(x => x.Identifier == Config.Settings.Language) ??
                            LanguageModels.First();
+        FocusBorderColor = Config.Overlays.FocusBorderColor;
+        FocusBorderThickness = Config.Overlays.FocusBorderThickness;
         // Set the default values if the config is not existing
         ConfigService.SaveConfig();
         GetFileVersion();
     }
-    
+
+
     public void GetFileVersion()
     {
         var exeDir = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
@@ -56,6 +66,10 @@ public partial class SettingsViewModel : ViewModelBase
         if (version == null) return;
         AppVersion = version;
     }
+
+    partial void OnFocusBorderColorChanged(Color value) => Config.Overlays.FocusBorderColor = value;
+
+    partial void OnFocusBorderThicknessChanged(int value) => Config.Overlays.FocusBorderThickness = value;
     
     partial void OnSelectedLanguageChanged(LanguageModel value)
     {

@@ -72,5 +72,9 @@
   "InvalidFileFormat": "Invalid File Format",
   "LoadingImage": "Loading Image...",
   "LoadingView": "Loading View...",
-  "Curve": "Curve"
+  "Curve": "Curve",
+  "BorderColor": "Border Color",
+  "CommonSettings": "Common Settings",
+  "BorderThickness": "Border Thickness",
+  "BorderSettings": "Border Settings"
 }

@@ -1,6 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using Avalonia;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using CommunityToolkit.Mvvm.ComponentModel;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
@@ -24,8 +27,22 @@ public partial class SnapShotViewModel : ViewModelBase
     [ObservableProperty]
     private float _guideLinesOpacity = 0.5f;
 
-    [ObservableProperty]
-    private Color _borderColor = Colors.Brown;
+
+    private Thickness _focusBorderThickness;
+
+    public Thickness FocusBorderThickness
+    {
+        get => _focusBorderThickness;
+        private set => SetProperty(ref _focusBorderThickness, value);
+    }
+
+    private IImmutableSolidColorBrush _focusFocusBorderBrush;
+
+    public IImmutableSolidColorBrush FocusBorderBrush
+    {
+        get => _focusFocusBorderBrush;
+        private set => SetProperty(ref _focusFocusBorderBrush, value);
+    }
 
     [ObservableProperty]
     private SizeRatio? _selectedSizeRatio;
@@ -64,6 +81,19 @@ public partial class SnapShotViewModel : ViewModelBase
         ShowGuideLinesGrid = Config.Overlays.Guides.Grid;
         ShowGuideLinesCenter = Config.Overlays.Guides.Center;
         ShowGuideLinesRatio = Config.Overlays.Guides.Ratio;
-        ShowFocusBorder = Config.Overlays.Focus;
+        ShowFocusBorder = Config.Overlays.ShowFocusBorder;
+        var thickness = Config.Overlays.FocusBorderThickness;
+        FocusBorderThickness = new Thickness(thickness);
+        FocusBorderBrush = new ImmutableSolidColorBrush(Config.Overlays.FocusBorderColor);
+
+        Config.Overlays.PropertyChanged += OnOverlaysPropertyChanged;
+    }
+
+    private void OnOverlaysPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Config.Overlays.FocusBorderColor))
+            FocusBorderBrush = new ImmutableSolidColorBrush(Config.Overlays.FocusBorderColor);
+        else if (e.PropertyName == nameof(Config.Overlays.FocusBorderThickness))
+            FocusBorderThickness = new Thickness(Config.Overlays.FocusBorderThickness);
     }
 }

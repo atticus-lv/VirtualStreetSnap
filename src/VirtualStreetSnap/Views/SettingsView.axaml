@@ -15,47 +15,74 @@
     <UserControl.DataContext>
         <viewModels:SettingsViewModel />
     </UserControl.DataContext>
-    <Panel>
-        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Opacity="0.5">
-            <TextBlock Text="{Binding AppVersion, StringFormat=v{0}}"></TextBlock>
-        </StackPanel>
-        <Grid ColumnDefinitions="150,10,Auto" RowDefinitions="Auto,10,Auto,10,Auto" Margin="50"
-              VerticalAlignment="Center" HorizontalAlignment="Center">
-
-            <TextBlock VerticalAlignment="Center"
-                       Text="{i18n:Localize Language}" FontSize="16" />
-
-            <ListBox Grid.Column="2" ItemsSource="{Binding LanguageModels}"
-                     SelectedItem="{Binding SelectedLanguage}"
-                     HorizontalAlignment="Left" CornerRadius="4"
-                     SelectionMode="Single">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type models:LanguageModel}">
-                        <TextBlock Text="{Binding Label}" Width="150" TextAlignment="Center" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-            <TextBlock Grid.Row="2" VerticalAlignment="Center"
-                       Text="{i18n:Localize FilePrefix}" FontSize="16" />
-            <TextBox Grid.Row="2" Grid.Column="2"
-                     Text="{Binding FilePrefix}" TextAlignment="Center" />
-            <TextBlock Grid.Row="4" VerticalAlignment="Center" Margin="0,0,10,0"
-                       Text="{i18n:Localize  SaveDirectory}" FontSize="16" />
-            <Grid Grid.Column="2" Grid.Row="4" ColumnDefinitions="*,Auto">
-                <TextBox Text="{Binding SaveDirectory}" IsReadOnly="True"
-                         ToolTip.Tip="{Binding SaveDirectory}" />
-                <Button Grid.Column="2" Command="{Binding ChangeDir}"
-                        CommandParameter="SaveDirectory">
-                    ...
-                </Button>
+    <UserControl.Styles>
+        <Style Selector="Expander">
+            <Setter Property="Background" Value="#191919"></Setter>
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer>
+        <StackPanel>
+            <Grid Margin="20" ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
+                <StackPanel DockPanel.Dock="Left">
+                    <TextBlock Text="VirtualStreetSnap" FontSize="18" />
+                    <TextBlock Text="Created by Atticus" Foreground="DimGray" Opacity="0.8" />
+                    <TextBlock Text="{Binding AppVersion, StringFormat=v{0}}"></TextBlock>
+                </StackPanel>
             </Grid>
-        </Grid>
-    </Panel>
+            <StackPanel Margin="10 0 10 0" Spacing="10">
+                <Expander Header="{i18n:Localize CommonSettings}" HorizontalAlignment="Stretch" IsExpanded="True" >
+                    <Grid ColumnDefinitions="150,*,Auto" RowDefinitions="Auto,10,Auto,10,Auto" 
+                          VerticalAlignment="Center" >
+
+                        <TextBlock VerticalAlignment="Center"
+                                   Text="{i18n:Localize Language}" FontSize="16" />
+
+                        <ListBox Grid.Column="2" ItemsSource="{Binding LanguageModels}"
+                                 SelectedItem="{Binding SelectedLanguage}"
+                                 HorizontalAlignment="Left" CornerRadius="4"
+                                 SelectionMode="Single">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:LanguageModel}">
+                                    <TextBlock Text="{Binding Label}" Width="150" TextAlignment="Center" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <TextBlock Grid.Row="2" VerticalAlignment="Center"
+                                   Text="{i18n:Localize FilePrefix}" FontSize="16" />
+                        <TextBox Grid.Row="2" Grid.Column="2"
+                                 Text="{Binding FilePrefix}" TextAlignment="Center" />
+                        <TextBlock Grid.Row="4" VerticalAlignment="Center" Margin="0,0,10,0"
+                                   Text="{i18n:Localize  SaveDirectory}" FontSize="16" />
+                        <Grid Grid.Row="4"  Grid.Column="2" ColumnDefinitions="*,Auto">
+                            <TextBox Text="{Binding SaveDirectory}" IsReadOnly="True"
+                                     ToolTip.Tip="{Binding SaveDirectory}" />
+                            <Button Grid.Column="2" Command="{Binding ChangeDir}"
+                                    CommandParameter="SaveDirectory">
+                                ...
+                            </Button>
+                        </Grid>
+                         </Grid>
+                </Expander>
+                <Expander Header="{i18n:Localize BorderSettings}" HorizontalAlignment="Stretch" IsExpanded="False">
+                    <Grid ColumnDefinitions="150,*,Auto" RowDefinitions="Auto,10,Auto" 
+                          VerticalAlignment="Center" >
+                        <TextBlock Grid.Row="0"  Text="{i18n:Localize BorderColor}" FontSize="16"></TextBlock>
+                        <ColorPicker Grid.Row="0" Grid.Column="2" Width="200" HorizontalAlignment="Right" Color="{Binding FocusBorderColor}"></ColorPicker>
+                        <TextBlock Grid.Row="2"  Text="{i18n:Localize BorderThickness}" FontSize="16"></TextBlock>
+                        <NumericUpDown Grid.Row="2" Grid.Column="2" Value="{Binding FocusBorderThickness}" Minimum="2" Maximum="16" FormatString="F0" ClipValueToMinMax="True"></NumericUpDown>
+
+                    </Grid>
+                </Expander>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+
 
 </UserControl>
