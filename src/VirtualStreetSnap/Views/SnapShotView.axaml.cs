@@ -23,6 +23,7 @@ public partial class SnapShotView : UserControl
     {
         InitializeComponent();
         SizeChanged += UpdateRealSize;
+        FocusBorder.PropertyChanged += UpdateRealSize2;
     }
 
     private void GetCurrentScreenInfo()
@@ -91,7 +92,7 @@ public partial class SnapShotView : UserControl
         _window.Position = new PixelPoint((int)endX, (int)(endY));
     }
 
-    private void UpdateRealSize(object sender, RoutedEventArgs e)
+    private void UpdateRealSize(object sender, RoutedEventArgs? e)
     {
         var viewModel = DataContext as SnapShotViewModel;
         if (_currentScreen == null)
@@ -104,7 +105,12 @@ public partial class SnapShotView : UserControl
         viewModel.RealCaptureAreaWidth = (int)(CaptureArea.Bounds.Width * scaling);
         viewModel.RealCaptureAreaHeight = (int)(CaptureArea.Bounds.Height * scaling);
     }
-
+    
+    private void UpdateRealSize2(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        UpdateRealSize(sender, null);
+    }
+    
     // call when init
     public bool FixWindowSize()
     {

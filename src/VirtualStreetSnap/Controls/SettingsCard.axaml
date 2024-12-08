@@ -1,0 +1,32 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:VirtualStreetSnap.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="VirtualStreetSnap.Controls.SettingsCard">
+    <ContentControl.Styles>
+        <Style Selector="controls|SettingsCard">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <Border.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="4" Opacity="1" OffsetX="0" OffsetY="0" />
+                        </Border.Effect>
+                        <Grid ColumnDefinitions="150,*,Auto">
+                            <TextBlock Margin="10 5 0 5"
+                                VerticalAlignment="Center"
+                                Text="{TemplateBinding SettingName}"
+                                FontSize="{TemplateBinding FontSize}">
+                            </TextBlock>
+                            <ContentPresenter Grid.Column="2" Margin="0 5 10  5"
+                                              VerticalContentAlignment="Center" VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+    </ContentControl.Styles>
+</UserControl>

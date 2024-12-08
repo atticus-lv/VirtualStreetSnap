@@ -70,7 +70,7 @@ public class ConfigService
                     Ratio = false,
                     Opacity = 0.5f
                 },
-                Focus = true
+                ShowFocusBorder = true
             }
         };
     }

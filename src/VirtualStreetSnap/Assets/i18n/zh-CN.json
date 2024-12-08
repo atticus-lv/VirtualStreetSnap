@@ -72,5 +72,9 @@
   "InvalidFileFormat": "无效的文件格式",
   "LoadingImage": "加载图像...",
   "LoadingView": "加载视图...",
-  "Curve": "曲线"
+  "Curve": "曲线",
+  "BorderColor": "边框颜色",
+  "CommonSettings": "常规设置",
+  "BorderThickness": "边框厚度",
+  "BorderSettings": "边框设置"
 }
