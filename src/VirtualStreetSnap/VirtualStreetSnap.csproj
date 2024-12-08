@@ -15,7 +15,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>0.1.5.1</Version>
+        <Version>0.1.5.2</Version>
         <Authors>Atticus</Authors>
         <Description>A simple screen shot tool design for VirtualStreetSnap</Description>
     </PropertyGroup>
@@ -57,6 +57,10 @@
     <ItemGroup>
       <Compile Update="Views\ImageEditorWindow.axaml.cs">
         <DependentUpon>ImageEditorWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\SettingsCard.axaml.cs">
+        <DependentUpon>Card.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

@@ -6,6 +6,7 @@
              xmlns:models="clr-namespace:VirtualStreetSnap.Models"
              xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
              xmlns:services="clr-namespace:VirtualStreetSnap.Services"
+             xmlns:controls="clr-namespace:VirtualStreetSnap.Controls"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              services:ToplevelService.Register="{Binding}"
              x:Class="VirtualStreetSnap.Views.SettingsView"
@@ -16,8 +17,10 @@
         <viewModels:SettingsViewModel />
     </UserControl.DataContext>
     <UserControl.Styles>
-        <Style Selector="Expander">
-            <Setter Property="Background" Value="#191919"></Setter>
+        <Style Selector="controls|SettingsCard">
+            <Setter Property="Background" Value="#1D1D1D"></Setter>
+            <Setter Property="CornerRadius" Value="5"></Setter>
+            <Setter Property="FontSize" Value="16"></Setter>
         </Style>
     </UserControl.Styles>
     <ScrollViewer>
@@ -30,13 +33,8 @@
                 </StackPanel>
             </Grid>
             <StackPanel Margin="10 0 10 0" Spacing="10">
-                <Expander Header="{i18n:Localize CommonSettings}" HorizontalAlignment="Stretch" IsExpanded="True" >
-                    <Grid ColumnDefinitions="150,*,Auto" RowDefinitions="Auto,10,Auto,10,Auto" 
-                          VerticalAlignment="Center" >
-
-                        <TextBlock VerticalAlignment="Center"
-                                   Text="{i18n:Localize Language}" FontSize="16" />
-
+                <StackPanel Margin="10" Spacing="10">
+                    <controls:SettingsCard SettingName="{i18n:Localize Language}">
                         <ListBox Grid.Column="2" ItemsSource="{Binding LanguageModels}"
                                  SelectedItem="{Binding SelectedLanguage}"
                                  HorizontalAlignment="Left" CornerRadius="4"
@@ -48,41 +46,41 @@
                             </ListBox.ItemsPanel>
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:LanguageModel}">
-                                    <TextBlock Text="{Binding Label}" Width="150" TextAlignment="Center" />
+                                    <TextBlock Text="{Binding Label}" Width="125" TextAlignment="Center" />
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-
-                        <TextBlock Grid.Row="2" VerticalAlignment="Center"
-                                   Text="{i18n:Localize FilePrefix}" FontSize="16" />
-                        <TextBox Grid.Row="2" Grid.Column="2"
-                                 Text="{Binding FilePrefix}" TextAlignment="Center" />
-                        <TextBlock Grid.Row="4" VerticalAlignment="Center" Margin="0,0,10,0"
-                                   Text="{i18n:Localize  SaveDirectory}" FontSize="16" />
-                        <Grid Grid.Row="4"  Grid.Column="2" ColumnDefinitions="*,Auto">
-                            <TextBox Text="{Binding SaveDirectory}" IsReadOnly="True"
-                                     ToolTip.Tip="{Binding SaveDirectory}" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard SettingName="{i18n:Localize  SaveDirectory}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBox Text="{Binding SaveDirectory}"
+                                       VerticalAlignment="Center" Margin="0 0 2 0" IsReadOnly="True"
+                                       ToolTip.Tip="{Binding SaveDirectory}" />
                             <Button Grid.Column="2" Command="{Binding ChangeDir}"
                                     CommandParameter="SaveDirectory">
                                 ...
                             </Button>
                         </Grid>
-                         </Grid>
-                </Expander>
-                <Expander Header="{i18n:Localize BorderSettings}" HorizontalAlignment="Stretch" IsExpanded="False">
-                    <Grid ColumnDefinitions="150,*,Auto" RowDefinitions="Auto,10,Auto" 
-                          VerticalAlignment="Center" >
-                        <TextBlock Grid.Row="0"  Text="{i18n:Localize BorderColor}" FontSize="16"></TextBlock>
-                        <ColorPicker Grid.Row="0" Grid.Column="2" Width="200" HorizontalAlignment="Right" Color="{Binding FocusBorderColor}"></ColorPicker>
-                        <TextBlock Grid.Row="2"  Text="{i18n:Localize BorderThickness}" FontSize="16"></TextBlock>
-                        <NumericUpDown Grid.Row="2" Grid.Column="2" Value="{Binding FocusBorderThickness}" Minimum="2" Maximum="16" FormatString="F0" ClipValueToMinMax="True"></NumericUpDown>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard SettingName="{i18n:Localize FilePrefix}">
+                        <TextBox Width="150"
+                                 Text="{Binding FilePrefix}" TextAlignment="Center" />
+                    </controls:SettingsCard>
 
-                    </Grid>
-                </Expander>
+                    <controls:SettingsCard SettingName="{i18n:Localize BorderColor}">
+                        <ColorPicker Width="150" HorizontalAlignment="Right"
+                                     Color="{Binding FocusBorderColor}">
+                        </ColorPicker>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard SettingName="{i18n:Localize BorderThickness}">
+                        <NumericUpDown Value="{Binding FocusBorderThickness}" Minimum="2"
+                                       Maximum="16" FormatString="F0" ClipValueToMinMax="True" Width="150">
+                        </NumericUpDown>
+                    </controls:SettingsCard>
+
+
+                </StackPanel>
             </StackPanel>
-
         </StackPanel>
     </ScrollViewer>
-
-
 </UserControl>
