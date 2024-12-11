@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -11,18 +12,29 @@ using VirtualStreetSnap.ViewModels;
 namespace VirtualStreetSnap.Views;
 
 public partial class ImageViewerView : UserControl
-{
-    private const double LogBase = 1.05; 
+{   
+    // zoom
+    private const double ZoomScaleLogMap = 1.05; 
     private const double InfoDisplayScaleThreshold = 1.2;
     private const double MinScale = 0.5;
     private const double MaxScale = 10.0;
     private double _currentScale = 1.0;
-
+    // zoom animation
+    private double _zoomVelocity;
+    private bool _isZooming;
+    private const double ZoomAnimSpeed = 1.5;
+    private const double ZoomAnimStopVelocity = 0.05;
+    private const double ZoomAnimSpeedDecay = 0.8;
+    private const int ZoomUpdateInterval = 8; //ms
+    
+    // pan
     private Point _lastMovePoint;
     private Point _lastPanPoint;
     private bool _isPanning;
     private readonly ScaleTransform _scaleTransform = new();
     private readonly TranslateTransform _translateTransform = new();
+    
+    // color picker
     private SKBitmap? _pickedColorImage;
 
     public ImageViewerView()
@@ -46,13 +58,31 @@ public partial class ImageViewerView : UserControl
         if (IsPickingColor) return;
 
         var delta = e.Delta.Y > 0 ? 1 : -1;
-        _currentScale *= Math.Pow(LogBase, delta);
-        _currentScale = Math.Clamp(_currentScale, MinScale, MaxScale);
+        _zoomVelocity = delta * ZoomAnimSpeed;
+        if (!_isZooming)
+        {
+            _isZooming = true;
+            StartZoomInertia();
+        }
 
-        ImageInfoPanel.Opacity = _currentScale > InfoDisplayScaleThreshold ? 0 : 1;
-        _scaleTransform.ScaleX = _currentScale;
-        _scaleTransform.ScaleY = _currentScale;
         e.Handled = true;
+    }
+    private async void StartZoomInertia()
+    {
+        while (Math.Abs(_zoomVelocity) > ZoomAnimStopVelocity)
+        {
+            _currentScale *= Math.Pow(ZoomScaleLogMap, _zoomVelocity);
+            _currentScale = Math.Clamp(_currentScale, MinScale, MaxScale);
+
+            ImageInfoPanel.Opacity = _currentScale > InfoDisplayScaleThreshold ? 0 : 1;
+            _scaleTransform.ScaleX = _currentScale;
+            _scaleTransform.ScaleY = _currentScale;
+
+            _zoomVelocity *= ZoomAnimSpeedDecay;
+            await Task.Delay(ZoomUpdateInterval); 
+        }
+
+        _isZooming = false;
     }
 
     private void ImageViewbox_PointerPressed(object? sender, PointerPressedEventArgs e)
