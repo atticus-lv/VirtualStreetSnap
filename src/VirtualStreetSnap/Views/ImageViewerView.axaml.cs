@@ -24,7 +24,7 @@ public partial class ImageViewerView : UserControl
     private bool _isZooming;
     private const double ZoomAnimSpeed = 1.5;
     private const double ZoomAnimStopVelocity = 0.05;
-    private const double ZoomAnimSpeedDecay = 0.8;
+    private const double ZoomAnimSpeedDecay = 0.85;
     private const int ZoomUpdateInterval = 8; //ms
     
     // pan
