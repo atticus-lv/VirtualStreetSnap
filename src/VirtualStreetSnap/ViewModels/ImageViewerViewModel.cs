@@ -16,7 +16,7 @@ public partial class ImageViewerViewModel : ViewModelBase
     private Bitmap? _image;
     
     public ImageViewerViewModel()
-    {
+    {   
         ViewImage = new ImageModelBase();
     }
 }

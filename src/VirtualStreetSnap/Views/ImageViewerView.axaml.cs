@@ -12,13 +12,15 @@ using VirtualStreetSnap.ViewModels;
 namespace VirtualStreetSnap.Views;
 
 public partial class ImageViewerView : UserControl
-{   
+{
     // zoom
-    private const double ZoomScaleLogMap = 1.05; 
+    private const double ZoomScaleLogMap = 1.05;
     private const double InfoDisplayScaleThreshold = 1.2;
     private const double MinScale = 0.5;
     private const double MaxScale = 10.0;
+
     private double _currentScale = 1.0;
+
     // zoom animation
     private double _zoomVelocity;
     private bool _isZooming;
@@ -26,35 +28,32 @@ public partial class ImageViewerView : UserControl
     private const double ZoomAnimStopVelocity = 0.05;
     private const double ZoomAnimSpeedDecay = 0.85;
     private const int ZoomUpdateInterval = 8; //ms
-    
+
     // pan
     private Point _lastMovePoint;
     private Point _lastPanPoint;
     private bool _isPanning;
     private readonly ScaleTransform _scaleTransform = new();
     private readonly TranslateTransform _translateTransform = new();
-    
+
     // color picker
     private SKBitmap? _pickedColorImage;
 
     public ImageViewerView()
     {
         InitializeComponent();
-
-        var imageViewbox = ImageViewbox;
-        imageViewbox.PointerWheelChanged += ImageViewbox_PointerWheelChanged;
-
+        
         var transformGroup = new TransformGroup();
         transformGroup.Children.Add(_scaleTransform);
         transformGroup.Children.Add(_translateTransform);
-        imageViewbox.RenderTransform = transformGroup;
+        ViewBoxImage.RenderTransform = transformGroup;
     }
 
     private bool IsPickingColor => DataContext is ImageViewerViewModel { ShowColorPicker: true };
 
-    private void ImageViewbox_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    private void Viewer_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        if (sender is not Viewbox) return;
+        if (sender is not Control) return;
         if (IsPickingColor) return;
 
         var delta = e.Delta.Y > 0 ? 1 : -1;
@@ -67,6 +66,7 @@ public partial class ImageViewerView : UserControl
 
         e.Handled = true;
     }
+
     private async void StartZoomInertia()
     {
         while (Math.Abs(_zoomVelocity) > ZoomAnimStopVelocity)
@@ -79,15 +79,14 @@ public partial class ImageViewerView : UserControl
             _scaleTransform.ScaleY = _currentScale;
 
             _zoomVelocity *= ZoomAnimSpeedDecay;
-            await Task.Delay(ZoomUpdateInterval); 
+            await Task.Delay(ZoomUpdateInterval);
         }
 
         _isZooming = false;
     }
 
-    private void ImageViewbox_PointerPressed(object? sender, PointerPressedEventArgs e)
+    private void Viewer_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is not Viewbox) return;
         _lastMovePoint = e.GetPosition(this);
 
         if (!e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed &&
@@ -106,21 +105,20 @@ public partial class ImageViewerView : UserControl
         e.Pointer.Capture((IInputElement)sender!);
     }
 
-    private void ImageViewbox_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    private void Viewer_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (sender is not Viewbox) return;
         if (!_isPanning || (e.InitialPressMouseButton != MouseButton.Middle &&
                             e.InitialPressMouseButton != MouseButton.Left)) return;
         _isPanning = false;
         e.Pointer.Capture(null);
     }
 
-    private void ImageViewbox_PointerMoved(object? sender, PointerEventArgs e)
+    private void Viewer_PointerMoved(object? sender, PointerEventArgs e)
     {
-        if (sender is not Viewbox viewbox) return;
+        if (sender is not Control viewbox) return;
         var currentPoint = e.GetPosition(viewbox);
 
-        GetColorAndSetText(e, viewbox, currentPoint);
+        GetColorAndSetText(e, currentPoint);
 
         if (!_isPanning) return;
         var delta = e.GetPosition(this) - _lastPanPoint;
@@ -130,19 +128,16 @@ public partial class ImageViewerView : UserControl
         _translateTransform.Y += delta.Y;
     }
 
-    private void GetColorAndSetText(PointerEventArgs e, Viewbox viewbox, Point currentPoint)
+    private void GetColorAndSetText(PointerEventArgs e, Point currentPoint)
     {
-        if (!IsPickingColor || viewbox.Child is not Image image) return;
-        
+        if (!IsPickingColor || ViewBoxImage is not Image image) return;
+
         var imageBounds = image.Bounds;
-        var viewboxBounds = viewbox.Bounds;
-        var scaleX = imageBounds.Width / viewboxBounds.Width;
-        var scaleY = imageBounds.Height / viewboxBounds.Height;
-        var imagePoint = new Point(currentPoint.X * scaleX, currentPoint.Y * scaleY);
+        var imagePoint = new Point(currentPoint.X, currentPoint.Y);
 
         if (imagePoint is not { X: >= 0, Y: >= 0 }) return;
         if (!(imagePoint.X < imageBounds.Width) || !(imagePoint.Y < imageBounds.Height)) return;
-        
+
         var color = ScreenshotHelper.GetColorFromSKBitmap(_pickedColorImage, imagePoint);
         var colorHex = color.ToString().Substring(3);
         color.ToHsv(out var h, out var s, out var v);
@@ -179,7 +174,7 @@ public partial class ImageViewerView : UserControl
     {
         if (DataContext is not ImageViewerViewModel viewModel) return;
         viewModel.ShowColorPicker = true;
-        if (ImageViewbox.Child is not Image image) return;
+        if (ViewBoxImage is not Image image) return;
         _pickedColorImage = ScreenshotHelper.CaptureControlSKBitmap(image);
         Canvas.SetLeft(ColoPickerPanel, _lastPanPoint.X);
         Canvas.SetTop(ColoPickerPanel, _lastPanPoint.Y);
