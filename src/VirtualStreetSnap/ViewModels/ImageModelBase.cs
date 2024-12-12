@@ -6,9 +6,8 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
 using VirtualStreetSnap.Services;
-using VirtualStreetSnap.ViewModels;
 
-namespace VirtualStreetSnap.Models;
+namespace VirtualStreetSnap.ViewModels;
 
 public partial class ImageModelBase : ViewModelBase
 {

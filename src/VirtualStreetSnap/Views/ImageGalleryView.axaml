@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
              xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
-             xmlns:models="clr-namespace:VirtualStreetSnap.Models"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              x:Class="VirtualStreetSnap.Views.ImageGalleryView"
              x:DataType="viewModels:ImageGalleryViewModel">
@@ -76,7 +75,7 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:ImageModelBase}">
+                        <DataTemplate DataType="{x:Type viewModels:ImageModelBase}">
                             <Panel>
                                 <Image Source="{Binding ImageThumb}" Stretch="UniformToFill" ToolTip.ShowDelay="500"
                                        Width="{Binding $parent[UserControl].((viewModels:ImageGalleryViewModel)DataContext).ThumbDisplaySize}"
