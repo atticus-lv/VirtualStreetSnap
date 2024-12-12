@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
              xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
+             xmlns:services="clr-namespace:VirtualStreetSnap.Services"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             services:ToplevelService.Register="{Binding}"
              x:Class="VirtualStreetSnap.Views.ImageViewerView"
              x:DataType="viewModels:ImageViewerViewModel">
 
@@ -21,56 +23,64 @@
                 </Transitions>
             </Setter>
         </Style>
+        <Style Selector="Canvas">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
     </UserControl.Styles>
 
     <Panel Background="#111111">
+        <Panel.ContextMenu>
+            <ContextMenu>
+                <MenuItem Click="OnShowColorPicker_Click">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <PathIcon Data="{StaticResource Dropper}"></PathIcon>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{i18n:Localize  PickColor}" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <Separator></Separator>
+                <MenuItem Click="OnFlipHorizontally_Click">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <PathIcon Data="{StaticResource FlipHorizontalRegular}" />
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{i18n:Localize  FlipHorizontally}" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Click="OnFlipVertically_Click">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <PathIcon Data="{StaticResource FlipVerticalRegular}" />
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{i18n:Localize  FlipVertically}" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Click="OnResetImageViewBox_Click">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <PathIcon Data="{StaticResource ResetZoom}" />
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{i18n:Localize  ResetZoom}" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+            </ContextMenu>
+        </Panel.ContextMenu>
         <StackPanel x:Name="ViewBoxArea" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                     PointerWheelChanged="Viewer_PointerWheelChanged"
                     PointerPressed="Viewer_PointerPressed"
                     PointerReleased="Viewer_PointerReleased"
                     PointerMoved="Viewer_PointerMoved">
             <Image Name="ViewBoxImage" Source="{Binding ViewImage.Image}" />
-            <StackPanel.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Click="OnShowColorPicker_Click">
-                        <MenuItem.Header>
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource Dropper}"></PathIcon>
-                                <TextBlock VerticalAlignment="Center"
-                                           Text="{i18n:Localize  PickColor}" />
-                            </StackPanel>
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <Separator></Separator>
-                    <MenuItem Click="OnFlipHorizontally_Click">
-                        <MenuItem.Header>
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource FlipHorizontalRegular}" />
-                                <TextBlock VerticalAlignment="Center"
-                                           Text="{i18n:Localize  FlipHorizontally}" />
-                            </StackPanel>
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem Click="OnFlipVertically_Click">
-                        <MenuItem.Header>
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource FlipVerticalRegular}" />
-                                <TextBlock VerticalAlignment="Center"
-                                           Text="{i18n:Localize  FlipVertically}" />
-                            </StackPanel>
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem Click="OnResetImageViewBox_Click">
-                        <MenuItem.Header>
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{StaticResource ResetZoom}" />
-                                <TextBlock VerticalAlignment="Center"
-                                           Text="{i18n:Localize  ResetZoom}" />
-                            </StackPanel>
-                        </MenuItem.Header>
-                    </MenuItem>
-                </ContextMenu>
-            </StackPanel.ContextMenu>
+
         </StackPanel>
 
         <!-- image info -->
@@ -83,7 +93,7 @@
             <TextBlock Text="{Binding ViewImage.ImgSize}" Foreground="Gray" />
         </StackPanel>
         <!-- color picker -->
-        <Canvas IsVisible="{Binding ShowColorPicker}">
+        <Canvas Opacity="{Binding ShowColorPicker}">
             <Border Name="ColoPickerPanel" Canvas.Left="300" Canvas.Top="200"
                     Background="#111111" CornerRadius="4" IsHitTestVisible="False">
                 <Border.Effect>

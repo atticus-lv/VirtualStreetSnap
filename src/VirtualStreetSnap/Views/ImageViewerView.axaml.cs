@@ -42,7 +42,7 @@ public partial class ImageViewerView : UserControl
     public ImageViewerView()
     {
         InitializeComponent();
-        
+
         var transformGroup = new TransformGroup();
         transformGroup.Children.Add(_scaleTransform);
         transformGroup.Children.Add(_translateTransform);
@@ -97,6 +97,7 @@ public partial class ImageViewerView : UserControl
             var viewModel = (ImageViewerViewModel)DataContext!;
             viewModel.ShowColorPicker = false;
             _ = PowerShellClipBoard.SetText(ColorPickerTextHex.Text!);
+            NotifyHelper.Notify(viewModel, Localizer.Localizer.Instance["Copied"], ColorPickerTextHex.Text);
             return;
         }
 
