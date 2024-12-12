@@ -4,19 +4,35 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using CommunityToolkit.Mvvm.ComponentModel;
 using VirtualStreetSnap.Services;
+using VirtualStreetSnap.ViewModels;
 
 namespace VirtualStreetSnap.Models;
 
-public class ImageModelBase : INotifyPropertyChanged
+public partial class ImageModelBase : ViewModelBase
 {
     private const string DefaultImagePath = "avares://VirtualStreetSnap/Assets/avalonia-logo.ico";
     private const string LoadingImagePath = "avares://VirtualStreetSnap/Assets/Images/LoadingImage.png";
 
-    public string ImgPath { get; set; } = "";
-    public string ImgDir { get; set; } = "";
-    public string ImgName { get; set; }
-    public string ImgSize { get; set; } = "0 x 0";
+    [ObservableProperty]
+    private string _imgPath = "";
+
+    [ObservableProperty]
+    private string _imgDir = "";
+
+    [ObservableProperty]
+    private string _imgName;
+
+    [ObservableProperty]
+    private string _imgSize = "0 x 0";
+
+    [ObservableProperty]
+    private Bitmap? _imageThumb;
+
+    [ObservableProperty]
+    private Bitmap? _image;
+
     public int ImgThumbSize { get; set; } = 100;
 
     public ImageModelBase(string imgPath = "")
@@ -28,35 +44,10 @@ public class ImageModelBase : INotifyPropertyChanged
         LoadThumbAsync();
     }
 
-    private Bitmap? _image;
-    private Bitmap? _imageThumb;
 
-    public Bitmap Image
+    partial void OnImageChanged(Bitmap value)
     {
-        get => _image;
-        set
-        {
-            _image = value;
-            ImgSize = $"{value.Size.Width} x {value.Size.Height}";
-            OnPropertyChanged(nameof(Image));
-        }
-    }
-
-    public Bitmap? ImageThumb
-    {
-        get => _imageThumb;
-        private set
-        {
-            _imageThumb = value;
-            OnPropertyChanged(nameof(ImageThumb));
-        }
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        ImgSize = $"{value.Size.Width} x {value.Size.Height}";
     }
 
 
