@@ -76,5 +76,7 @@
   "BorderColor": "Border Color",
   "CommonSettings": "Common Settings",
   "BorderThickness": "Border Thickness",
-  "BorderSettings": "Border Settings"
+  "BorderSettings": "Border Settings",
+  "Copied": "Copied",
+  
 }

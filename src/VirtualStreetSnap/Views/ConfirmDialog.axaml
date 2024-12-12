@@ -11,7 +11,7 @@
         Height="{Binding Height}"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaTitleBarHeightHint="0"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterOwner">
 
     <Design.DataContext>
         <viewModels:ConfirmDialogViewModel />

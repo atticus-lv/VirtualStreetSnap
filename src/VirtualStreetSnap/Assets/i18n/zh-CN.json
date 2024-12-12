@@ -76,5 +76,6 @@
   "BorderColor": "边框颜色",
   "CommonSettings": "常规设置",
   "BorderThickness": "边框厚度",
-  "BorderSettings": "边框设置"
+  "BorderSettings": "边框设置",
+  "Copied": "已复制",
 }
