@@ -53,7 +53,7 @@ public partial class ImageViewerView : UserControl
 
     private void Viewer_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        if (sender is not Control) return;
+        if (sender is not StackPanel) return;
         if (IsPickingColor) return;
 
         var delta = e.Delta.Y > 0 ? 1 : -1;
