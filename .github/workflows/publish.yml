@@ -47,9 +47,7 @@ jobs:
 
       - name: Archive macOS Build
         run: |
-          cd ./src/VirtualStreetSnap/bin/Release/net8.0/osx-x64/publish/
-          mkdir -p ./upload
-          zip -r ./upload/VirtualStreetSnap.osx-x64.zip . -x "*.pdb"
+          zip -r ./upload/VirtualStreetSnap.osx-x64.zip ./src/VirtualStreetSnap/bin/Release/net8.0/osx-x64/publish/* -x "*.pdb"
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4.3.1
