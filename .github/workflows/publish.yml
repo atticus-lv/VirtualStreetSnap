@@ -5,10 +5,35 @@ on:
     branches: [ "master","develop" ]
     tags:
       - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: false
+        default: ''
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - debug
 
 jobs:
-  windows:
-    runs-on: windows-latest
+  build:
+    strategy:
+      matrix:
+        config:
+          - os: windows-latest
+            runtime: win-x64
+            archive_name: VirtualStreetSnap.win-x64.zip
+          - os: macos-latest
+            runtime: osx-x64
+            archive_name: VirtualStreetSnap.osx-x64.zip
+            
+    runs-on: ${{ matrix.config.os }}
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
@@ -16,16 +41,23 @@ jobs:
       - name: Make upload directory
         run: mkdir upload
 
-      - name: Publish win-x64
-        run: dotnet publish ./src/VirtualStreetSnap -c Release -r win-x64 --self-contained -p:PublishAot=true
-
-      - name: Zip win-x64
+      - name: Publish ${{ matrix.config.runtime }}
+        run: dotnet publish ./src/VirtualStreetSnap -c ${{ github.event.inputs.build_type || 'Release' }} -r ${{ matrix.config.runtime }} --self-contained true
+        
+      - name: Archive Windows Build
+        if: matrix.config.os == 'windows-latest'
         run: |
-          $files = Get-ChildItem -Path ./src/VirtualStreetSnap/bin/Release/net8.0/win-x64/publish/* -Recurse -Exclude *.pdb
-          Compress-Archive -Path $files.FullName -DestinationPath ./upload/VirtualStreetSnap.win-x64.zip
+          $files = Get-ChildItem -Path ./src/VirtualStreetSnap/bin/${{ github.event.inputs.build_type || 'Release' }}/net8.0/${{ matrix.config.runtime }}/publish/* -Recurse -Exclude *.pdb
+          Compress-Archive -Path $files.FullName -DestinationPath ./upload/${{ matrix.config.archive_name }}
+          
+      - name: Archive macOS Build
+        if: matrix.config.os == 'macos-latest'
+        run: |
+          cd ./src/VirtualStreetSnap/bin/${{ github.event.inputs.build_type || 'Release' }}/net8.0/${{ matrix.config.runtime }}/publish/
+          zip -r ../../../../../../../../upload/${{ matrix.config.archive_name }} . -x "*.pdb"
 
-      - name: Upload a Build Artifact
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: VirtualStreetSnap
-          path: ./upload/VirtualStreetSnap.win-x64.zip
+          name: VirtualStreetSnap-${{ matrix.config.runtime }}
+          path: ./upload/${{ matrix.config.archive_name }}
