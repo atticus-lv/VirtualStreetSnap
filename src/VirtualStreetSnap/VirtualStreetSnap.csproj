@@ -18,6 +18,9 @@
         <Version>0.1.5.4</Version>
         <Authors>Atticus</Authors>
         <Description>A simple screen shot tool design for VirtualStreetSnap</Description>
+        <DefineConstants Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(DefineConstants);WINDOWS</DefineConstants>
+        <DefineConstants Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(DefineConstants);OSX</DefineConstants>
+        <DefineConstants Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(DefineConstants);LINUX</DefineConstants>
     </PropertyGroup>
     
     <ItemGroup>
