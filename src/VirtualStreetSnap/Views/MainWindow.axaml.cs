@@ -15,6 +15,10 @@ public partial class MainWindow : Window
         var currentScreen = Screens.Primary;
         Width = currentScreen.Bounds.Width / 2 / scale;
         Height = currentScreen.Bounds.Height / 2 / scale;
+#if OSX 
+        // Hide shadow for opacity control
+        SystemDecorations = SystemDecorations.None;
+#endif
     }
 
     private void DragMoveWindow_PointerPressed(object? sender, PointerPressedEventArgs e)
