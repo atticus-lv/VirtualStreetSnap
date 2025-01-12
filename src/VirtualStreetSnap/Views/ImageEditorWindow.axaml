@@ -15,7 +15,8 @@
         WindowStartupLocation="CenterScreen"
         Width="1280" Height="720"
         ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaTitleBarHeightHint="0">
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1">
 
     <Design.DataContext>
         <viewModels:ImageEditorWindowViewModel />
