@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia;
@@ -8,6 +8,8 @@ using Avalonia.Skia.Helpers;
 using SkiaSharp;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 using Point = Avalonia.Point;
+using System.Drawing;
+using System.Drawing.Imaging;
 using Size = System.Drawing.Size;
 
 namespace VirtualStreetSnap.Services;
@@ -22,9 +24,32 @@ public static class ScreenshotHelper
     /// </summary>
     /// <param name="screenBounds">The bounds of the screen to capture.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the captured screen as a Bitmap.</returns>
-    public static async Task<Bitmap> CaptureFullScreenAsync(PixelRect screenBounds,int msDelay = 10)
+    public static async Task<Bitmap> CaptureFullScreenAsync(PixelRect screenBounds, int msDelay = 10)
     {
-        await Task.Delay(msDelay); // This is a workaround to prevent the app from freezing when capturing the screen.
+        await Task.Delay(msDelay);
+
+#if OSX
+        // macOS 实现
+        var tempPath = await CaptureScreenMacOs();
+        if (string.IsNullOrEmpty(tempPath))
+        {
+            throw new Exception("截图失败");
+        }
+
+        try
+        {
+            using var fileStream = File.OpenRead(tempPath);
+            var bitmap = new Bitmap(fileStream);
+            File.Delete(tempPath); // 删除临时文件
+            return bitmap;
+        }
+        catch (Exception ex)
+        {
+            File.Delete(tempPath); // 确保清理临时文件
+            throw new Exception($"处理截图失败: {ex.Message}");
+        }
+#else
+        // Windows 实现（默认）
         using var bitmap = new System.Drawing.Bitmap(screenBounds.Width, screenBounds.Height);
         using var g = Graphics.FromImage(bitmap);
         g.CopyFromScreen(screenBounds.X, screenBounds.Y, 0, 0,
@@ -34,8 +59,31 @@ public static class ScreenshotHelper
         bitmap.Save(ms, ImageFormat.Bmp);
         ms.Seek(0, SeekOrigin.Begin);
         return new Bitmap(ms);
+#endif
     }
 
+#if OSX
+    private static async Task<string> CaptureScreenMacOs()
+    {
+        var fileName = $"screenshot_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+        var tempPath = Path.Combine(Path.GetTempPath(), fileName);
+
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = "screencapture",
+            Arguments = $"-x \"{tempPath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            CreateNoWindow = true
+        };
+
+        using var process = Process.Start(startInfo);
+        await process!.WaitForExitAsync();
+
+        return process.ExitCode == 0 ? tempPath : string.Empty;
+    }
+#endif
+    
     /// <summary>
     /// Crops the specified source image to the specified bounds.
     /// </summary>
