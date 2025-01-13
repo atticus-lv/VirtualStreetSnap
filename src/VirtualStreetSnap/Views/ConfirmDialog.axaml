@@ -10,7 +10,8 @@
         Width="{Binding Width}"
         Height="{Binding Height}"
         ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaTitleBarHeightHint="0"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
         WindowStartupLocation="CenterOwner">
 
     <Design.DataContext>

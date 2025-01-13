@@ -3,7 +3,7 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <!--windows-x64平台-->
-        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+<!--        <RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
         <!--发布时本机依赖项自解压-->
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <!--        trim-->
@@ -15,9 +15,12 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>0.1.5.4</Version>
+        <Version>0.1.5.5</Version>
         <Authors>Atticus</Authors>
         <Description>A simple screen shot tool design for VirtualStreetSnap</Description>
+        <DefineConstants Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(DefineConstants);WINDOWS</DefineConstants>
+        <DefineConstants Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(DefineConstants);OSX</DefineConstants>
+        <DefineConstants Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(DefineConstants);LINUX</DefineConstants>
     </PropertyGroup>
     
     <ItemGroup>

@@ -14,11 +14,11 @@ sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Trace.Listeners.Add(new TextWriterTraceListener("VirtualStreetSnap.log"));
-        Trace.AutoFlush = true;
-        TextWriter originalConsoleOutput = Console.Out;
-        MultiTextWriter multiTextWriter = new MultiTextWriter(originalConsoleOutput, new TraceTextWriter());
-        Console.SetOut(multiTextWriter);
+        // Trace.Listeners.Add(new TextWriterTraceListener("VirtualStreetSnap.log"));
+        // Trace.AutoFlush = true;
+        // TextWriter originalConsoleOutput = Console.Out;
+        // MultiTextWriter multiTextWriter = new MultiTextWriter(originalConsoleOutput, new TraceTextWriter());
+        // Console.SetOut(multiTextWriter);
 
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
