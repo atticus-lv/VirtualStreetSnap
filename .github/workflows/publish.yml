@@ -31,7 +31,7 @@ jobs:
           name: VirtualStreetSnap-win-x64
           path: ./upload/VirtualStreetSnap.win-x64.zip
 
-  macos-build:
+  macos-intel-build:
     runs-on: macos-latest
     
     steps:
@@ -41,15 +41,38 @@ jobs:
       - name: Make upload directory
         run: mkdir upload
 
-      - name: Publish macOS
-        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-x64 --self-contained true
+      - name: Publish macOS (Intel)
+        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-x64 --self-contained true -o ./dist/Intel
 
       - name: Archive macOS Build
         run: |
-          zip -r ./upload/VirtualStreetSnap.osx-x64.zip ./src/VirtualStreetSnap/bin/Release/net8.0/osx-x64/publish/* -x "*.pdb"
+          cd ./dist/Intel && zip -r ../../upload/VirtualStreetSnap.Intel.zip ./*
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: VirtualStreetSnap-osx-x64
-          path: ./upload/VirtualStreetSnap.osx-x64.zip
+          name: VirtualStreetSnap-Intel
+          path: ./upload/VirtualStreetSnap.Intel.zip
+
+  macos-silicon-build:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Make upload directory
+        run: mkdir upload
+
+      - name: Publish macOS (Apple Silicon)
+        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-arm64 --self-contained true -o ./dist/AppleSilicon
+
+      - name: Archive macOS Build
+        run: |
+          cd ./dist/AppleSilicon && zip -r ../../upload/VirtualStreetSnap.AppleSilicon.zip ./*
+
+      - name: Upload macOS Artifact
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: VirtualStreetSnap-AppleSilicon
+          path: ./upload/VirtualStreetSnap.AppleSilicon.zip
