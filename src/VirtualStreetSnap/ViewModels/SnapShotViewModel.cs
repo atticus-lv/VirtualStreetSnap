@@ -84,7 +84,7 @@ public partial class SnapShotViewModel : ViewModelBase
         ShowFocusBorder = Config.Overlays.ShowFocusBorder;
         var thickness = Config.Overlays.FocusBorderThickness;
         FocusBorderThickness = new Thickness(thickness);
-        FocusBorderBrush = new ImmutableSolidColorBrush(Config.Overlays.FocusBorderColor);
+        FocusBorderBrush = new ImmutableSolidColorBrush(Config.Overlays.FocusBorderColor, 1.0);
 
         Config.Overlays.PropertyChanged += OnOverlaysPropertyChanged;
     }
@@ -92,7 +92,7 @@ public partial class SnapShotViewModel : ViewModelBase
     private void OnOverlaysPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(Config.Overlays.FocusBorderColor))
-            FocusBorderBrush = new ImmutableSolidColorBrush(Config.Overlays.FocusBorderColor);
+            FocusBorderBrush = new ImmutableSolidColorBrush(Config.Overlays.FocusBorderColor, 1.0);
         else if (e.PropertyName == nameof(Config.Overlays.FocusBorderThickness))
             FocusBorderThickness = new Thickness(Config.Overlays.FocusBorderThickness);
     }
