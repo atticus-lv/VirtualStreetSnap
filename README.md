@@ -18,6 +18,23 @@ Compare to other screenshot tool, VirtualStreetSnap provide a more camera-like e
 
 ### Features
 
+> v0.1.6
+
++ **MacOS Support** ***Experimental***
+    + add MacOS support(Intel/Apple Silicon)
+    + installer is not ready yet.
+
++ Settings
+    + add border color/thickness config support
+    + cleanup the settings page.
++ Image Viewer
+    + smooth scale animation
+    + scale will be faster when the image scale too big.
+    + add notification for copy color to clipboard.
+    + fix: image info not update
++ Image Editor
+    + confirm dialog is now center of the window.
+
 > v0.1.5
 
 + SnapShot view
