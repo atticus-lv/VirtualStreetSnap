@@ -1,11 +1,9 @@
-﻿using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
-using Bitmap = Avalonia.Media.Imaging.Bitmap;
-
+using Image = SixLabors.ImageSharp.Image;
 
 namespace VirtualStreetSnap.Services;
 
@@ -18,62 +16,46 @@ public static class ImageResizer
 
     private static Bitmap ResizeImage(string inputPath, int targetWidth, int targetHeight)
     {
-        using var srcImage = Image.FromFile(inputPath);
-        var srcWidth = srcImage.Width;
-        var srcHeight = srcImage.Height;
-        // If the size of the source image is smaller than the target size, the original image is returned  
+        using var image = Image.Load(inputPath);
+        var srcWidth = image.Width;
+        var srcHeight = image.Height;
+
+        // 如果源图像小于目标尺寸，直接返回原图
         if (srcWidth <= targetWidth && srcHeight <= targetHeight)
         {
             using var memoryStream = new MemoryStream();
-            srcImage.Save(memoryStream, ImageFormat.Png);
+            image.SaveAsPng(memoryStream);
             memoryStream.Seek(0, SeekOrigin.Begin);
             return new Bitmap(memoryStream);
         }
 
         var aspectRatio = (float)srcWidth / srcHeight;
         int newWidth, newHeight;
-        // If the source image size is larger than the target size, crop to the target size  
+
+        // 计算新的尺寸
         if (srcWidth > targetWidth && srcHeight > targetHeight)
         {
             newWidth = targetWidth;
             newHeight = targetHeight;
         }
-        // If the source image width is larger than the target width, scale by width
         else if (srcWidth > targetWidth)
         {
             newWidth = targetWidth;
             newHeight = (int)(targetWidth / aspectRatio);
         }
-        // If the source image height is greater than the target height, scale by height      
         else
         {
             newHeight = targetHeight;
             newWidth = (int)(targetHeight * aspectRatio);
         }
 
-        var destRect = new Rectangle(0, 0, newWidth, newHeight);
-        var destImage = new System.Drawing.Bitmap(newWidth, newHeight);
-        destImage.SetResolution(srcImage.HorizontalResolution, srcImage.VerticalResolution);
-        using (var graphics = Graphics.FromImage(destImage))
-        {
-            graphics.CompositingMode = CompositingMode.SourceCopy;
-            graphics.CompositingQuality = CompositingQuality.HighQuality;
-            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            graphics.SmoothingMode = SmoothingMode.HighQuality;
-            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            using (var wrapMode = new ImageAttributes())
-            {
-                wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                graphics.DrawImage(srcImage, destRect, 0, 0, srcImage.Width, srcImage.Height, GraphicsUnit.Pixel,
-                    wrapMode);
-            }
-        }
+        // 调整图像大小
+        image.Mutate(x => x.Resize(newWidth, newHeight));
 
-        using (var memoryStream = new MemoryStream())
-        {
-            destImage.Save(memoryStream, ImageFormat.Png);
-            memoryStream.Seek(0, SeekOrigin.Begin);
-            return new Bitmap(memoryStream);
-        }
+        // 保存到内存流
+        using var memStream = new MemoryStream();
+        image.SaveAsPng(memStream);
+        memStream.Seek(0, SeekOrigin.Begin);
+        return new Bitmap(memStream);
     }
 }
