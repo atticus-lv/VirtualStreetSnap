@@ -34,6 +34,13 @@ public partial class SnapShotView : UserControl
         if (screen == null) return;
         _window = topLevel as Window;
         _currentScreen = screen;
+#if OSX
+        if (_window.RenderScaling > 1.0f)
+        {
+            var vm = DataContext as SnapShotViewModel;
+            vm.RetinaScaling = _window.RenderScaling;
+        }
+#endif
     }
 
     private async void SnapshotButton_Click(object? sender, RoutedEventArgs e)
@@ -46,15 +53,15 @@ public partial class SnapShotView : UserControl
         await Dispatcher.UIThread.InvokeAsync(() => Overlay.IsVisible = true);
 
 #if OSX
-        // 计算实际缩放比例：物理分辨率 / 逻辑分辨率
-        var scaling = screenshot.Size.Width / currentScreen.Bounds.Width;
-        Console.WriteLine($"Real scale: {scaling}, Screen bounds: {currentScreen.Bounds.Width}x{currentScreen.Bounds.Height}, Screenshot size: {screenshot.Size.Width}x{screenshot.Size.Height}");
-        
+        // Calc RenderScaling on Mac for Retina screen
+        var window = TopLevel.GetTopLevel(this) as Window;
+        var scaling = window.RenderScaling;
+
         var captureArea = CaptureArea.Bounds;
         captureArea = new Rect(
-            (captureArea.X + _window.Position.X) * scaling, 
+            (captureArea.X + _window.Position.X) * scaling,
             (captureArea.Y + _window.Position.Y) * scaling,
-            captureArea.Width * scaling, 
+            captureArea.Width * scaling,
             captureArea.Height * scaling
         );
 #else
@@ -120,12 +127,12 @@ public partial class SnapShotView : UserControl
         viewModel.RealCaptureAreaWidth = (int)(CaptureArea.Bounds.Width * scaling);
         viewModel.RealCaptureAreaHeight = (int)(CaptureArea.Bounds.Height * scaling);
     }
-    
+
     private void UpdateRealSize2(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         UpdateRealSize(sender, null);
     }
-    
+
     // call when init
     public bool FixWindowSize()
     {
