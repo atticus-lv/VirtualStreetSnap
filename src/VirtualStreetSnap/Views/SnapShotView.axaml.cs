@@ -45,13 +45,28 @@ public partial class SnapShotView : UserControl
         var screenshot = await Task.Run(() => ScreenshotHelper.CaptureFullScreenAsync(currentScreen.Bounds));
         await Dispatcher.UIThread.InvokeAsync(() => Overlay.IsVisible = true);
 
-        // calculate capture area
-        var appScale = currentScreen.Scaling;
-        var borderCrop = 0;
+#if OSX
+        // 计算实际缩放比例：物理分辨率 / 逻辑分辨率
+        var scaling = screenshot.Size.Width / currentScreen.Bounds.Width;
+        Console.WriteLine($"Real scale: {scaling}, Screen bounds: {currentScreen.Bounds.Width}x{currentScreen.Bounds.Height}, Screenshot size: {screenshot.Size.Width}x{screenshot.Size.Height}");
+        
         var captureArea = CaptureArea.Bounds;
         captureArea = new Rect(
-            captureArea.X + _window.Position.X, captureArea.Y + _window.Position.Y,
-            captureArea.Width * appScale, captureArea.Height * appScale);
+            (captureArea.X + _window.Position.X) * scaling, 
+            (captureArea.Y + _window.Position.Y) * scaling,
+            captureArea.Width * scaling, 
+            captureArea.Height * scaling
+        );
+#else
+        var scaling = currentScreen.Scaling;
+        var captureArea = CaptureArea.Bounds;
+        captureArea = new Rect(
+            captureArea.X + _window.Position.X, 
+            captureArea.Y + _window.Position.Y,
+            captureArea.Width * scaling, 
+            captureArea.Height * scaling
+        );
+#endif
 
         var captureShot = ScreenshotHelper.CropImage(screenshot, captureArea);
         // save screenshot
