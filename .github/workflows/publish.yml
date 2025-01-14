@@ -51,7 +51,7 @@ jobs:
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: VirtualStreetSnap-Intel
+          name: VirtualStreetSnap-mac-Intel
           path: ./upload/VirtualStreetSnap.Intel.zip
 
   macos-silicon-build:
@@ -74,5 +74,5 @@ jobs:
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: VirtualStreetSnap-AppleSilicon
+          name: VirtualStreetSnap-mac-AppleSilicon
           path: ./upload/VirtualStreetSnap.AppleSilicon.zip
