@@ -34,6 +34,13 @@ public partial class SnapShotView : UserControl
         if (screen == null) return;
         _window = topLevel as Window;
         _currentScreen = screen;
+#if OSX
+        if (_window.RenderScaling > 1.0f)
+        {
+            var vm = DataContext as SnapShotViewModel;
+            vm.RetinaScaling = _window.RenderScaling;
+        }
+#endif
     }
 
     private async void SnapshotButton_Click(object? sender, RoutedEventArgs e)
@@ -45,13 +52,28 @@ public partial class SnapShotView : UserControl
         var screenshot = await Task.Run(() => ScreenshotHelper.CaptureFullScreenAsync(currentScreen.Bounds));
         await Dispatcher.UIThread.InvokeAsync(() => Overlay.IsVisible = true);
 
-        // calculate capture area
-        var appScale = currentScreen.Scaling;
-        var borderCrop = 0;
+#if OSX
+        // Calc RenderScaling on Mac for Retina screen
+        var window = TopLevel.GetTopLevel(this) as Window;
+        var scaling = window.RenderScaling;
+
         var captureArea = CaptureArea.Bounds;
         captureArea = new Rect(
-            captureArea.X + _window.Position.X, captureArea.Y + _window.Position.Y,
-            captureArea.Width * appScale, captureArea.Height * appScale);
+            (captureArea.X + _window.Position.X) * scaling,
+            (captureArea.Y + _window.Position.Y) * scaling,
+            captureArea.Width * scaling,
+            captureArea.Height * scaling
+        );
+#else
+        var scaling = currentScreen.Scaling;
+        var captureArea = CaptureArea.Bounds;
+        captureArea = new Rect(
+            captureArea.X + _window.Position.X, 
+            captureArea.Y + _window.Position.Y,
+            captureArea.Width * scaling, 
+            captureArea.Height * scaling
+        );
+#endif
 
         var captureShot = ScreenshotHelper.CropImage(screenshot, captureArea);
         // save screenshot
@@ -105,12 +127,12 @@ public partial class SnapShotView : UserControl
         viewModel.RealCaptureAreaWidth = (int)(CaptureArea.Bounds.Width * scaling);
         viewModel.RealCaptureAreaHeight = (int)(CaptureArea.Bounds.Height * scaling);
     }
-    
+
     private void UpdateRealSize2(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         UpdateRealSize(sender, null);
     }
-    
+
     // call when init
     public bool FixWindowSize()
     {

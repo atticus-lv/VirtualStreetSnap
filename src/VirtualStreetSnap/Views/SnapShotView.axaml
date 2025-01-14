@@ -5,6 +5,8 @@
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
              xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
              xmlns:models="clr-namespace:VirtualStreetSnap.Models"
+             xmlns:services="clr-namespace:VirtualStreetSnap.Services"
+             services:ToplevelService.Register="{Binding}"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="VirtualStreetSnap.Views.SnapShotView"
              x:DataType="viewModels:SnapShotViewModel">
@@ -130,7 +132,10 @@
                        PointerPressed="DisplayTextBlock_PointerPressed" Cursor="Ibeam" />
             <TextBox Text="{Binding EditHeight}" FontSize="24" IsVisible="{Binding IsEditingSize}"
                      LostFocus="EditTextBox_LostFocus" KeyDown="EditTextBox_KeyDown" />
-            <TextBlock Text="px" />
+            <StackPanel>
+                <TextBlock Text="px" />
+                <TextBlock Text="{Binding RetinaScaling,StringFormat='x{0:F1}'}" FontSize="10"/>
+            </StackPanel>
         </StackPanel>
     </Panel>
 </UserControl>

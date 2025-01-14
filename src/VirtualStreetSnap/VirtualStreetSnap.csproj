@@ -15,7 +15,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>0.1.6.0</Version>
+        <Version>0.1.6.1</Version>
         <Authors>Atticus</Authors>
         <Description>A simple screen shot tool design for VirtualStreetSnap</Description>
         <DefineConstants Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(DefineConstants);WINDOWS</DefineConstants>

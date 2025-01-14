@@ -65,6 +65,10 @@ public partial class SnapShotViewModel : ViewModelBase
 
     [ObservableProperty]
     private AppConfig _config = ConfigService.Instance;
+    
+    // This only show for macOS's Retina Screen
+    [ObservableProperty] 
+    private double _retinaScaling;
 
     [ObservableProperty]
     private bool _isEditingSize;
