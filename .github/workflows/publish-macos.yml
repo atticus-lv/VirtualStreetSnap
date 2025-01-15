@@ -17,11 +17,38 @@ jobs:
       - name: Install create-dmg
         run: brew install create-dmg
 
-      - name: Make upload directory
-        run: mkdir upload
+      - name: Make directories
+        run: |
+          mkdir -p upload
+          mkdir -p ./dist/Intel/VirtualStreetSnap.app/Contents/MacOS
 
       - name: Publish macOS (Intel)
-        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-x64 --self-contained true -o ./dist/Intel
+        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-x64 --self-contained true -o ./dist/Intel/VirtualStreetSnap.app/Contents/MacOS
+
+      - name: Create Info.plist (Intel)
+        run: |
+          cat > ./dist/Intel/VirtualStreetSnap.app/Contents/Info.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleExecutable</key>
+              <string>VirtualStreetSnap</string>
+              <key>CFBundleName</key>
+              <string>VirtualStreetSnap</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.yourcompany.virtualstreetsnap</string>
+              <key>CFBundleShortVersionString</key>
+              <string>1.0.0</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>10.12</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
 
       - name: Create DMG (Intel)
         run: |
@@ -30,6 +57,8 @@ jobs:
             --window-pos 200 120 \
             --window-size 800 400 \
             --icon-size 100 \
+            --icon "VirtualStreetSnap.app" 200 190 \
+            --hide-extension "VirtualStreetSnap.app" \
             --app-drop-link 600 185 \
             ./upload/VirtualStreetSnap.Intel.dmg \
             ./dist/Intel
@@ -50,11 +79,38 @@ jobs:
       - name: Install create-dmg
         run: brew install create-dmg
 
-      - name: Make upload directory
-        run: mkdir upload
+      - name: Make directories
+        run: |
+          mkdir -p upload
+          mkdir -p ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS
 
       - name: Publish macOS (Apple Silicon)
-        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-arm64 --self-contained true -o ./dist/AppleSilicon
+        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-arm64 --self-contained true -o ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS
+
+      - name: Create Info.plist (Apple Silicon)
+        run: |
+          cat > ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/Info.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleExecutable</key>
+              <string>VirtualStreetSnap</string>
+              <key>CFBundleName</key>
+              <string>VirtualStreetSnap</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.yourcompany.virtualstreetsnap</string>
+              <key>CFBundleShortVersionString</key>
+              <string>1.0.0</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>10.12</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
 
       - name: Create DMG (Apple Silicon)
         run: |
@@ -63,6 +119,8 @@ jobs:
             --window-pos 200 120 \
             --window-size 800 400 \
             --icon-size 100 \
+            --icon "VirtualStreetSnap.app" 200 190 \
+            --hide-extension "VirtualStreetSnap.app" \
             --app-drop-link 600 185 \
             ./upload/VirtualStreetSnap.AppleSilicon.dmg \
             ./dist/AppleSilicon
