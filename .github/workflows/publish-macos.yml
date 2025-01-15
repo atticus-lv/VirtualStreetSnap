@@ -14,21 +14,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
+      - name: Install create-dmg
+        run: brew install create-dmg
+
       - name: Make upload directory
         run: mkdir upload
 
       - name: Publish macOS (Intel)
         run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-x64 --self-contained true -o ./dist/Intel
 
-      - name: Archive macOS Build
+      - name: Create DMG (Intel)
         run: |
-          cd ./dist/Intel && zip -r ../../upload/VirtualStreetSnap.Intel.zip ./*
+          create-dmg \
+            --volname "VirtualStreetSnap" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --app-drop-link 600 185 \
+            ./upload/VirtualStreetSnap.Intel.dmg \
+            ./dist/Intel
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
           name: VirtualStreetSnap-mac-Intel
-          path: ./upload/VirtualStreetSnap.Intel.zip
+          path: ./upload/VirtualStreetSnap.Intel.dmg
 
   macos-silicon-build:
     runs-on: macos-latest
@@ -37,18 +47,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
+      - name: Install create-dmg
+        run: brew install create-dmg
+
       - name: Make upload directory
         run: mkdir upload
 
       - name: Publish macOS (Apple Silicon)
         run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-arm64 --self-contained true -o ./dist/AppleSilicon
 
-      - name: Archive macOS Build
+      - name: Create DMG (Apple Silicon)
         run: |
-          cd ./dist/AppleSilicon && zip -r ../../upload/VirtualStreetSnap.AppleSilicon.zip ./*
+          create-dmg \
+            --volname "VirtualStreetSnap" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --app-drop-link 600 185 \
+            ./upload/VirtualStreetSnap.AppleSilicon.dmg \
+            ./dist/AppleSilicon
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
           name: VirtualStreetSnap-mac-AppleSilicon
-          path: ./upload/VirtualStreetSnap.AppleSilicon.zip 
+          path: ./upload/VirtualStreetSnap.AppleSilicon.dmg 
