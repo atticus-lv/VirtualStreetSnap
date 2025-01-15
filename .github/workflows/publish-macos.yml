@@ -50,6 +50,10 @@ jobs:
           </plist>
           EOF
 
+      - name: Sign App Bundle (Intel)
+        run: |
+          codesign --force --deep --sign - ./dist/Intel/VirtualStreetSnap.app
+
       - name: Create DMG (Intel)
         run: |
           create-dmg \
@@ -62,6 +66,10 @@ jobs:
             --app-drop-link 600 185 \
             ./upload/VirtualStreetSnap.Intel.dmg \
             ./dist/Intel
+
+      - name: Sign DMG (Intel)
+        run: |
+          codesign --force --sign - ./upload/VirtualStreetSnap.Intel.dmg
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4.3.1
@@ -112,6 +120,10 @@ jobs:
           </plist>
           EOF
 
+      - name: Sign App Bundle (Apple Silicon)
+        run: |
+          codesign --force --deep --sign - ./dist/AppleSilicon/VirtualStreetSnap.app
+
       - name: Create DMG (Apple Silicon)
         run: |
           create-dmg \
@@ -124,6 +136,10 @@ jobs:
             --app-drop-link 600 185 \
             ./upload/VirtualStreetSnap.AppleSilicon.dmg \
             ./dist/AppleSilicon
+
+      - name: Sign DMG (Apple Silicon)
+        run: |
+          codesign --force --sign - ./upload/VirtualStreetSnap.AppleSilicon.dmg
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4.3.1
