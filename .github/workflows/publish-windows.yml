@@ -1,0 +1,32 @@
+name: publish windows demo
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  windows-build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Make upload directory
+        run: mkdir upload
+
+      - name: Publish Windows
+        run: dotnet publish ./src/VirtualStreetSnap -c Release -r win-x64 --self-contained true -p:PublishAot=true
+
+      - name: Archive Windows Build
+        run: |
+          $files = Get-ChildItem -Path ./src/VirtualStreetSnap/bin/Release/net8.0/win-x64/publish/* -Recurse -Exclude *.pdb
+          Compress-Archive -Path $files.FullName -DestinationPath ./upload/VirtualStreetSnap.win-x64.zip
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: VirtualStreetSnap-win-x64
+          path: ./upload/VirtualStreetSnap.win-x64.zip 

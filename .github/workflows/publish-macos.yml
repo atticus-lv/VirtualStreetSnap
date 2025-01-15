@@ -1,0 +1,74 @@
+name: publish macos demo
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  macos-intel-build:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Install create-dmg
+        run: brew install create-dmg
+
+      - name: Make upload directory
+        run: mkdir upload
+
+      - name: Publish macOS (Intel)
+        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-x64 --self-contained true -o ./dist/Intel
+
+      - name: Create DMG (Intel)
+        run: |
+          create-dmg \
+            --volname "VirtualStreetSnap" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --app-drop-link 600 185 \
+            ./upload/VirtualStreetSnap.Intel.dmg \
+            ./dist/Intel
+
+      - name: Upload macOS Artifact
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: VirtualStreetSnap-mac-Intel
+          path: ./upload/VirtualStreetSnap.Intel.dmg
+
+  macos-silicon-build:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Install create-dmg
+        run: brew install create-dmg
+
+      - name: Make upload directory
+        run: mkdir upload
+
+      - name: Publish macOS (Apple Silicon)
+        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-arm64 --self-contained true -o ./dist/AppleSilicon
+
+      - name: Create DMG (Apple Silicon)
+        run: |
+          create-dmg \
+            --volname "VirtualStreetSnap" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --app-drop-link 600 185 \
+            ./upload/VirtualStreetSnap.AppleSilicon.dmg \
+            ./dist/AppleSilicon
+
+      - name: Upload macOS Artifact
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: VirtualStreetSnap-mac-AppleSilicon
+          path: ./upload/VirtualStreetSnap.AppleSilicon.dmg 
