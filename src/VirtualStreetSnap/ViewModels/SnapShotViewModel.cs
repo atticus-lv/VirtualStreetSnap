@@ -100,4 +100,24 @@ public partial class SnapShotViewModel : ViewModelBase
         else if (e.PropertyName == nameof(Config.Overlays.FocusBorderThickness))
             FocusBorderThickness = new Thickness(Config.Overlays.FocusBorderThickness);
     }
+
+    partial void OnShowGuideLinesGridChanged(bool value)
+    {
+        Config.Overlays.Guides.Grid = value;
+    }
+
+    partial void OnShowGuideLinesRatioChanged(bool value)
+    {
+        Config.Overlays.Guides.Ratio = value;
+    }
+
+    partial void OnShowGuideLinesCenterChanged(bool value)
+    {
+        Config.Overlays.Guides.Center = value;
+    }
+
+    partial void OnGuideLinesOpacityChanged(float value)
+    {
+        Config.Overlays.Guides.Opacity = value;
+    }
 }
