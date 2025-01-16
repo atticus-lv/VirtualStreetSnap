@@ -22,6 +22,15 @@ jobs:
           mkdir -p upload
           mkdir -p ./dist/Intel/VirtualStreetSnap.app/Contents/MacOS
 
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          else
+            echo "version=0.0.1" >> $GITHUB_OUTPUT
+          fi
+
       - name: Publish macOS (Intel)
         run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-x64 --self-contained true -o ./dist/Intel/VirtualStreetSnap.app/Contents/MacOS
 
@@ -41,7 +50,9 @@ jobs:
               <key>CFBundleIdentifier</key>
               <string>com.yourcompany.virtualstreetsnap</string>
               <key>CFBundleShortVersionString</key>
-              <string>1.0.0</string>
+              <string>${{ steps.get_version.outputs.version }}</string>
+              <key>CFBundleVersion</key>
+              <string>${{ steps.get_version.outputs.version }}</string>
               <key>LSMinimumSystemVersion</key>
               <string>10.12</string>
               <key>NSHighResolutionCapable</key>
@@ -57,25 +68,25 @@ jobs:
       - name: Create DMG (Intel)
         run: |
           create-dmg \
-            --volname "VirtualStreetSnap" \
+            --volname "VirtualStreetSnap ${{ steps.get_version.outputs.version }}" \
             --window-pos 200 120 \
             --window-size 800 400 \
             --icon-size 100 \
             --icon "VirtualStreetSnap.app" 200 190 \
             --hide-extension "VirtualStreetSnap.app" \
             --app-drop-link 600 185 \
-            ./upload/VirtualStreetSnap.Intel.dmg \
+            ./upload/VirtualStreetSnap-${{ steps.get_version.outputs.version }}.Intel.dmg \
             ./dist/Intel
 
       - name: Sign DMG (Intel)
         run: |
-          codesign --force --sign - ./upload/VirtualStreetSnap.Intel.dmg
+          codesign --force --sign - ./upload/VirtualStreetSnap-${{ steps.get_version.outputs.version }}.Intel.dmg
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: VirtualStreetSnap-mac-Intel
-          path: ./upload/VirtualStreetSnap.Intel.dmg
+          name: VirtualStreetSnap-${{ steps.get_version.outputs.version }}-mac-Intel
+          path: ./upload/VirtualStreetSnap-${{ steps.get_version.outputs.version }}.Intel.dmg
 
   macos-silicon-build:
     runs-on: macos-latest
