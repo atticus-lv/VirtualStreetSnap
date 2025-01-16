@@ -35,6 +35,20 @@
     </UserControl.Styles>
 
     <Panel Background="#111111">
+        <Canvas Name="TransparencyGrid" IsVisible="{Binding ViewImage.Image, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Canvas.Background>
+                <VisualBrush TileMode="Tile" SourceRect="0,0,20,20" DestinationRect="0,0,20,20">
+                    <VisualBrush.Visual>
+                        <Grid ColumnDefinitions="10,10" RowDefinitions="10,10">
+                            <Rectangle Grid.Column="0" Grid.Row="0" Fill="#FF1A1A1A"/>
+                            <Rectangle Grid.Column="1" Grid.Row="1" Fill="#FF1A1A1A"/>
+                            <Rectangle Grid.Column="1" Grid.Row="0" Fill="#FF222222"/>
+                            <Rectangle Grid.Column="0" Grid.Row="1" Fill="#FF222222"/>
+                        </Grid>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Canvas.Background>
+        </Canvas>
         <Panel.ContextMenu>
             <ContextMenu>
                 <MenuItem Click="OnShowColorPicker_Click">
