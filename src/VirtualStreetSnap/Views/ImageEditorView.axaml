@@ -7,6 +7,8 @@
              xmlns:imageEditorLayer="clr-namespace:VirtualStreetSnap.ViewModels.ImageEditorLayer"
              xmlns:services="clr-namespace:VirtualStreetSnap.Services"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:behaviors="clr-namespace:VirtualStreetSnap.Behaviors"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              x:Class="VirtualStreetSnap.Views.ImageEditorView"
              services:ToplevelService.Register="{Binding}"
@@ -106,6 +108,9 @@
                                      Background="#111111" Margin="0 10 0 0"
                                      ItemsSource="{Binding LayerManager.Layers, Converter={StaticResource ReverseCollectionConverter}}"
                                      SelectedItem="{Binding SelectedLayer}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:ListBoxDragDropBehavior />
+                                </i:Interaction.Behaviors>
 
                                 <ListBox.Styles>
                                     <Style Selector="ListBoxItem">
