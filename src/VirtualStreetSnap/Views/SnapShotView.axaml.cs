@@ -47,10 +47,17 @@ public partial class SnapShotView : UserControl
     {
         GetCurrentScreenInfo();
         if (_currentScreen == null) return;
+#if OSX
+        var topLevel = TopLevel.GetTopLevel(this) as Window;
+        topLevel.SystemDecorations = SystemDecorations.None;
+#endif
         await Dispatcher.UIThread.InvokeAsync(() => Overlay.IsVisible = false);
         var currentScreen = _currentScreen;
         var screenshot = await Task.Run(() => ScreenshotHelper.CaptureFullScreenAsync(currentScreen.Bounds));
         await Dispatcher.UIThread.InvokeAsync(() => Overlay.IsVisible = true);
+#if OSX
+        topLevel.SystemDecorations = SystemDecorations.Full;
+#endif
 
 #if OSX
         // Calc RenderScaling on Mac for Retina screen

@@ -17,7 +17,7 @@ public partial class MainWindow : Window
         Height = currentScreen.Bounds.Height / 2 / scale;
 #if OSX 
         // Hide shadow for opacity control
-        SystemDecorations = SystemDecorations.None;
+        // SystemDecorations = SystemDecorations.Full;
 #endif
     }
 
