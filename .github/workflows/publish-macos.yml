@@ -113,7 +113,7 @@ jobs:
           fi
 
       - name: Publish macOS (Apple Silicon)
-        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-arm64 --self-contained true -p:PublishAot=true -o ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS
+        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-arm64 --self-contained true -p:PublishAot=true -p:DebugSymbols=false -p:DebugType=None -o ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS
 
       - name: Create Info.plist (Apple Silicon)
         run: |
