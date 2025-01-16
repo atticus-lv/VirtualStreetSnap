@@ -1,4 +1,4 @@
-name: publish windows demo
+name: publish windows
 
 on:
   push:

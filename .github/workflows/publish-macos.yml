@@ -1,4 +1,4 @@
-name: publish macos demo
+name: publish macos
 
 on:
   push:
@@ -104,7 +104,7 @@ jobs:
           mkdir -p ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS
 
       - name: Publish macOS (Apple Silicon)
-        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-arm64 --self-contained true -o ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS
+        run: dotnet publish ./src/VirtualStreetSnap -c Release -r osx-arm64 --self-contained true -p:PublishAot=true -o ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS
 
       - name: Create Info.plist (Apple Silicon)
         run: |
