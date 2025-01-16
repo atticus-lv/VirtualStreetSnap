@@ -26,14 +26,21 @@ SOFTWARE.
 */
 
 using Avalonia.Platform;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace VirtualStreetSnap.Localizer;
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(Dictionary<string, string>))]
+internal partial class LocalizerJsonContext : JsonSerializerContext
+{
+}
 
 public class Localizer : INotifyPropertyChanged
 {
@@ -41,21 +48,30 @@ public class Localizer : INotifyPropertyChanged
     private const string IndexerArrayName = "Item[]";
     private Dictionary<string, string> m_Strings = null;
 
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = true,
+        PropertyNameCaseInsensitive = true,
+        TypeInfoResolver = LocalizerJsonContext.Default,
+        AllowTrailingCommas = true,
+        ReadCommentHandling = JsonCommentHandling.Skip
+    };
+
     public bool LoadLanguage(string language)
     {
         Language = language;
 
         Uri uri = new Uri($"avares://VirtualStreetSnap/Assets/i18n/{language}.json");
         if (!AssetLoader.Exists(uri)) return false;
+        
         using (StreamReader sr = new StreamReader(AssetLoader.Open(uri), Encoding.UTF8))
         {
-            m_Strings = JsonConvert.DeserializeObject<Dictionary<string, string>>(sr.ReadToEnd());
+            string jsonString = sr.ReadToEnd();
+            m_Strings = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonString, _jsonOptions);
         }
 
         Invalidate();
-
         return true;
-
     }
 
     public string Language { get; private set; }
@@ -79,5 +95,4 @@ public class Localizer : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(IndexerName));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(IndexerArrayName));
     }
-    
 }

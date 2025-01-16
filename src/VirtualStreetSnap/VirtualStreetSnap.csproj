@@ -3,7 +3,7 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <!--windows-x64平台-->
-<!--        <RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
+        <!--        <RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
         <!--发布时本机依赖项自解压-->
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <!--        trim-->
@@ -22,7 +22,7 @@
         <DefineConstants Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(DefineConstants);OSX</DefineConstants>
         <DefineConstants Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(DefineConstants);LINUX</DefineConstants>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
@@ -31,18 +31,18 @@
         <TrimmerRootDescriptor Include="TrimmerRoots.xml"/>
     </ItemGroup>
 
+
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.2.2"/>
-        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.2.2" />
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.2.2"/>
         <PackageReference Include="Avalonia.Desktop" Version="11.2.2"/>
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.2"/>
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.2"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.2"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
-        <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
-        <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5"/>
+        <PackageReference Include="MathNet.Numerics" Version="5.0.0"/>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6"/>
         <PackageReference Include="System.Drawing.Common" Version="8.0.10"/>
     </ItemGroup>
@@ -58,13 +58,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Views\ImageEditorWindow.axaml.cs">
-        <DependentUpon>ImageEditorWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Controls\SettingsCard.axaml.cs">
-        <DependentUpon>Card.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+        <Compile Update="Views\ImageEditorWindow.axaml.cs">
+            <DependentUpon>ImageEditorWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Controls\SettingsCard.axaml.cs">
+            <DependentUpon>Card.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 </Project>

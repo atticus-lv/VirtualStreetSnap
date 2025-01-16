@@ -1,14 +1,29 @@
 ﻿using System;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using VirtualStreetSnap.Models;
 
 namespace VirtualStreetSnap.Services;
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(AppConfig))]
+internal partial class AppJsonContext : JsonSerializerContext
+{
+}
 
 public class ConfigService
 {
     private static readonly Lazy<AppConfig> _configInstance = new(() => LoadConfig());
     private static readonly string _configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+    
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = true,
+        PropertyNameCaseInsensitive = true,
+        TypeInfoResolver = AppJsonContext.Default,
+        Converters = { new ColorJsonConverter() }
+    };
 
     private ConfigService() { }
 
@@ -22,7 +37,7 @@ public class ConfigService
         try
         {
             var json = File.ReadAllText(_configFilePath);
-            return JsonConvert.DeserializeObject<AppConfig>(json);
+            return JsonSerializer.Deserialize<AppConfig>(json, _jsonOptions) ?? NewDefaultConfig();
         }
         catch (Exception ex)
         {
@@ -35,7 +50,7 @@ public class ConfigService
     {
         try
         {
-            var json = JsonConvert.SerializeObject(Instance, Formatting.Indented);
+            var json = JsonSerializer.Serialize(Instance, _jsonOptions);
             File.WriteAllText(_configFilePath, json);
         }
         catch (Exception ex)

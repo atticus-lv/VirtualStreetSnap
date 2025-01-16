@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using Avalonia.Media;
+using System.Text.Json.Serialization;
+using VirtualStreetSnap.Services;
 
 namespace VirtualStreetSnap.Models;
 
@@ -47,6 +49,7 @@ public class Overlays
 
     private Color _focusBorderColor = Colors.Brown;
 
+    [JsonConverter(typeof(ColorJsonConverter))]
     public Color FocusBorderColor
     {
         get => _focusBorderColor;
