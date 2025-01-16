@@ -146,6 +146,10 @@ jobs:
         run: |
           codesign --force --deep --sign - ./dist/AppleSilicon/VirtualStreetSnap.app
 
+      - name: Remove debug symbols
+        run: |
+          find ./dist/AppleSilicon -name "*.dysm" -type f -delete
+
       - name: Create DMG (Apple Silicon)
         run: |
           create-dmg \
