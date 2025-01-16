@@ -66,13 +66,63 @@ public class Overlays
     }
 }
 
-public class Guides
+public class Guides : INotifyPropertyChanged
 {
-    public bool Grid { get; set; } = true;
-    public bool Center { get; set; }
-    public bool Ratio { get; set; }
+    private bool _grid = true;
+    private bool _center;
+    private bool _ratio;
+    private float _opacity = 0.5f;
 
-    public float Opacity { get; set; } = 0.5f;
+    public bool Grid
+    {
+        get => _grid;
+        set
+        {
+            if (_grid == value) return;
+            _grid = value;
+            OnPropertyChanged(nameof(Grid));
+        }
+    }
+
+    public bool Center
+    {
+        get => _center;
+        set
+        {
+            if (_center == value) return;
+            _center = value;
+            OnPropertyChanged(nameof(Center));
+        }
+    }
+
+    public bool Ratio
+    {
+        get => _ratio;
+        set
+        {
+            if (_ratio == value) return;
+            _ratio = value;
+            OnPropertyChanged(nameof(Ratio));
+        }
+    }
+
+    public float Opacity
+    {
+        get => _opacity;
+        set
+        {
+            if (_opacity == value) return;
+            _opacity = value;
+            OnPropertyChanged(nameof(Opacity));
+        }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }
 
 public class AppConfig
