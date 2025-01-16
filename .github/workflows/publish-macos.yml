@@ -148,8 +148,10 @@ jobs:
 
       - name: Remove debug symbols
         run: |
-          find ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS -type f \( -name "*.dSYM" -o -name "*.dysm" -o -name "*.pdb" \) -delete
-          find ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS -type d -name "*.dSYM" -exec rm -rf {} +
+          find ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS -type f \( -name "*.dsym" -o -name "*.pdb" \) -delete
+          find ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS -type d -name "*.dsym" -exec rm -rf {} +
+          rm -rf ./dist/AppleSilicon/VirtualStreetSnap.app/Contents/MacOS/*.dsym
+          rm -rf ./dist/AppleSilicon/VirtualStreetSnap.app.dsym
 
       - name: Create DMG (Apple Silicon)
         run: |
