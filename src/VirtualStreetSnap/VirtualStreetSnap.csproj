@@ -15,7 +15,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>0.1.6.2</Version>
+        <Version>0.1.7.0</Version>
         <Authors>Atticus</Authors>
         <Description>A simple screen shot tool design for VirtualStreetSnap</Description>
         <DefineConstants Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(DefineConstants);WINDOWS</DefineConstants>
@@ -40,6 +40,7 @@
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.2"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.2"/>
+        <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.2.0.7" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
         <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5"/>
         <PackageReference Include="MathNet.Numerics" Version="5.0.0"/>

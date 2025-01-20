@@ -5,6 +5,8 @@
              xmlns:viewModels="clr-namespace:VirtualStreetSnap.ViewModels"
              xmlns:i18n="clr-namespace:VirtualStreetSnap.Localizer"
              xmlns:services="clr-namespace:VirtualStreetSnap.Services"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:behaviors="clr-namespace:VirtualStreetSnap.Behaviors"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              services:ToplevelService.Register="{Binding}"
              x:Class="VirtualStreetSnap.Views.ImageViewerView"
@@ -33,6 +35,20 @@
     </UserControl.Styles>
 
     <Panel Background="#111111">
+        <Canvas Name="TransparencyGrid" IsVisible="{Binding ViewImage.Image, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Canvas.Background>
+                <VisualBrush TileMode="Tile" SourceRect="0,0,20,20" DestinationRect="0,0,20,20">
+                    <VisualBrush.Visual>
+                        <Grid ColumnDefinitions="10,10" RowDefinitions="10,10">
+                            <Rectangle Grid.Column="0" Grid.Row="0" Fill="#FF1A1A1A"/>
+                            <Rectangle Grid.Column="1" Grid.Row="1" Fill="#FF1A1A1A"/>
+                            <Rectangle Grid.Column="1" Grid.Row="0" Fill="#FF222222"/>
+                            <Rectangle Grid.Column="0" Grid.Row="1" Fill="#FF222222"/>
+                        </Grid>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Canvas.Background>
+        </Canvas>
         <Panel.ContextMenu>
             <ContextMenu>
                 <MenuItem Click="OnShowColorPicker_Click">
@@ -74,13 +90,11 @@
                 </MenuItem>
             </ContextMenu>
         </Panel.ContextMenu>
-        <StackPanel x:Name="ViewBoxArea" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                    PointerWheelChanged="Viewer_PointerWheelChanged"
-                    PointerPressed="Viewer_PointerPressed"
-                    PointerReleased="Viewer_PointerReleased"
-                    PointerMoved="Viewer_PointerMoved">
+        <StackPanel x:Name="ViewBoxArea" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <i:Interaction.Behaviors>
+                <behaviors:ImageViewerBehavior/>
+            </i:Interaction.Behaviors>
             <Image Name="ViewBoxImage" Source="{Binding ViewImage.Image}" />
-
         </StackPanel>
 
         <!-- image info -->

@@ -12,80 +12,15 @@ using CommunityToolkit.Mvvm.Input;
 using VirtualStreetSnap.Models;
 using VirtualStreetSnap.Services;
 using VirtualStreetSnap.Views;
+using Avalonia.Threading;
 
 namespace VirtualStreetSnap.ViewModels;
 
-public class LazyLoadManager
-{
-    private const int BatchSize = 20;
-    private Dictionary<string, DateTime> _allImagePaths = new();
-    private int _currentBatchIndex;
-    private DateTime _lastCheckedTime = DateTime.MinValue;
-    private string _lastCheckedDirectory = string.Empty;
-
-    public bool IsInitialized;
-
-    public ObservableCollection<ImageModelBase> Thumbnails { get; } = new();
-
-    public void Initialize(string saveDirectory)
-    {
-        if (!Directory.Exists(saveDirectory)) return;
-
-        var lastWriteTime = Directory.GetLastWriteTime(saveDirectory);
-        if (lastWriteTime <= _lastCheckedTime && saveDirectory == _lastCheckedDirectory) return;
-
-        _lastCheckedTime = lastWriteTime;
-        _lastCheckedDirectory = saveDirectory;
-
-        _allImagePaths = Directory.GetFiles(saveDirectory, "*.png")
-            .ToDictionary(file => file, File.GetLastWriteTime);
-        _allImagePaths = _allImagePaths.OrderByDescending(kv => kv.Value).ToDictionary(kv => kv.Key, kv => kv.Value);
-        Thumbnails.Clear();
-        _currentBatchIndex = 0;
-        LoadNextBatch();
-        IsInitialized = true;
-    }
-
-    public void LoadNextBatch()
-    {
-        var nextBatch = _allImagePaths.Skip(_currentBatchIndex * BatchSize).Take(BatchSize);
-        foreach (var kv in nextBatch) Thumbnails.Add(new ImageModelBase(kv.Key));
-        _currentBatchIndex++;
-    }
-
-    public void LoadNecessary()
-    {
-        var currentImagePaths = Directory.GetFiles(_lastCheckedDirectory, "*.png")
-            .ToDictionary(file => file, File.GetLastWriteTime);
-
-        // Detect and remove missing files
-        var missingFiles = _allImagePaths.Keys.Except(currentImagePaths.Keys).ToList();
-        foreach (var missingFile in missingFiles)
-        {
-            var imageToRemove = Thumbnails.FirstOrDefault(img => img.ImgPath == missingFile);
-            if (imageToRemove != null)
-            {
-                Thumbnails.Remove(imageToRemove);
-            }
-
-            _allImagePaths.Remove(missingFile);
-        }
-
-        // Detect and add new files
-        var newImagePaths = currentImagePaths.Keys.Except(_allImagePaths.Keys).Reverse().ToList();
-        if (newImagePaths.Count == 0) return;
-
-        foreach (var file in newImagePaths)
-        {
-            _allImagePaths[file] = currentImagePaths[file];
-            Thumbnails.Insert(0, new ImageModelBase(file));
-        }
-    }
-}
-
-public partial class ImageGalleryViewModel : ViewModelBase
+public partial class ImageGalleryViewModel : ViewModelBase, IDisposable
 {
     private readonly LazyLoadManager _lazyLoadManager = new();
+    private readonly FileSystemWatcher _watcher = new();
+    private readonly Dictionary<string, DateTime> _imageFiles = new();
 
     [ObservableProperty]
     private bool _showColorPicker;
@@ -110,8 +45,43 @@ public partial class ImageGalleryViewModel : ViewModelBase
     public ImageGalleryViewModel()
     {
         SelectedImageViewer = new ImageViewerView();
+        InitializeFileWatcher();
         UpdateThumbnails(selectFirst: false);
         Config.Settings.PropertyChanged += OnSettingsPropertyChanged;
+    }
+
+    private void InitializeFileWatcher()
+    {
+        _watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
+        _watcher.Filter = "*.png";
+        _watcher.Created += OnFileChanged;
+        _watcher.Deleted += OnFileChanged;
+        _watcher.Changed += OnFileChanged;
+        _watcher.Renamed += OnFileRenamed;
+        
+        if(Directory.Exists(Config.Settings.SaveDirectory))
+        {
+            _watcher.Path = Config.Settings.SaveDirectory;
+            _watcher.EnableRaisingEvents = true;
+        }
+    }
+
+    private void OnFileChanged(object sender, FileSystemEventArgs e)
+    {
+        if(!File.Exists(e.FullPath)) return;
+        
+        Dispatcher.UIThread.Post(() =>
+        {
+            UpdateThumbnails(true);
+        });
+    }
+
+    private void OnFileRenamed(object sender, RenamedEventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            UpdateThumbnails(true); 
+        });
     }
 
     private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -127,18 +97,35 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
     public void UpdateThumbnails(bool reload = false, bool selectFirst = true)
     {
-        if (_lazyLoadManager.IsInitialized && !reload)
+        var saveDirectory = Config.Settings.SaveDirectory;
+        if (!Directory.Exists(saveDirectory)) return;
+
+        if(_watcher.Path != saveDirectory)
         {
-            _lazyLoadManager.LoadNecessary();
-        }
-        else
-        {
-            _lazyLoadManager.Initialize(Config.Settings.SaveDirectory);
+            _watcher.Path = saveDirectory;
+            _watcher.EnableRaisingEvents = true;
         }
 
-        if (Thumbnails.Count > 0 && SelectedThumbnail == null && selectFirst) SelectedThumbnail = Thumbnails.First();
+        if(reload)
+        {
+            _imageFiles.Clear();
+            var files = Directory.GetFiles(saveDirectory, "*.png");
+            foreach(var file in files)
+            {
+                _imageFiles[file] = File.GetLastWriteTime(file);
+            }
+            _lazyLoadManager.Initialize(saveDirectory);
+        }
+        else if(!_lazyLoadManager.IsInitialized)
+        {
+            _lazyLoadManager.Initialize(saveDirectory);
+        }
+        
+        if (Thumbnails.Count > 0 && SelectedThumbnail == null && selectFirst)
+        {
+            SelectedThumbnail = Thumbnails.First();
+        }
     }
-
 
     [RelayCommand]
     public void LoadMoreThumbnails()
@@ -235,5 +222,11 @@ public partial class ImageGalleryViewModel : ViewModelBase
 
         EditorWindow.Show();
         EditorWindow.Activate();
+    }
+
+    public void Dispose()
+    {
+        Config.Settings.PropertyChanged -= OnSettingsPropertyChanged;
+        _watcher.Dispose();
     }
 }
