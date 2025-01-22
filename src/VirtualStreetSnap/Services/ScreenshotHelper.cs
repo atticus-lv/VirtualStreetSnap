@@ -110,12 +110,12 @@ public static class ScreenshotHelper
         var fileName = $"screenshot_{DateTime.Now:yyyyMMdd_HHmmss}.png";
         var tempPath = Path.Combine(Path.GetTempPath(), fileName);
 
-        // 优先使用 import 命令，然后是其他备选工具
+        // 尝试使用不同的截图工具
         var screenshotTools = new[]
         {
-            ("import", $"-window root \"{tempPath}\""),  // ImageMagick的import命令
-            ("maim", $"\"{tempPath}\""),                 // maim工具作为备选
-            ("scrot", $"-q 100 -z \"{tempPath}\""),      // scrot作为最后的备选
+            ("scrot", $"\"{tempPath}\""),  // 通用
+            ("gnome-screenshot", $"--file=\"{tempPath}\""),  // GNOME
+            ("spectacle", $"-b -n -o \"{tempPath}\"")  // KDE
         };
 
         foreach (var (tool, args) in screenshotTools)
@@ -135,45 +135,22 @@ public static class ScreenshotHelper
                 using var process = Process.Start(startInfo);
                 if (process == null) continue;
 
-                // 设置较短的超时时间
-                if (!await process.WaitForExitAsync(TimeSpan.FromSeconds(3)))
-                {
-                    try 
-                    {
-                        process.Kill();
-                    }
-                    catch 
-                    {
-                        continue;
-                    }
-                    continue;
-                }
+                await process.WaitForExitAsync();
 
+                // 检查文件是否成功创建
                 if (process.ExitCode == 0 && File.Exists(tempPath))
                 {
-                    // 缩短等待时间
-                    await Task.Delay(50);
                     return tempPath;
                 }
             }
             catch (Exception)
             {
-                if (File.Exists(tempPath))
-                {
-                    try 
-                    {
-                        File.Delete(tempPath);
-                    }
-                    catch 
-                    {
-                        // 忽略删除失败的错误
-                    }
-                }
+                // 如果当前工具不可用，继续尝试下一个
                 continue;
             }
         }
 
-        return string.Empty;
+        return string.Empty;  // 所有工具都失败时返回空
     }
 #endif
     
