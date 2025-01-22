@@ -60,12 +60,11 @@ public static class ScreenshotHelper
         {
             using var fileStream = File.OpenRead(tempPath);
             var bitmap = new Bitmap(fileStream);
-            File.Delete(tempPath); // 删除临时文件
+            File.Delete(tempPath);
             return bitmap;
         }
         catch (Exception ex)
         {
-            File.Delete(tempPath); // 确保清理临时文件
             throw new Exception($"处理截图失败: {ex.Message}");
         }
 #else
