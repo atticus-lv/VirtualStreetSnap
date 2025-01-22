@@ -48,6 +48,26 @@ public static class ScreenshotHelper
             File.Delete(tempPath); // 确保清理临时文件
             throw new Exception($"处理截图失败: {ex.Message}");
         }
+#elif LINUX
+        // Linux 实现
+        var tempPath = await CaptureScreenLinux();
+        if (string.IsNullOrEmpty(tempPath))
+        {
+            throw new Exception("截图失败");
+        }
+
+        try
+        {
+            using var fileStream = File.OpenRead(tempPath);
+            var bitmap = new Bitmap(fileStream);
+            File.Delete(tempPath); // 删除临时文件
+            return bitmap;
+        }
+        catch (Exception ex)
+        {
+            File.Delete(tempPath); // 确保清理临时文件
+            throw new Exception($"处理截图失败: {ex.Message}");
+        }
 #else
         // Windows 实现（默认）
         using var bitmap = new System.Drawing.Bitmap(screenBounds.Width, screenBounds.Height);
@@ -81,6 +101,56 @@ public static class ScreenshotHelper
         await process!.WaitForExitAsync();
 
         return process.ExitCode == 0 ? tempPath : string.Empty;
+    }
+#endif
+
+#if LINUX
+    private static async Task<string> CaptureScreenLinux()
+    {
+        var fileName = $"screenshot_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+        var tempPath = Path.Combine(Path.GetTempPath(), fileName);
+
+        // 尝试使用不同的截图工具
+        var screenshotTools = new[]
+        {
+            ("scrot", $"\"{tempPath}\""),  // 通用
+            ("gnome-screenshot", $"--file=\"{tempPath}\""),  // GNOME
+            ("spectacle", $"-b -n -o \"{tempPath}\"")  // KDE
+        };
+
+        foreach (var (tool, args) in screenshotTools)
+        {
+            try
+            {
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = tool,
+                    Arguments = args,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+
+                using var process = Process.Start(startInfo);
+                if (process == null) continue;
+
+                await process.WaitForExitAsync();
+
+                // 检查文件是否成功创建
+                if (process.ExitCode == 0 && File.Exists(tempPath))
+                {
+                    return tempPath;
+                }
+            }
+            catch (Exception)
+            {
+                // 如果当前工具不可用，继续尝试下一个
+                continue;
+            }
+        }
+
+        return string.Empty;  // 所有工具都失败时返回空
     }
 #endif
     
