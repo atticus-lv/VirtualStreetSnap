@@ -15,9 +15,9 @@ public partial class MainWindow : Window
         var currentScreen = Screens.Primary;
         Width = currentScreen.Bounds.Width / 2 / scale;
         Height = currentScreen.Bounds.Height / 2 / scale;
-#if OSX 
-        // Hide shadow for opacity control
-        // SystemDecorations = SystemDecorations.Full;
+#if LINUX 
+        // Hide title bar on Linux
+        SystemDecorations = SystemDecorations.BorderOnly;
 #endif
     }
 
